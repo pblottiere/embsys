@@ -1,0 +1,258 @@
+\documentclass[12pt,t]{beamer}
+
+%------------------------------------------------------------------------------
+% configuration
+%------------------------------------------------------------------------------
+\RequirePackage{etex}
+\usepackage{../../themes/dbt}
+\usepackage{catchfilebetweentags}
+
+\setbeameroption{hide notes}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
+
+%------------------------------------------------------------------------------
+% title
+%------------------------------------------------------------------------------
+% slide
+\title{Systèmes d'exploitation pour l'embarqué}
+\subtitle{UV 5.2 - Exécution et Concurrence}
+
+\author{\href{}{Paul Blottière}}
+\institute{
+    \href{http://www.ensta-bretagne.fr/}{ENSTA Bretagne} \\[2pt]
+    \href{}{\tt \scriptsize 10 Novembre 2015}
+}
+\date{
+    \href{https://github.com/pblottiere}{\tt \scriptsize github.com/pblottiere}
+}
+
+% info
+\begin{document}
+
+{
+\setbeamertemplate{footline}{} % no page number here
+\frame{
+    \titlepage
+    \incnote{title}
+} }
+
+%------------------------------------------------------------------------------
+% organisation
+%------------------------------------------------------------------------------
+\begin{frame}{Organisation}
+    \vspace{12pt}
+
+    \bi
+        \itemsep12pt
+        \item 9 CM
+        \item 6 TE
+        \item 2 BE
+    \ei
+
+    \incnote{organisation}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% plan
+%------------------------------------------------------------------------------
+\begin{frame}{Plan}
+    \subt{}
+    \vspace{30pt}
+
+    \bi
+        \itemsep12pt
+        \item Un peu d'histoire
+        \item Définitions
+        \item Pourquoi Linux comme système embarqué
+        \item Les normes
+    \ei
+
+    \note {
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% histoire1
+%------------------------------------------------------------------------------
+\begin{frame}{Un peu d'histoire}
+    \subt{Le premier jeu vidéo}
+    \incnote{histoire1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% histoire2
+%------------------------------------------------------------------------------
+\begin{frame}{Un peu d'histoire}
+    \subt{La naissance du langage C}
+    \incnote{histoire2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% histoire3
+%------------------------------------------------------------------------------
+\begin{frame}{Un peu d'histoire}
+    \subt{U hobby devenu célèbre}
+    \incnote{histoire3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% normes1
+%------------------------------------------------------------------------------
+\begin{frame}{Les normes}
+    \subt{}
+    \incnote{normes1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% normes2
+%------------------------------------------------------------------------------
+\begin{frame}{Les normes}
+    \subt{POSIXLY\_CORRECT SIR!}
+
+    tool [-a][-b][-c option\_argument] [-d|-e][-f[option\_argument]][operand...]
+
+    \incnote{normes2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% opensource
+%------------------------------------------------------------------------------
+\begin{frame}{Logiciel Libre et Logiciel Open Source}
+    \subt{Question de philosophie...}
+    \incnote {opensource}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% licences1
+%------------------------------------------------------------------------------
+\begin{frame}{Licences de distribution}
+    \subt{Copyleft, GPL, LGPL, ...}
+    \incnote {licences1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% licences2
+%------------------------------------------------------------------------------
+\begin{frame}{Licences de distribution}
+    \subt{Conséquences dans la vie courante...}
+    \incnote{licences2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def1
+%------------------------------------------------------------------------------
+\begin{frame}{Ébauches de définitions}
+    \subt{Le Kernel et système d'exploitation}
+    \incnote{def1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def2
+%------------------------------------------------------------------------------
+\begin{frame}{Ébauche de définitions}
+    \subt{Dans le monde des systèmes embarqués...}
+    \incnote{def2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def3
+%------------------------------------------------------------------------------
+\begin{frame}{Ébauche de définitions}
+    \subt{Dans le monde des systèmes embarqués...}
+    \incnote{def3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% chiffres1
+%------------------------------------------------------------------------------
+\begin{frame}{Quelques chiffres}
+    \subt{Les systèmes embarqués sont partout!}
+    \incnote{chiffre1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% chiffres2
+%------------------------------------------------------------------------------
+\begin{frame}{Quelques chiffres}
+    \subt{Soutien des états}
+    \incnote{chiffres2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% chiffres3
+%------------------------------------------------------------------------------
+\begin{frame}{Quelques chiffres}
+    \subt{Répartition du Chiffre d'Affaires}
+    \incnote{chiffres3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% chiffres4
+%------------------------------------------------------------------------------
+\begin{frame}{Quelques chiffres}
+    \subt{Répartition des effectifs}
+    \incnote{chiffres4}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% embos1
+%------------------------------------------------------------------------------
+\begin{frame}{Les OS embarqués existant}
+    \subt{Sans base Linux}
+    \incnote{embos1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% embos2
+%------------------------------------------------------------------------------
+\begin{frame}{Les OS embarqués existant}
+    \subt{A base de Linux}
+    \incnote{embos2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% choice1
+%------------------------------------------------------------------------------
+\begin{frame}{Comment choisir?!}
+    \subt{Systèmes propriétaires ?}
+    \incnote{choice1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% choice2
+%------------------------------------------------------------------------------
+\begin{frame}{Comment choisir?}
+    \subt{Systèmes Open Source?}
+    \incnote{choice2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% linux1
+%------------------------------------------------------------------------------
+\begin{frame}{Et si on choisit Linux..}
+    \subt{Avantages}
+    \incnote{linux1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% linux2
+%------------------------------------------------------------------------------
+\begin{frame}{Et si on choisit Linux..}
+    \subt{Avantages}
+    \incnote{linux2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% linux3
+%------------------------------------------------------------------------------
+\begin{frame}{Et si on choisit Linux..}
+    \subt{Inconvénients}
+    \incnote{linux3}
+\end{frame}
+
+\end{document}

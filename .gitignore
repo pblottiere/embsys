@@ -1,3 +1,14 @@
+# blackbox
 /keyrings/live/pubring.gpg~
 /keyrings/live/pubring.kbx~
 /keyrings/live/secring.gpg
+/cm/1_intro/notes.tex
+
+# tex
+*.aux
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc
