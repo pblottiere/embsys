@@ -6,6 +6,7 @@
 
 # tex
 *.aux
+*.vrb
 *.log
 *.nav
 *.out

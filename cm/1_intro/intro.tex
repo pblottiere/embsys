@@ -9,6 +9,8 @@
 
 \setbeameroption{hide notes}
 
+\graphicspath{{images/}}
+
 % a few macros
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
@@ -28,7 +30,7 @@
     \href{}{\tt \scriptsize 10 Novembre 2015}
 }
 \date{
-    \href{https://github.com/pblottiere}{\tt \scriptsize github.com/pblottiere}
+    \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere}
 }
 
 % info
@@ -40,6 +42,25 @@
     \titlepage
     \incnote{title}
 } }
+
+%------------------------------------------------------------------------------
+% amélioration continue
+%------------------------------------------------------------------------------
+\begin{frame}{Amélioration continue}
+    \subt{Contributions}
+    \vspace{12pt}
+
+    \begin{center}
+    \includegraphics[scale=0.7]{github.png}
+    \end{center}
+
+    \bi
+    \itemsep12pt
+    \item Dépôt du cours : \href{https://github.com/pblottiere/embsys}{\tt \scriptsize https://github.com/pblottiere/embsys}
+    \item Souhaits d'amélioration, erreurs, ... : ouverture d'issues (avec le bon tag!)
+    \item Apports de correction : Pull Request
+    \ei
+\end{frame}
 
 %------------------------------------------------------------------------------
 % organisation
@@ -62,14 +83,19 @@
 %------------------------------------------------------------------------------
 \begin{frame}{Plan}
     \subt{}
-    \vspace{30pt}
 
     \bi
-        \itemsep12pt
+        \itemsep8pt
         \item Un peu d'histoire
-        \item Définitions
-        \item Pourquoi Linux comme système embarqué
         \item Les normes
+        \item Logiciel Libre et Logiciel Open-Source
+        \item Licences de distribution
+        \item Définitions et propriétés
+        \item Architectures matérielles
+        \item Quelques chiffres
+        \item Les OS embarqués existant
+        \item Comment choisir?
+        \item Et si on choisit Linux?
     \ei
 
     \note {
@@ -81,6 +107,23 @@
 %------------------------------------------------------------------------------
 \begin{frame}{Un peu d'histoire}
     \subt{Le premier jeu vidéo}
+    \vspace{20pt}
+
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.45\textwidth}
+            \centering
+            1964 : Multics \\
+            \vspace{30pt}
+            \includegraphics[scale=0.15]{ge645-paris.jpg}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \centering
+            1969 : Space Travel par Ken Thompson \\
+            \vspace{20pt}
+            \includegraphics[scale=0.6]{space-travel.png}
+        \end{column}
+    \end{columns}
+
     \incnote{histoire1}
 \end{frame}
 
@@ -89,6 +132,23 @@
 %------------------------------------------------------------------------------
 \begin{frame}{Un peu d'histoire}
     \subt{La naissance du langage C}
+    \vspace{30pt}
+
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.45\textwidth}
+            \centering
+            1971 : Le C par Dennis Ritchie \\
+            \vspace{20pt}
+            \includegraphics[scale=0.3]{ken-ritchie-1972.jpg}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \centering
+            1983 : GNU par Stallman \\
+            \vspace{20pt}
+            \includegraphics[scale=0.15]{rms-mitlab.jpg}
+        \end{column}
+    \end{columns}
+
     \incnote{histoire2}
 \end{frame}
 
@@ -96,25 +156,93 @@
 % histoire3
 %------------------------------------------------------------------------------
 \begin{frame}{Un peu d'histoire}
-    \subt{U hobby devenu célèbre}
+    \subt{Un hobby devenu célèbre}
+    \vspace{30pt}
+
+    \begin{columns}[onlytextwidth]
+        \begin{column}{0.45\textwidth}
+            \centering
+            1987 : Linux par Linus Torvalds \\
+            \vspace{20pt}
+            \includegraphics[scale=0.3]{linus.jpg}
+        \end{column}
+        \begin{column}{0.45\textwidth}
+            \centering
+            1992 : GNU / Linux \\
+            \vspace{30pt}
+            \includegraphics[scale=0.2]{gnu-linux.png}
+        \end{column}
+    \end{columns}
+
     \incnote{histoire3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% histoire4
+%------------------------------------------------------------------------------
+\begin{frame}{Un peu d'histoire}
+    \subt{De nos jours}
+    \vspace{5pt}
+
+    \includegraphics[scale=0.18]{timeline.png}
+
+    \incnote{histoire4}
 \end{frame}
 
 %------------------------------------------------------------------------------
 % normes1
 %------------------------------------------------------------------------------
 \begin{frame}{Les normes}
-    \subt{}
+    \subt{SUSv3}
+    \vspace{20pt}
+
+    Des normes sont nécessaires pour assurer une compatibilité des logiciels
+    entre systèmes d'exploitation:
+    \vspace{10pt}
+    \bi
+    \itemsep12pt
+    \item 1988 : Portable Operating System Interface (POSIX). Plusieurs versions : 1,
+                 1.b, 1.c
+      \item 1997 : UNIX98 ou Single UNIX Specification V2
+    \item Standard actuel : SUS V3 (fusion entre POSIX et UNIX98)
+    \ei
+
+    \vspace{10pt}
+    \centering
+    \href{http://www.unix.org/version3/}{\tt \scriptsize http://www.unix.org/version3/}
+
     \incnote{normes1}
 \end{frame}
 
 %------------------------------------------------------------------------------
 % normes2
 %------------------------------------------------------------------------------
-\begin{frame}{Les normes}
+\begin{frame}[fragile]{Les normes}
     \subt{POSIXLY\_CORRECT SIR!}
+    \vspace{10pt}
 
-    tool [-a][-b][-c option\_argument] [-d|-e][-f[option\_argument]][operand...]
+    POSIX:
+    \begin{lstlisting}[language=bash]
+    tool [-a][-b][-c option_argument] \
+        [-d|-e][-f[option_argument]][operand...]
+    \end{lstlisting}
+
+    \vspace{10pt}
+    Sous GNU/Linux, les règles sont différentes!
+
+    \vspace{10pt}
+    Conséquences sous GNU/Linux:
+
+    \begin{lstlisting}
+    # ls -a .
+    .vimrc .vim devel doc
+    # ls . -a
+    .vimrc .vim devel doc
+    # POSIXLY_CORRECT=1 ls . -a
+    ls: impossible d'accéder à -a: Aucun fichier ou
+        dossier de ce type
+    .vimrc .vim devel doc
+    \end{lstlisting}
 
     \incnote{normes2}
 \end{frame}
@@ -146,7 +274,7 @@
 %------------------------------------------------------------------------------
 % def1
 %------------------------------------------------------------------------------
-\begin{frame}{Ébauches de définitions}
+\begin{frame}{Définitions et propriétés}
     \subt{Le Kernel et système d'exploitation}
     \incnote{def1}
 \end{frame}
@@ -154,7 +282,7 @@
 %------------------------------------------------------------------------------
 % def2
 %------------------------------------------------------------------------------
-\begin{frame}{Ébauche de définitions}
+\begin{frame}{Définitions et propriétés}
     \subt{Dans le monde des systèmes embarqués...}
     \incnote{def2}
 \end{frame}
@@ -162,9 +290,17 @@
 %------------------------------------------------------------------------------
 % def3
 %------------------------------------------------------------------------------
-\begin{frame}{Ébauche de définitions}
+\begin{frame}{Définitions et propriétés}
     \subt{Dans le monde des systèmes embarqués...}
     \incnote{def3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def4
+%------------------------------------------------------------------------------
+\begin{frame}{Définitions et propriétés}
+    \subt{microcontrolleur vs microprocesseur}
+    \incnote{def4}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -172,7 +308,7 @@
 %------------------------------------------------------------------------------
 \begin{frame}{Quelques chiffres}
     \subt{Les systèmes embarqués sont partout!}
-    \incnote{chiffre1}
+    \incnote{chiffres1}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -234,7 +370,7 @@
 %------------------------------------------------------------------------------
 % linux1
 %------------------------------------------------------------------------------
-\begin{frame}{Et si on choisit Linux..}
+\begin{frame}{Et si on choisit Linux...}
     \subt{Avantages}
     \incnote{linux1}
 \end{frame}
@@ -242,7 +378,7 @@
 %------------------------------------------------------------------------------
 % linux2
 %------------------------------------------------------------------------------
-\begin{frame}{Et si on choisit Linux..}
+\begin{frame}{Et si on choisit Linux...}
     \subt{Avantages}
     \incnote{linux2}
 \end{frame}
@@ -250,9 +386,25 @@
 %------------------------------------------------------------------------------
 % linux3
 %------------------------------------------------------------------------------
-\begin{frame}{Et si on choisit Linux..}
+\begin{frame}{Et si on choisit Linux...}
     \subt{Inconvénients}
     \incnote{linux3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% hard1
+%------------------------------------------------------------------------------
+\begin{frame}{Aspect matériel}
+    \subt{Processeurs}
+    \incnote{hard1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% hard2
+%------------------------------------------------------------------------------
+\begin{frame}{Aspect matériel}
+    \subt{MMU}
+    \incnote{hard2}
 \end{frame}
 
 \end{document}
