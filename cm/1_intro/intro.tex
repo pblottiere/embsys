@@ -15,6 +15,7 @@
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
+\newcommand{\myhref}[1]{\href{#1}{\tt \scriptsize #1}}
 \newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
 
 %------------------------------------------------------------------------------
@@ -85,7 +86,7 @@
     \subt{}
 
     \bi
-        \itemsep8pt
+        \itemsep6pt
         \item Un peu d'histoire
         \item Les normes
         \item Logiciel Libre et Logiciel Open-Source
@@ -118,8 +119,8 @@
         \end{column}
         \begin{column}{0.45\textwidth}
             \centering
-            1969 : Space Travel par Ken Thompson \\
-            \vspace{20pt}
+            1969 : Space Travel/Unics par Ken Thompson \\
+            \vspace{10pt}
             \includegraphics[scale=0.6]{space-travel.png}
         \end{column}
     \end{columns}
@@ -209,7 +210,7 @@
 
     \vspace{10pt}
     \centering
-    \href{http://www.unix.org/version3/}{\tt \scriptsize http://www.unix.org/version3/}
+    \myhref{http://www.unix.org/version3/}
 
     \incnote{normes1}
 \end{frame}
@@ -231,14 +232,14 @@
     Sous GNU/Linux, les règles sont différentes!
 
     \vspace{10pt}
-    Conséquences sous GNU/Linux:
+    Conséquences sous une distribution Linux:
 
     \begin{lstlisting}
-    # ls -a .
+    > ls -a .
     .vimrc .vim devel doc
-    # ls . -a
+    > ls . -a
     .vimrc .vim devel doc
-    # POSIXLY_CORRECT=1 ls . -a
+    > POSIXLY_CORRECT=1 ls . -a
     ls: impossible d'accéder à -a: Aucun fichier ou
         dossier de ce type
     .vimrc .vim devel doc
@@ -248,18 +249,67 @@
 \end{frame}
 
 %------------------------------------------------------------------------------
-% opensource
+% opensource1
 %------------------------------------------------------------------------------
 \begin{frame}{Logiciel Libre et Logiciel Open Source}
     \subt{Question de philosophie...}
-    \incnote {opensource}
+    \vspace{20pt}
+
+    \bi
+    \item Logiciel Libre : code source ouvert et pouvant être modifié. Fond
+        philosophique => liberté des utilisateurs (Free as Freedom)!
+    \vspace{20pt}
+    \item Logiciel Open Source : code source ouvert et pouvant être modifié...
+          Fond pragmatique => efficacité, praticité!
+    \ei
+
+    \vspace{10pt}
+
+    \centering
+    \myhref{http://www.gnu.org/philosophy/free-software-for-freedom.fr.html}
+
+    \incnote {opensource1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% opensource2
+%------------------------------------------------------------------------------
+\begin{frame}{Logiciel Libre et Logiciel Open Source}
+    \subt{Origine des licences GPL et LGPL}
+    \vspace{15pt}
+
+    \vspace{5pt}
+    \begin{center}
+    1985 \\
+    \vspace{10pt}
+    \includegraphics[scale=0.5]{fsf.png}
+    \end{center}
+    \vspace{5pt}
+
+    Son but:
+    \bi
+    \itemsep12pt
+    \item protéger les utilisateurs contre les logiciels "privateurs"
+    \item élaborer des licences de distribution
+    \ei
+
+    \incnote{opensource2}
 \end{frame}
 
 %------------------------------------------------------------------------------
 % licences1
 %------------------------------------------------------------------------------
 \begin{frame}{Licences de distribution}
-    \subt{Copyleft, GPL, LGPL, ...}
+    \subt{Copyleft}
+    \vspace{20pt}
+
+    L'utilisateur refuse qu'une évolution quelconque de son travail soit
+    accompagnée d'une restriction!
+
+    \vspace{40pt}
+    \centering
+    \includegraphics[scale=0.25]{copyleft.png}
+
     \incnote {licences1}
 \end{frame}
 
@@ -267,15 +317,94 @@
 % licences2
 %------------------------------------------------------------------------------
 \begin{frame}{Licences de distribution}
+    \subt{GPL et LGPL}
+    \vspace{20pt}
+
+    Licence libre copyleft :
+    \bi
+    \item GPL : GNU General Public Licence. Édition de liens possible qu'avec du
+          code GPL! \myhref{http://www.gnu.org/licenses/gpl-3.0.fr.html}
+      \item LGPL : Lesser GPL. Édition de liens moins restrictive! \myhref{http://www.gnu.org/licenses/lgpl-3.0.fr.html}
+    \ei
+
+    \vspace{20pt}
+    Licence libre non copyleft :
+    \bi
+    \item BSD : les versions modifiées ne sont elles mêmes pas nécessairement
+          libres!
+    \item ...
+    \ei
+
+    \incnote {licences2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% licences3
+%------------------------------------------------------------------------------
+\begin{frame}[fragile]{Licences de distribution}
     \subt{Conséquences dans la vie courante...}
-    \incnote{licences2}
+    \vspace{15pt}
+
+    Examples de licences:
+    \bi
+    \itemsep6pt
+    \item nmap : GPL {\tt /usr/share/doc/nmap/copyright}
+    \item GNU C library : LGPL {\tt /usr/share/doc/libc6/copyright}
+    \ei
+    \vspace{20pt}
+
+    Debian et le DFSG (Debian Free Software Guideline) :
+    \bi
+    \item {\tt main} : paquets conforme au DFSG
+    \item {\tt contrib} : paquets conforme au DFSG mais avec des dépendances en
+        dehors du {\tt main}
+    \item {\tt non-free} : paquets non conforme au DFSG
+    \ei
+
+    \incnote{licences3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% licences4
+%------------------------------------------------------------------------------
+\begin{frame}[fragile]{Licences de distribution}
+    \subt{Conséquences dans la vie courante...}
+    \vspace{20pt}
+
+    VRMS (Virtual RMS) :
+    \vspace{15pt}
+    \begin{lstlisting}
+> vrms
+Contrib packages installed on multi
+flashplugin-nonfree            Adobe Flash Player
+1 contrib packages, 0.0% of 2877 installed packages
+    \end{lstlisting}
+
 \end{frame}
 
 %------------------------------------------------------------------------------
 % def1
 %------------------------------------------------------------------------------
 \begin{frame}{Définitions et propriétés}
-    \subt{Le Kernel et système d'exploitation}
+    \subt{Kernel et système d'exploitation}
+    \vspace{10pt}
+
+    Kernel :
+    \bi
+    \item noyau d'un système d'exploitation
+    \item gère les ressources matérielles
+    \item permet la communication entre composants logiciels/matériels
+    \item existe plusieurs architectures (voir cours suivant)
+    \ei
+
+    \vspace{10pt}
+    Système d'exploitation:
+    \bi
+    \item kernel + logiciels comme compilateur, shell, debuger, ...
+    \item couche d'abstraction par rapport au matériel
+    \item interface générique de programmation
+    \ei
+
     \incnote{def1}
 \end{frame}
 
@@ -284,6 +413,24 @@
 %------------------------------------------------------------------------------
 \begin{frame}{Définitions et propriétés}
     \subt{Dans le monde des systèmes embarqués...}
+    \vspace{5pt}
+
+    Système embarqué:
+    \bi
+    \itemsep4pt
+    \item composition d'une partie électronique et logicielle
+    \item souvent très limitée d'un point de vue ressources matérielles (CPU,
+          mémoire, ...)
+    \item autonome, durée de vie très longue (plus de 20ans pour les systèmes
+          militaires)
+    \item doit respecter des contraintes d'environnement (vibration, chaleur,
+          ...)
+    \ei
+
+    \vspace{5pt}
+    \centering
+    \includegraphics[scale=0.13]{ol-rasp.png}
+
     \incnote{def2}
 \end{frame}
 
@@ -291,7 +438,27 @@
 % def3
 %------------------------------------------------------------------------------
 \begin{frame}{Définitions et propriétés}
-    \subt{Dans le monde des systèmes embarqués...}
+    \subt{Dans le monde des systèmes embarqués}
+    \vspace{20pt}
+
+    Système d'exploitation embarqué:
+    \bi
+    \itemsep6pt
+    \item OS sur lequel un logiciel embarqué va être exécuté.
+    \item Contrainte forte par rapport à la consommation matérielle /
+          énergétique.
+    \item OS classique souvent inenvisageable
+    \ei
+    \vspace{10pt}
+
+    Système d'exploitation temps réel (vs temps partagé):
+    \bi
+    \itemsep6pt
+    \item garantit les temps de réponse (temps réel dur/mou, préemptivité du
+          Kernel, ...)
+    \item Voir le cours associé!
+    \ei
+
     \incnote{def3}
 \end{frame}
 
@@ -299,7 +466,57 @@
 % def4
 %------------------------------------------------------------------------------
 \begin{frame}{Définitions et propriétés}
-    \subt{microcontrolleur vs microprocesseur}
+    \subt{Dans le monde des systèmes embarqués}
+    \vspace{10pt}
+
+    Logiciel embarqué:
+    \bi
+    \itemsep6pt
+    \item logiciel intégré pour une application dédiée
+    \item un bon logiciel embarqué est un logiciel dont on oubli l'existence!
+    \ei
+
+    \vspace{10pt}
+    Linux embarqué
+    \bi
+    \itemsep6pt
+    \item Kernel Linux + composants open-source
+    \item construit sur mesure par rapport aux besoins
+    \ei
+
+    \vspace{10pt}
+    \centering
+    \includegraphics[scale=0.8]{linux-embedded.png}
+
+    \incnote{def4}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def5
+%------------------------------------------------------------------------------
+\begin{frame}{Définitions et propriétés}
+    \subt{Rappels : microcontrôlleur vs microprocesseur}
+    \vspace{10pt}
+
+    Microprocesseur:
+    \bi
+    \itemsep6pt
+    \item séquenceur
+    \item unité arithmétique et logique (UAL)
+    \item registre
+    \item unité d'entrée sortie (analogique)
+    \ei
+
+    \vspace{10pt}
+    Microcontrôlleur:
+    \bi
+    \itemsep6pt
+    \item microprocesseur peu puissant (fréquence d'horloge faible, largeur des
+          registres restreinte : 4 bits/8bits contre 32 bits/64bits, ...)
+    \item mémoire intégrée
+    \item entrées/sorties analogiques et numériques
+    \ei
+
     \incnote{def4}
 \end{frame}
 
@@ -405,6 +622,13 @@
 \begin{frame}{Aspect matériel}
     \subt{MMU}
     \incnote{hard2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ref
+%------------------------------------------------------------------------------
+\begin{frame}{Références}
+
 \end{frame}
 
 \end{document}
