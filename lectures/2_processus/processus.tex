@@ -1,0 +1,107 @@
+\documentclass[12pt,t]{beamer}
+
+%------------------------------------------------------------------------------
+% configuration
+%------------------------------------------------------------------------------
+\RequirePackage{etex}
+\usepackage{../../themes/dbt}
+\usepackage{catchfilebetweentags}
+
+\setbeameroption{hide notes}
+
+\graphicspath{{images/}}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\myhref}[1]{\href{#1}{\tt \scriptsize #1}}
+\newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
+
+%------------------------------------------------------------------------------
+% title
+%------------------------------------------------------------------------------
+% slide
+\title{Systèmes d'exploitation pour l'embarqué}
+\subtitle{UV 5.2 - Exécution et Concurrence}
+
+\author{\href{}{Paul Blottière}}
+\institute{
+    \href{http://www.ensta-bretagne.fr/}{ENSTA Bretagne} \\[2pt]
+    \href{}{\tt \scriptsize 10 Novembre 2015}
+}
+\date{
+    \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere} \\[2pt]
+    \href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
+}
+
+% info
+\begin{document}
+
+{
+\setbeamertemplate{footline}{} % no page number here
+\frame{
+    \titlepage
+    \incnote{title}
+} }
+
+%------------------------------------------------------------------------------
+% plan
+%------------------------------------------------------------------------------
+\begin{frame}{Plan}
+    \subt{}
+    \vspace{20pt}
+
+    \bi
+        \itemsep12pt
+        \item Définitions
+        \item Les commandes utiles
+        \item Identification (PID, ...)
+        \item Création de processus
+        \item Phase d'init
+        \item Terminaison, signaux et fichier core
+        \item Les threads
+    \ei
+
+    \note {
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def1
+%------------------------------------------------------------------------------
+\begin{frame}{Définition (1)}
+    \subt{Programme et Processus}
+    \vspace{20pt}
+
+    \incnote{def1}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def2
+%------------------------------------------------------------------------------
+\begin{frame}{Définition (2)}
+    \subt{Process Control Block}
+    \vspace{20pt}
+
+    \incnote{def2}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% def3
+%------------------------------------------------------------------------------
+\begin{frame}{Définition (3)}
+    \subt{États}
+    \vspace{20pt}
+
+    \incnote{def3}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% cmd1
+%------------------------------------------------------------------------------
+\begin{frame}{Les commandes utiles (1)}
+    \subt{}
+\end{frame}
+
+\end{document}
