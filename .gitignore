@@ -2,7 +2,8 @@
 /keyrings/live/pubring.gpg~
 /keyrings/live/pubring.kbx~
 /keyrings/live/secring.gpg
-/cm/1_intro/notes.tex
+notes.tex
+lectures/full/full_content.tex
 
 # tex
 *.aux
@@ -13,4 +14,3 @@
 *.pdf
 *.snm
 *.toc
-/lectures/2_processus/notes.tex

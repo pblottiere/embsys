@@ -1,0 +1,75 @@
+\documentclass[12pt,t]{beamer}
+
+%------------------------------------------------------------------------------
+% configuration
+%------------------------------------------------------------------------------
+\RequirePackage{etex}
+\usepackage{../../themes/dbt}
+\usepackage{catchfilebetweentags}
+
+\setbeameroption{hide notes}
+
+\graphicspath{{images/}{../1_intro/images/}{../2_processus/images/}}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\myhref}[1]{\href{#1}{\tt \scriptsize #1}}
+
+%------------------------------------------------------------------------------
+% title
+%------------------------------------------------------------------------------
+% slide
+\title{Systèmes d'exploitation pour l'embarqué}
+\subtitle{UV 5.2 - Exécution et Concurrence}
+
+\author{\href{}{Paul Blottière}}
+\institute{
+    \href{http://www.ensta-bretagne.fr/}{ENSTA Bretagne} \\[2pt]
+    \href{}{\tt \scriptsize 10 Novembre 2015}
+}
+\date{
+    \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere} \\[2pt]
+    %\href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
+}
+
+% info
+\begin{document}
+
+{
+\setbeamertemplate{footline}{} % no page number here
+\frame{
+    \titlepage
+} }
+
+%------------------------------------------------------------------------------
+% amélioration continue
+%------------------------------------------------------------------------------
+\begin{frame}{Amélioration continue}
+    \subt{Contributions}
+    \vspace{12pt}
+
+    \begin{center}
+    \includegraphics[scale=0.7]{github.png}
+    \end{center}
+
+    \bi
+    \itemsep12pt
+    \item Dépôt du cours : \href{https://github.com/pblottiere/embsys}{\tt \scriptsize https://github.com/pblottiere/embsys}
+    \item Souhaits d'amélioration, erreurs, idées de TP, ... : ouverture d'Issues (avec le bon label!)
+    \item Apports de corrections : Pull Request
+    \ei
+\end{frame}
+
+%------------------------------------------------------------------------------
+% lecture1
+%------------------------------------------------------------------------------
+%include[../1_intro/intro.tex][lecture_content]
+
+%------------------------------------------------------------------------------
+% lecture2
+%------------------------------------------------------------------------------
+%include[../2_processus/processus.tex][lecture_content]
+
+\end{document}

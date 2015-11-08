@@ -32,7 +32,7 @@
 }
 \date{
     \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere} \\[2pt]
-    \href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
+    %\href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
 }
 
 % info
@@ -46,22 +46,50 @@
 } }
 
 %------------------------------------------------------------------------------
+% amélioration continue
+%------------------------------------------------------------------------------
+\begin{frame}{Amélioration continue}
+    \subt{Contributions}
+    \vspace{12pt}
+
+    \begin{center}
+    \includegraphics[scale=0.7]{github.png}
+    \end{center}
+
+    \bi
+    \itemsep12pt
+    \item Dépôt du cours : \href{https://github.com/pblottiere/embsys}{\tt \scriptsize https://github.com/pblottiere/embsys}
+    \item Souhaits d'amélioration, erreurs, idées de TP, ... : ouverture d'Issues (avec le bon label!)
+    \item Apports de corrections : Pull Request
+    \ei
+\end{frame}
+
+%<**lecture_content>
+%------------------------------------------------------------------------------
+% lecture
+%------------------------------------------------------------------------------
+\begin{frame}[plain,c]
+    \centering
+    \huge\textcolor{title}{Les processus et les threads}
+\end{frame}
+
+%------------------------------------------------------------------------------
 % plan
 %------------------------------------------------------------------------------
 \begin{frame}{Plan}
     \subt{}
-    \vspace{20pt}
+    \vspace{10pt}
 
     \begin{enumerate}
         \itemsep12pt
         \item Définitions
         \item Outils d'analyse
         \item Identification (PID, ...)
-        \item Capacités
+        \item Capacités d'un processus
         \item Création de processus
         \item Phase d'init
-        \item Terminaison, signaux et fichier core
-        \item Les threads
+        \item Terminaison d'un processus
+        \item Les pthreads
     \end{enumerate}
 
     \note {
@@ -242,7 +270,7 @@
 %------------------------------------------------------------------------------
 % end1
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (1)}
+\begin{frame}{Terminaison d'un processus (1)}
     \subt{Généralité}
     \incnote{end1}
 \end{frame}
@@ -250,7 +278,7 @@
 %------------------------------------------------------------------------------
 % end2
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (2)}
+\begin{frame}{Terminaison d'un processus (2)}
     \subt{Tout va bien, je vais bien...}
     \incnote{end2}
 \end{frame}
@@ -258,7 +286,7 @@
 %------------------------------------------------------------------------------
 % end3
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (3)}
+\begin{frame}{Terminaison d'un processus (3)}
     \subt{Terminaison anormale}
     \incnote{end3}
 \end{frame}
@@ -266,7 +294,7 @@
 %------------------------------------------------------------------------------
 % end4
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (4)}
+\begin{frame}{Terminaison d'un processus (4)}
     \subt{Signaux}
     \incnote{end4}
 \end{frame}
@@ -274,7 +302,7 @@
 %------------------------------------------------------------------------------
 % end5
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (5)}
+\begin{frame}{Terminaison d'un processus (5)}
     \subt{Signaux}
     \incnote{end5}
 \end{frame}
@@ -282,7 +310,7 @@
 %------------------------------------------------------------------------------
 % end6
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (6)}
+\begin{frame}{Terminaison d'un processus (6)}
     \subt{Signaux}
     \incnote{end6}
 \end{frame}
@@ -290,7 +318,7 @@
 %------------------------------------------------------------------------------
 % end7
 %------------------------------------------------------------------------------
-\begin{frame}{Terminaison d'un programme (7)}
+\begin{frame}{Terminaison d'un processus (7)}
     \subt{Signaux}
     \incnote{end7}
 \end{frame}
@@ -298,7 +326,7 @@
 %------------------------------------------------------------------------------
 % pthread1
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (1)}
+\begin{frame}{Les pthreads (1)}
     \subt{Présentation}
     \incnote{pthread1}
 \end{frame}
@@ -306,7 +334,7 @@
 %------------------------------------------------------------------------------
 % pthread2
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (2)}
+\begin{frame}{Les pthreads (2)}
     \subt{NTPL}
     \incnote{pthread2}
 \end{frame}
@@ -314,7 +342,7 @@
 %------------------------------------------------------------------------------
 % pthread3
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (3)}
+\begin{frame}{Les pthreads (3)}
     \subt{Création et identification}
     \incnote{pthread3}
 \end{frame}
@@ -322,7 +350,7 @@
 %------------------------------------------------------------------------------
 % pthread4
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (4)}
+\begin{frame}{Les pthreads (4)}
     \subt{Application}
     \incnote{pthread4}
 \end{frame}
@@ -330,7 +358,7 @@
 %------------------------------------------------------------------------------
 % pthread5
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (5)}
+\begin{frame}{Les pthreads (5)}
     \subt{Terminaison}
     \incnote{pthread5}
 \end{frame}
@@ -338,7 +366,7 @@
 %------------------------------------------------------------------------------
 % pthread6
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (6)}
+\begin{frame}{Les pthreads (6)}
     \subt{join}
     \incnote{pthread6}
 \end{frame}
@@ -346,7 +374,7 @@
 %------------------------------------------------------------------------------
 % pthread7
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (7)}
+\begin{frame}{Les pthreads (7)}
     \subt{Nombre maximum de threads}
     \incnote{pthread7}
 \end{frame}
@@ -354,7 +382,7 @@
 %------------------------------------------------------------------------------
 % pthread8
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (8)}
+\begin{frame}{Les pthreads (8)}
     \subt{detach}
     \incnote{pthread8}
 \end{frame}
@@ -362,7 +390,7 @@
 %------------------------------------------------------------------------------
 % pthread9
 %------------------------------------------------------------------------------
-\begin{frame}{Les PThreads (9)}
+\begin{frame}{Les pthreads (9)}
     \subt{Thread Safety et \_REENTRANT}
     \incnote{pthread9}
 \end{frame}
@@ -384,9 +412,24 @@
 \end{frame}
 
 %------------------------------------------------------------------------------
+% pthread12
+%------------------------------------------------------------------------------
+\begin{frame}{Les pthreads (12)}
+    \subt{Programmation avancée}
+    \incnote{pthread12}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% conclusion
+%------------------------------------------------------------------------------
+\begin{frame}{Conclusion}
+\end{frame}
+
+%------------------------------------------------------------------------------
 % ref
 %------------------------------------------------------------------------------
 \begin{frame}{Références}
 \end{frame}
+%<//lecture_content>
 
 \end{document}

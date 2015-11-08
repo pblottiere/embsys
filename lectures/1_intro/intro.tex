@@ -32,7 +32,7 @@
 }
 \date{
     \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere} \\ [2pt]
-    \href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
+    %\href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
 }
 
 % info
@@ -59,8 +59,8 @@
     \bi
     \itemsep12pt
     \item Dépôt du cours : \href{https://github.com/pblottiere/embsys}{\tt \scriptsize https://github.com/pblottiere/embsys}
-    \item Souhaits d'amélioration, erreurs, ... : ouverture d'issues (avec le bon tag!)
-    \item Apports de correction : Pull Request
+    \item Souhaits d'amélioration, erreurs, idées de TP, ... : ouverture d'Issues (avec le bon label!)
+    \item Apports de corrections : Pull Request
     \ei
 \end{frame}
 
@@ -68,24 +68,36 @@
 % organisation
 %------------------------------------------------------------------------------
 \begin{frame}{Organisation}
+    \subt{Volume horaire : 35 heures}
     \vspace{12pt}
 
+    9 cours :
     \bi
-        \itemsep12pt
-        \item 9 CM
-        \item 6 TE
-        \item 2 BE
+    \itemsep12pt
+    \item Introduction, Généralités
+    \item Programmation Système
+    \item Linux embarqué
+    \ei
+
+    \vspace{12pt}
+    Le reste : des travaux pratiques
+    \vspace{12pt}
+    \bi
+    \itemsep12pt
+    \item Programmation sous Linux
+    \item Utilisation d'outils pour l'embarqué : Armadeus APF28
     \ei
 
     \incnote{organisation}
 \end{frame}
 
+%<**lecture_content>
 %------------------------------------------------------------------------------
 % lecture
 %------------------------------------------------------------------------------
 \begin{frame}[plain,c]
     \centering
-    Introduction
+    \huge\textcolor{title}{Introduction}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -94,19 +106,21 @@
 \begin{frame}{Plan}
     \subt{}
 
-    \bi
-        \itemsep6pt
+    \begin{enumerate}
+        \itemsep4pt
         \item Un peu d'histoire
         \item Les normes
         \item Logiciel Libre et Logiciel Open-Source
         \item Licences de distribution
         \item Définitions et propriétés
-        \item Architectures matérielles
         \item Quelques chiffres
-        \item Les OS embarqués existant
+        \item Les OS embarqués existants
         \item Comment choisir?
-        \item Et si on choisit Linux?
-    \ei
+        \item Et si on choisit Linux...
+        \item Aspects matériels
+        \item Conclusion
+        \item Références
+        \end{enumerate}
 
     \note {
     }
@@ -115,7 +129,7 @@
 %------------------------------------------------------------------------------
 % histoire1
 %------------------------------------------------------------------------------
-\begin{frame}{Un peu d'histoire}
+\begin{frame}{Un peu d'histoire (1)}
     \subt{Le premier jeu vidéo}
     \vspace{20pt}
 
@@ -140,7 +154,7 @@
 %------------------------------------------------------------------------------
 % histoire2
 %------------------------------------------------------------------------------
-\begin{frame}{Un peu d'histoire}
+\begin{frame}{Un peu d'histoire (2)}
     \subt{La naissance du langage C}
     \vspace{30pt}
 
@@ -165,7 +179,7 @@
 %------------------------------------------------------------------------------
 % histoire3
 %------------------------------------------------------------------------------
-\begin{frame}{Un peu d'histoire}
+\begin{frame}{Un peu d'histoire (3)}
     \subt{Un hobby devenu célèbre}
     \vspace{30pt}
 
@@ -190,7 +204,7 @@
 %------------------------------------------------------------------------------
 % histoire4
 %------------------------------------------------------------------------------
-\begin{frame}{Un peu d'histoire}
+\begin{frame}{Un peu d'histoire (4)}
     \subt{De nos jours}
     \vspace{5pt}
 
@@ -202,8 +216,8 @@
 %------------------------------------------------------------------------------
 % normes1
 %------------------------------------------------------------------------------
-\begin{frame}{Les normes}
-    \subt{SUSv3}
+\begin{frame}{Les normes (1)}
+    \subt{SUSv4}
     \vspace{20pt}
 
     Des normes sont nécessaires pour assurer une compatibilité des logiciels
@@ -211,15 +225,15 @@
     \vspace{10pt}
     \bi
     \itemsep12pt
-    \item 1988 : Portable Operating System Interface (POSIX). Plusieurs versions : 1,
-                 1.b, 1.c
-      \item 1997 : UNIX98 ou Single UNIX Specification V2
-    \item Standard actuel : SUS V3 (fusion entre POSIX et UNIX98)
+    \item 1988 : Portable Operating System Interface (POSIX). Plusieurs
+          versions : 1, 1.b, 1.c
+    \item 1997 : UNIX98 ou Single UNIX Specification V2
+    \item Standard actuel : SUSv4 (fusion entre POSIX et UNIX98)
     \ei
 
     \vspace{10pt}
     \centering
-    \myhref{http://www.unix.org/version3/}
+    \myhref{http://www.unix.org/version4/}
 
     \incnote{normes1}
 \end{frame}
@@ -227,7 +241,7 @@
 %------------------------------------------------------------------------------
 % normes2
 %------------------------------------------------------------------------------
-\begin{frame}[fragile]{Les normes}
+\begin{frame}[fragile]{Les normes (2)}
     \subt{POSIXLY\_CORRECT SIR!}
     \vspace{10pt}
 
@@ -260,7 +274,7 @@
 %------------------------------------------------------------------------------
 % opensource1
 %------------------------------------------------------------------------------
-\begin{frame}{Logiciel Libre et Logiciel Open Source}
+\begin{frame}{Logiciel Libre et Logiciel Open Source (1)}
     \subt{Question de philosophie...}
     \vspace{20pt}
 
@@ -283,7 +297,7 @@
 %------------------------------------------------------------------------------
 % opensource2
 %------------------------------------------------------------------------------
-\begin{frame}{Logiciel Libre et Logiciel Open Source}
+\begin{frame}{Logiciel Libre et Logiciel Open Source (2)}
     \subt{Origine des licences GPL et LGPL}
     \vspace{15pt}
 
@@ -308,7 +322,7 @@
 %------------------------------------------------------------------------------
 % licences1
 %------------------------------------------------------------------------------
-\begin{frame}{Licences de distribution}
+\begin{frame}{Licences de distribution (1)}
     \subt{Copyleft}
     \vspace{20pt}
 
@@ -325,7 +339,7 @@
 %------------------------------------------------------------------------------
 % licences2
 %------------------------------------------------------------------------------
-\begin{frame}{Licences de distribution}
+\begin{frame}{Licences de distribution (2)}
     \subt{GPL et LGPL}
     \vspace{20pt}
 
@@ -350,7 +364,7 @@
 %------------------------------------------------------------------------------
 % licences3
 %------------------------------------------------------------------------------
-\begin{frame}[fragile]{Licences de distribution}
+\begin{frame}[fragile]{Licences de distribution (3)}
     \subt{Conséquences dans la vie courante...}
     \vspace{15pt}
 
@@ -376,7 +390,7 @@
 %------------------------------------------------------------------------------
 % licences4
 %------------------------------------------------------------------------------
-\begin{frame}[fragile]{Licences de distribution}
+\begin{frame}[fragile]{Licences de distribution (4)}
     \subt{Conséquences dans la vie courante...}
     \vspace{20pt}
 
@@ -394,7 +408,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % def1
 %------------------------------------------------------------------------------
-\begin{frame}{Définitions et propriétés}
+\begin{frame}{Définitions et propriétés (1)}
     \subt{Kernel et système d'exploitation}
     \vspace{10pt}
 
@@ -420,7 +434,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % def2
 %------------------------------------------------------------------------------
-\begin{frame}{Définitions et propriétés}
+\begin{frame}{Définitions et propriétés (2)}
     \subt{Dans le monde des systèmes embarqués...}
     \vspace{5pt}
 
@@ -446,7 +460,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % def3
 %------------------------------------------------------------------------------
-\begin{frame}{Définitions et propriétés}
+\begin{frame}{Définitions et propriétés (3)}
     \subt{Dans le monde des systèmes embarqués}
     \vspace{20pt}
 
@@ -474,7 +488,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % def4
 %------------------------------------------------------------------------------
-\begin{frame}{Définitions et propriétés}
+\begin{frame}{Définitions et propriétés (4)}
     \subt{Dans le monde des systèmes embarqués}
     \vspace{10pt}
 
@@ -503,7 +517,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % def5
 %------------------------------------------------------------------------------
-\begin{frame}{Définitions et propriétés}
+\begin{frame}{Définitions et propriétés (5)}
     \subt{Rappels : microcontrôlleur vs microprocesseur}
     \vspace{10pt}
 
@@ -532,7 +546,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % chiffres1
 %------------------------------------------------------------------------------
-\begin{frame}{Quelques chiffres}
+\begin{frame}{Quelques chiffres (1)}
     \subt{Les systèmes embarqués sont partout!}
     \incnote{chiffres1}
 \end{frame}
@@ -540,7 +554,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % chiffres2
 %------------------------------------------------------------------------------
-\begin{frame}{Quelques chiffres}
+\begin{frame}{Quelques chiffres (2)}
     \subt{Soutien des états}
     \incnote{chiffres2}
 \end{frame}
@@ -548,7 +562,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % chiffres3
 %------------------------------------------------------------------------------
-\begin{frame}{Quelques chiffres}
+\begin{frame}{Quelques chiffres (3)}
     \subt{Répartition du Chiffre d'Affaires}
     \incnote{chiffres3}
 \end{frame}
@@ -556,7 +570,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % chiffres4
 %------------------------------------------------------------------------------
-\begin{frame}{Quelques chiffres}
+\begin{frame}{Quelques chiffres (4)}
     \subt{Répartition des effectifs}
     \incnote{chiffres4}
 \end{frame}
@@ -564,7 +578,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % embos1
 %------------------------------------------------------------------------------
-\begin{frame}{Les OS embarqués existant}
+\begin{frame}{Les OS embarqués existants (1)}
     \subt{Sans base Linux}
     \incnote{embos1}
 \end{frame}
@@ -572,7 +586,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % embos2
 %------------------------------------------------------------------------------
-\begin{frame}{Les OS embarqués existant}
+\begin{frame}{Les OS embarqués existants (2)}
     \subt{A base de Linux}
     \incnote{embos2}
 \end{frame}
@@ -580,7 +594,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % choice1
 %------------------------------------------------------------------------------
-\begin{frame}{Comment choisir?!}
+\begin{frame}{Comment choisir?! (1)}
     \subt{Systèmes propriétaires ?}
     \incnote{choice1}
 \end{frame}
@@ -588,7 +602,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % choice2
 %------------------------------------------------------------------------------
-\begin{frame}{Comment choisir?}
+\begin{frame}{Comment choisir? (2)}
     \subt{Systèmes Open Source?}
     \incnote{choice2}
 \end{frame}
@@ -596,7 +610,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % linux1
 %------------------------------------------------------------------------------
-\begin{frame}{Et si on choisit Linux...}
+\begin{frame}{Et si on choisit Linux... (1)}
     \subt{Avantages}
     \incnote{linux1}
 \end{frame}
@@ -604,7 +618,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % linux2
 %------------------------------------------------------------------------------
-\begin{frame}{Et si on choisit Linux...}
+\begin{frame}{Et si on choisit Linux... (2)}
     \subt{Avantages}
     \incnote{linux2}
 \end{frame}
@@ -612,7 +626,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % linux3
 %------------------------------------------------------------------------------
-\begin{frame}{Et si on choisit Linux...}
+\begin{frame}{Et si on choisit Linux... (3)}
     \subt{Inconvénients}
     \incnote{linux3}
 \end{frame}
@@ -620,7 +634,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % hard1
 %------------------------------------------------------------------------------
-\begin{frame}{Aspect matériel}
+\begin{frame}{Aspects matériels (1)}
     \subt{Processeurs}
     \incnote{hard1}
 \end{frame}
@@ -628,7 +642,7 @@ flashplugin-nonfree            Adobe Flash Player
 %------------------------------------------------------------------------------
 % hard2
 %------------------------------------------------------------------------------
-\begin{frame}{Aspect matériel}
+\begin{frame}{Aspects matériels (2)}
     \subt{MMU}
     \incnote{hard2}
 \end{frame}
@@ -648,5 +662,6 @@ Linux, c'est bien!
 \begin{frame}{Références}
 
 \end{frame}
+%<//lecture_content>
 
 \end{document}
