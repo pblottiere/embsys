@@ -1,7 +1,7 @@
 # EMBSYS
 
-This repository store my lectures on Linux Embedded with some reminders in
-system programming.
+This repository store my lectures on Linux for embedded systems with some
+reminders in system programming.
 
 ## Lectures
 
