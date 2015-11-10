@@ -430,10 +430,17 @@
 %------------------------------------------------------------------------------
 % ident2
 %------------------------------------------------------------------------------
-\begin{frame}{Identification (2)}
-    \subt{PID et PPID}
+\begin{frame}[fragile]{Identification (2)}
+    \subt{PID et PPID (pid.c)}
 
-    TODO : exemple avec shell comme père
+    \lstinputlisting[label=samplecode]{code/pid.c}
+
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.6]{pid.png}
+    \end{figure}
+
+    \incnote{ident2}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -527,7 +534,12 @@
     \item a un cout très faible en ressources (mécanisme COW)
     \ei
 
-    TODO : exemple!
+    \onslide<2->{
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.7]{fork.png}
+        \end{figure}
+    }
 
     \incnote{crea1}
 \end{frame}
@@ -536,6 +548,16 @@
 % crea2
 %------------------------------------------------------------------------------
 \begin{frame}{Création de processus (2)}
+    \subt{fork (fork.c)}
+
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/fork.c}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% crea3
+%------------------------------------------------------------------------------
+\begin{frame}{Création de processus (3)}
     \subt{vfork}
     \vspace{10pt}
 
@@ -555,13 +577,13 @@
         => relevé dans un audit de sécurité de Linux en 2000!
     }
 
-    \incnote{crea2}
+    \incnote{crea3}
 \end{frame}
 
 %------------------------------------------------------------------------------
-% crea3
+% crea4
 %------------------------------------------------------------------------------
-\begin{frame}{Création de processus (3)}
+\begin{frame}{Création de processus (4)}
     \subt{clone, execve, system, popen, ...}
 
     \vspace{20pt}
@@ -570,11 +592,11 @@
     \itemsep12pt
     \item {\textbf{clone}} : paramétrage précis du comportement du fils
     \item {\textbf{execve}} : espace mémoire totalement remplacé
-    \item {\textbf{system}} : exécute une commande shell (à bannir sûr...)
+    \item {\textbf{system}} : exécute une commande shell (à bannir bien sûr...)
     \item {\textbf{popen / pclose}} : pipe + fork + invocation dans le shell (idem)
     \ei
 
-    \incnote{crea3}
+    \incnote{crea4}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -607,25 +629,32 @@
 \begin{frame}{Terminaison d'un processus (1)}
     \subt{Généralité}
 
-    \vspace{5pt}
+    \vspace{8pt}
     Un processus peut se terminer :
     \bi
     \item volontairement : tâche terminée, erreur gérée, ...
     \item involontairement : erreur non gérée, Ctrl-C, ...
     \ei
 
-    \vspace{5pt}
-    Un processus retourne un code d'erreur. Pour être portable :
-    \bi
-    \itemsep12pt
-    \item un main doit toujours retourner un {\textbf{int}}!
-    \item utiliser EXIT\_SUCCESS et EXIT\_FAILURE
-    \ei
+    \onslide<2->{
+        \vspace{8pt}
+        Un processus retourne un code d'erreur. Pour être portable :
+        \bi
+        \itemsep12pt
+        \item un main doit toujours retourner un {\textbf{int}}!
+        \item utiliser EXIT\_SUCCESS et EXIT\_FAILURE
+        \ei
+    }
 
-    \vspace{5pt}
-    Ce code d'erreur est ensuite lu par le père :
+    \onslide<3-> {
+        \vspace{8pt}
+        Ce code d'erreur est ensuite lu par le père :
 
-    EXEMPLE TODO
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.6]{code_retour.png}
+        \end{figure}
+    }
 
     \incnote{end1}
 \end{frame}
@@ -736,9 +765,12 @@ core
 % end5
 %------------------------------------------------------------------------------
 \begin{frame}{Terminaison d'un processus (5)}
-    \subt{Signaux}
+    \subt{Signaux (signals.c)}
 
-    TODO!!
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.55]{signals.png}
+    \end{figure}
 
     \incnote{end5}
 \end{frame}
@@ -749,15 +781,22 @@ core
 \begin{frame}{Terminaison d'un processus (6)}
     \subt{Signaux}
 
-    \vspace{20pt}
+    \vspace{10pt}
     Pour gérer les signaux, deux méthodes :
     \vspace{10pt}
     \bi
-    \itemsep15pt
+    \itemsep8pt
     \item {\textbf{signal}} : très simple, défini par Ansi C et SUSv4 mais peut
-          avoir des problèmes de portabilité entre système UNIX
+          avoir des problèmes de portabilité entre systèmes UNIX
     \item {\textbf{sigaction}} : plus complexe mais complètement portable!
     \ei
+
+    \onslide<2->{
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.55]{sigaction.png}
+        \end{figure}
+    }
 
     \incnote{end6}
 \end{frame}
@@ -766,9 +805,9 @@ core
 % end7
 %------------------------------------------------------------------------------
 \begin{frame}{Terminaison d'un processus (7)}
-    \subt{Signaux}
+    \subt{Signaux (sigaction.c)}
 
-    Exemple!
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/sigaction.c}
 
     \incnote{end7}
 \end{frame}
@@ -779,6 +818,7 @@ core
 \begin{frame}{Les pthreads (1)}
     \subt{Présentation}
 
+    \vspace{15pt}
     \begin{figure}
         \centering
         \includegraphics[scale=0.4]{thread.png}
@@ -796,12 +836,18 @@ core
 \begin{frame}{Les pthreads (2)}
     \subt{NTPL}
 
+    \vspace{20pt}
     Les pthreads sont intégrés dans le Kernel Linux depuis la version 2.6 via
     la bibliothèque Native Posix Thread Library (NTPL).
 
-    Pour utiliser les threads de la NTPL :
-
-    TODO : code + gcc link
+    \onslide<2->{
+        \vspace{20pt}
+        Pour utiliser les threads de la NTPL :
+        \bi
+        \item \#include <pthread.h>
+        \item gcc -pthread
+        \ei
+    }
 
     \incnote{pthread2}
 \end{frame}
@@ -811,7 +857,7 @@ core
 %------------------------------------------------------------------------------
 \begin{frame}[fragile]{Les pthreads (3)}
     \subt{Création et identification}
-    \vspace{15pt}
+    \vspace{10pt}
 
     Identifiant :
     \bi
@@ -820,9 +866,9 @@ core
     \item d'un thread : pthread\_t
     \ei
 
-    \vspace{20pt}
-    Pour la création d'un pthread :
     \vspace{10pt}
+    Pour la création d'un pthread :
+    \vspace{5pt}
     %\lstcreate
     \begin{lstlisting}
 int pthread_create(pthread_t * thread,
@@ -831,6 +877,14 @@ int pthread_create(pthread_t * thread,
                    void * argument)
     \end{lstlisting}
 
+    \onslide<2->{
+        \vspace{10pt}
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.7]{thread2.png}
+        \end{figure}
+    }
+
     \incnote{pthread3}
 \end{frame}
 
@@ -838,7 +892,10 @@ int pthread_create(pthread_t * thread,
 % pthread4
 %------------------------------------------------------------------------------
 \begin{frame}{Les pthreads (4)}
-    \subt{Application}
+    \subt{Application (thread.c)}
+
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/thread.c}
+
     \incnote{pthread4}
 \end{frame}
 
@@ -885,8 +942,10 @@ int pthread_create(pthread_t * thread,
     \onslide<2-> {
         \vspace{15pt}
         Un processus a un espace mémoire limité donc ???
+    }
 
-        \vspace{15pt}
+    \vspace{15pt}
+    \onslide<3-> {
         => comme un thread stocke sa valeur de retour dans la pile, un processus
         peut instancier seulement un nombre limité de thread!
     }
@@ -898,9 +957,14 @@ int pthread_create(pthread_t * thread,
 % pthread7
 %------------------------------------------------------------------------------
 \begin{frame}{Les pthreads (7)}
-    \subt{Nombre maximum de threads}
+    \subt{Nombre maximum de threads (maxthread.c)}
 
-    EXAMPLE TODO
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/maxthread.c}
+
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.6]{maxthread.png}
+    \end{figure}
 
     \incnote{pthread7}
 \end{frame}
@@ -909,16 +973,21 @@ int pthread_create(pthread_t * thread,
 % pthread8
 %------------------------------------------------------------------------------
 \begin{frame}{Les pthreads (8)}
-    \subt{detach}
+    \subt{detach (unlthread.c)}
 
     \vspace{20pt}
     Pour indiquer au kernel de ne pas stocker les valeurs de retours dans la pile,
     on peut utiliser {\textbf{pthread\_detach}}.
 
-    \vspace{20pt}
-    => un processus peut alors créer un nombre illimité de thread!
+    \onslide<2->{
+        \vspace{20pt}
+        => un processus peut alors créer un nombre illimité de thread!
 
-    EXAMPLE
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.6]{unlthread.png}
+        \end{figure}
+    }
 
     \incnote{pthread8}
 \end{frame}
@@ -935,15 +1004,17 @@ int pthread_create(pthread_t * thread,
     au sein d'un même espace mémoire.
 
     \onslide<2-> {
-        EXAMPLE SORTIE gcc -pthread
-
         \vspace{10pt}
         L'option -D\_REENTRANT indique au compilateur que les fonctions peuvent
-        être utilisée simultanément (évite la duplication en RAM).
+        être utilisées simultanément (évite la duplication en RAM).
+
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.6]{reent.png}
+        \end{figure}
     }
 
     \onslide<3-> {
-        \vspace{10pt}
             Une fonction réentrante n'est pas forcément Thread Safe. \\
             => des mécanismes d'exclusion mutuelle sont nécessaires dû au
             caractère préemptif du Kernel!

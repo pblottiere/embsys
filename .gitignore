@@ -3,7 +3,15 @@
 /keyrings/live/pubring.kbx~
 /keyrings/live/secring.gpg
 notes.tex
+
 lectures/full/full_content.tex
+lectures/2_processus/code/pid
+lectures/2_processus/code/fork
+lectures/2_processus/code/signals
+lectures/2_processus/code/sigaction
+lectures/2_processus/code/thread
+lectures/2_processus/code/maxthread
+lectures/2_processus/code/unlthread
 
 # tex
 *.aux
