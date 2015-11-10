@@ -19,6 +19,5 @@ lectures/2_processus/code/unlthread
 *.log
 *.nav
 *.out
-*.pdf
 *.snm
 *.toc
