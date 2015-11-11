@@ -4,22 +4,44 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-#include <sys/ioctl.h>
 
-//=============================================================================
-// main
-//=============================================================================
-int main()
+//-----------------------------------------------------------------------------
+int main(int argc, char *argv [])
 {
-    int fd = open("/dev/pts/0", O_RDWR | O_NOCTTY);
-    ioctl(fd, TIOCSCTTY, 0);
+    char * port;
 
+    // parse comand line
+    if (argc != 3)
+    {
+        fprintf(stderr, "Invalid usage: reader -p port_name\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char * options = "p:";
+    int option;
+    while((option = getopt(argc, argv, options)) != -1)
+    {
+        switch(option)
+        {
+            case 'p':
+                port = optarg;
+                break;
+
+            case '?':
+                fprintf(stderr, "Invalid option %c\n", optopt);
+                exit(EXIT_FAILURE);
+        }
+    }
+
+    // open serial port
+    int fd = open(port, O_RDWR | O_NOCTTY);
     if (fd == -1)
     {
         fprintf(stderr, "Error on open(): %s\n", strerror(errno));
-        return EXIT_FAILURE;
+        exit(EXIT_FAILURE);
     }
 
+    // read port
     char buff[50];
 
     while(1)
@@ -33,7 +55,8 @@ int main()
         }
     }
 
+    // close serial port
     close(fd);
 
-    return EXIT_SUCCESS;
+    exit(EXIT_SUCCESS);
 }
