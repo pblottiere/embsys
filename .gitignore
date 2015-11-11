@@ -4,6 +4,7 @@
 /keyrings/live/secring.gpg
 notes.tex
 
+# pdf
 lectures/full/full_content.tex
 lectures/2_processus/code/pid
 lectures/2_processus/code/fork
@@ -12,6 +13,13 @@ lectures/2_processus/code/sigaction
 lectures/2_processus/code/thread
 lectures/2_processus/code/maxthread
 lectures/2_processus/code/unlthread
+
+# pdf
+lectures/1_intro/intro.pdf
+lectures/1_intro/intro_notes.pdf
+lectures/2_processus/processus.pdf
+lectures/2_processus/processus_notes.pdf
+lectures/full/full.pdf
 
 # tex
 *.aux
