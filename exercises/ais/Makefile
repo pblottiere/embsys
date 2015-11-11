@@ -1,18 +1,24 @@
 GCC = gcc
 
-all: libptmx ais reader
+all: libptmx libnmea ais reader
 
-ais:
+init:
+	mkdir -p bin lib include
+
+ais: init
 	cd src/bin/ais && make
 
-reader:
+reader: init
 	cd src/bin/reader && make
 
-libptmx:
+libptmx: init
 	cd src/lib/ptmx && make
+
+libnmea: init
+	cd src/lib/nmea && make
 
 clean:
 	find . -name *.o | xargs rm -f
-	rm -f bin/*
-	rm -f lib/*
-	rm -f include/*
+	rm -rf bin
+	rm -rf lib
+	rm -rf include

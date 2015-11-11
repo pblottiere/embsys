@@ -21,10 +21,10 @@ lectures/2_processus/processus.pdf
 lectures/2_processus/processus_notes.pdf
 lectures/full/full.pdf
 
-# exercices
-exercises/ais/bin/
-exercises/ais/include/
-exercises/ais/lib/
+# exercises
+exercises/ais/include
+exercises/ais/bin
+exercises/ais/lib
 
 # tex
 *.aux
