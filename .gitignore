@@ -4,7 +4,7 @@
 /keyrings/live/secring.gpg
 notes.tex
 
-# pdf
+# lectures
 lectures/full/full_content.tex
 lectures/2_processus/code/pid
 lectures/2_processus/code/fork
@@ -21,6 +21,11 @@ lectures/2_processus/processus.pdf
 lectures/2_processus/processus_notes.pdf
 lectures/full/full.pdf
 
+# exercices
+exercises/ais/bin/
+exercises/ais/include/
+exercises/ais/lib/
+
 # tex
 *.aux
 *.vrb
@@ -29,3 +34,6 @@ lectures/full/full.pdf
 *.out
 *.snm
 *.toc
+
+# build
+*.o

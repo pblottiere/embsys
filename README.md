@@ -11,4 +11,9 @@ Lectures are separated in several parts:
   * Linux System Programming (lect2)
   * ...
 
-## Examples
+## Exercises
+
+Several exercises are available :
+
+  * Tools, processus and threads
+  * IPC and network programming
