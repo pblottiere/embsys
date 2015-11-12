@@ -1,0 +1,131 @@
+\documentclass[12pt,t]{beamer}
+
+%------------------------------------------------------------------------------
+% configuration
+%------------------------------------------------------------------------------
+\RequirePackage{etex}
+\usepackage{../../themes/dbt}
+\usepackage{catchfilebetweentags}
+
+\setbeameroption{hide notes}
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+\graphicspath{{images/}}
+
+% a few macros
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\myhref}[1]{\href{#1}{\tt \scriptsize #1}}
+\newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
+\newcommand{\src}[2]{\vspace{-10pt}\caption{\href{#1}{\centering \tt \tiny [#2]}}}
+
+%------------------------------------------------------------------------------
+% title
+%------------------------------------------------------------------------------
+% slide
+\title{Systèmes d'exploitation pour l'embarqué}
+\subtitle{UV 5.2 - Exécution et Concurrence}
+
+\author{\href{}{Paul Blottière}}
+\institute{
+    \href{http://www.ensta-bretagne.fr/}{ENSTA Bretagne} \\[2pt]
+    \href{}{\tt \scriptsize 24 Novembre 2015}
+}
+\date{
+    \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere} \\[2pt]
+    %\href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
+}
+
+% info
+\begin{document}
+
+{
+\setbeamertemplate{footline}{} % no page number here
+\frame{
+    \titlepage
+    \incnote{title}
+} }
+
+%------------------------------------------------------------------------------
+% amélioration continue
+%------------------------------------------------------------------------------
+\begin{frame}{Amélioration continue}
+    \subt{Contributions}
+    \vspace{12pt}
+
+    \begin{center}
+    \includegraphics[scale=0.7]{github.png}
+    \end{center}
+
+    \bi
+    \itemsep12pt
+    \item Dépôt du cours : \href{https://github.com/pblottiere/embsys}{\tt \scriptsize https://github.com/pblottiere/embsys}
+
+    \onslide<2->{
+        \item Souhaits d'amélioration, erreurs, idées de TP, ... : ouverture d'Issues (avec le bon label!)
+        \item Apports de corrections : Pull Request
+        \ei
+    }
+\end{frame}
+
+%<**lecture_content>
+%------------------------------------------------------------------------------
+% lecture
+%------------------------------------------------------------------------------
+\begin{frame}[plain,c]
+    \centering
+    \huge\textcolor{title}{IPC et programmation réseau}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% plan
+%------------------------------------------------------------------------------
+\begin{frame}{Plan}
+    \subt{}
+    \vspace{10pt}
+
+    \begin{enumerate}
+        \itemsep12pt
+        \item Définitions
+        \item Outils
+        \item Appels système
+        \item Identification (PID, ...)
+        \item Capacités d'un processus
+        \item Création de processus
+        \item Terminaison d'un processus
+        \item Les pthreads
+    \end{enumerate}
+
+    \note {
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% conclusion
+%------------------------------------------------------------------------------
+\begin{frame}{Conclusion}
+
+    \centering
+    \vspace{20pt}
+    \LARGE{
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ref
+%------------------------------------------------------------------------------
+\begin{frame}{Références}
+    \vspace{30pt}
+
+    \bi
+    \itemsep12pt
+    \item Linux Embarqué - Pierre Ficheux
+    \item Développement système sous Linux - Christophe Blaess
+    \item Modern Operating Systems - Andrew Tanenbaum
+    \ei
+\end{frame}
+%<//lecture_content>
+
+\end{document}

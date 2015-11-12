@@ -6,32 +6,6 @@
 #include "nmea.h"
 
 //-----------------------------------------------------------------------------
-int decimal_to_sexagecimal(float lat, float lon, struct COORD_SEXAGECIMAL *c)
-{
-    // latitude
-    c->lat_deg = floor(lat);
-    c->lat_min = floor((lat - c->lat_deg) * 60);
-    c->lat_sec = (lat - c->lat_deg - c->lat_min/60) * 3600;
-
-    if (lat < 0)
-        c->lat_orient = 'S';
-    else
-        c->lat_orient = 'N';
-
-    // longitude
-    c->long_deg = floor(lon);
-    c->long_min = floor((lon - c->long_deg) * 60);
-    c->long_sec = (lon - c->long_deg - c->long_min/60) * 3600;
-
-    if (lon < 0)
-        c->long_orient = 'O';
-    else
-        c->long_orient = 'E';
-
-    return 0;
-}
-
-//-----------------------------------------------------------------------------
 int current_date_str(char * str)
 {
     time_t rawtime;

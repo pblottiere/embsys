@@ -8,7 +8,7 @@ reminders in system programming.
 Lectures are separated in several parts:
 
   * Introduction (lect1)
-  * Linux System Programming (lect2)
+  * Linux System Programming : processus, pthread, signals, mutex, IPC, ... (lect2 and lect3)
   * ...
 
 ## Exercises

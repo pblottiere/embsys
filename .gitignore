@@ -37,3 +37,4 @@ exercises/ais/lib
 
 # build
 *.o
+/lectures/3_ipc_net/notes.tex
