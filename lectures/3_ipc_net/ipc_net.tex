@@ -16,7 +16,7 @@
 \newcommand{\bi}{\begin{itemize}}
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
-\newcommand{\myhref}[1]{\href{#1}{\tt \scriptsize #1}}
+\newcommand{\myhref}[1]{\href{#1}{\tt \tiny #1}}
 \newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
 \newcommand{\src}[2]{\vspace{-10pt}\caption{\href{#1}{\centering \tt \tiny [#2]}}}
 
@@ -93,8 +93,8 @@
         \item File de message
         \item Mémoire partagée
         \item Sémaphore
-        \item Les sockets
-        \item Multiplexage d'entrées / sorties
+        \item Programmation réseau
+        \item Multiplexage d'entrées
     \end{enumerate}
 
     \note {
@@ -158,10 +158,10 @@
 % ipc1
 %------------------------------------------------------------------------------
 \begin{frame}{IPC : qu'est-ce?}
-    \subt{Définition}
+    \subt{Principe}
 
     \vspace{15pt}
-    Entres threads, la communication est simple : données partagées au sein
+    Entre threads, la communication est simple : données partagées au sein
     du même espace mémoire.
 
     \onslide<2->{
@@ -187,14 +187,14 @@
 % pipe1
 %------------------------------------------------------------------------------
 \begin{frame}{Pipe (1)}
-    \subt{Principe}
+    \subt{Définition}
 
     \vspace{10pt}
     Moyen de communication unidirectionnel.
 
     \onslide<2->{
         \vspace{10pt}
-        Deux extrémités représentées par des file descriptor :
+        Deux extrémités représentées par des file descriptors :
         \vspace{8pt}
         \begin{figure}
             \centering
@@ -255,12 +255,12 @@ pipe(int pipefd[2]);
 
     \vspace{15pt}
     Pour faire communiquer des processus distincts (n'ayant pas accès au file
-    descriptor du tube), il existe des {\textbf{tube nommé}}.
+    descriptor du tube), il existe des {\textbf{tubes nommés}}.
 
     \onslide<2->{
         \vspace{15pt}
-        Contrairement au tube simple résidant en mémoire, un tube nommé possède une
-        représentation au sein du système de fichier.
+        Contrairement au tube simple résidant en mémoire, un tube nommé possède
+        une représentation au sein du système de fichier.
 
         \vspace{5pt}
         \begin{figure}
@@ -282,7 +282,7 @@ pipe(int pipefd[2]);
     \vspace{5pt}
     \bi
     \itemsep6pt
-    \item {\textbf{mkfifo}} : création dy fichier représentant le tube
+    \item {\textbf{mkfifo}} : création du fichier représentant le tube
     \item {\textbf{open}} : ouverture du tube
     \item {\textbf{write}} : écriture de données dans le tube
     \item {\textbf{read}} : lecture des données
@@ -320,7 +320,7 @@ int mkfifo(const char * pipe_name, mode_t mode);
 
     \onslide<2->{
         \vspace{15pt}
-        La communication par file de message se fait par passage de message de
+        La communication par file de messages se fait par passage de messages de
         taille fixe avec des niveaux de priorité!
 
         \vspace{15pt}
@@ -338,11 +338,11 @@ int mkfifo(const char * pipe_name, mode_t mode);
 %------------------------------------------------------------------------------
 % msg2
 %------------------------------------------------------------------------------
-\begin{frame}[fragile]{File de message (2)}
+\begin{frame}[fragile]{File de messages (2)}
     \subt{Comment?}
 
     \vspace{10pt}
-    Les 5 appels système principaux :
+    Les cinq appels système principaux :
     \vspace{5pt}
     \bi
     \itemsep8pt
@@ -367,7 +367,7 @@ mqd_t mq_send(mqd_t mq, const char * msg,
 %------------------------------------------------------------------------------
 % msg3
 %------------------------------------------------------------------------------
-\begin{frame}{File de message (3)}
+\begin{frame}{File de messages (3)}
     \subt{mq.c}
 
     TODO
@@ -406,7 +406,7 @@ mqd_t mq_send(mqd_t mq, const char * msg,
     \itemsep8pt
     \item {\textbf{shm\_open}} : ouverture du segment mémoire
     \item {\textbf{ftruncate}} : dimensionnement du segment
-    \item {\textbf{mmap}} : projection de la srtucture de donnée sur le segment
+    \item {\textbf{mmap}} : projection de la structure de données sur le segment
     \item {\textbf{shm\_unlink}} : destruction du segment
     \ei
 
@@ -423,6 +423,9 @@ int shm_open(const char * name, int flags,
 %------------------------------------------------------------------------------
 \begin{frame}{Mémoire partagée (3)}
     \subt{shm.c}
+
+    TODO : shm source code + dans filesystem
+
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -434,13 +437,15 @@ int shm_open(const char * name, int flags,
     \vspace{15pt}
     Les communications multiprocessus à travers la mémoire partagée peut
     conduire à des incohérences dans les données si les accès ne sont pas
-    synchronisés!
+    synchronisés.
 
     \vspace{15pt}
     => contrôle d'accès aux ressources critiques via les sémaphores!
 
-    \vspace{20pt}
-    On peut aussi gérer le nombre d'accès simultané maximum autorisé!
+    \onslide<2->{
+        \vspace{20pt}
+        On peut aussi gérer le nombre d'accès simultanés maximum autorisé.
+    }
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -479,17 +484,305 @@ int shm_open(const char * name, int flags,
     \vspace{15pt}
     Mutex = Sémaphore local avec un nombre de clé de 1 (sémaphore binaire)
 
+    \vspace{10pt}
     \begin{lstlisting}
 sem_init(&mutex, 0, 1);
     \end{lstlisting}
 \end{frame}
 
 %------------------------------------------------------------------------------
-% sem3
+% sem4
 %------------------------------------------------------------------------------
-\begin{frame}{Sémaphore (3)}
-    \subt{Sémaphore nommé}
+\begin{frame}{Sémaphore (4)}
+    \subt{Sémaphore nomé}
 
+    \vspace{10pt}
+    De même que pour les tubes, un nom peut être associé à la sémaphore
+    pour permettre à d'autres processus de l'utiliser!
+
+    \vspace{10pt}
+    \onslide<2->{
+        Les sept appels systèmes :
+        \bi
+        \itemsep5pt
+        \item {\textbf{sem\_init}} : initialisation de la sémaphore
+        \item {\textbf{sem\_open}} x 2 : deux prototypes d'ouverture
+                                        (créateur/utilisateur)
+        \item {\textbf{sem\_close}} : fermeture de la sémaphore
+        \item {\textbf{sem\_unlink}} : destruction de la sémaphore
+        \item {\textbf{sem\_wait}} : attente bloquante de la sémaphore
+        \item {\textbf{sem\_post}} : relache la sémaphore
+        \ei
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% sem5
+%------------------------------------------------------------------------------
+\begin{frame}{Sémaphore (5)}
+    \subt{sem.c}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net1
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (1)}
+    \subt{Les couches}
+
+    \vspace{15pt}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.9]{layers.png}
+        \src{http://www.grima.be/site/uploads/tlp/export/html-doc/tlp.html}{Les couches pour TCP / UDP}
+    \end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net2
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (2)}
+    \subt{Materiels et MAC}
+
+    \vspace{8pt}
+    Les principaux éléments d'un réseau :
+    \bi
+    \itemsep8pt
+    \item {\textbf{hub}} : envoie toutes les données à toutes les machines
+    \item {\textbf{switch}} : distribue les données aux machines destinataires
+    \item {\textbf{routeur}} : liaison entre sous réseaux
+    \ei
+
+    \onslide<2->{
+        \vspace{8pt}
+        Les cartes Ethernet sont représentées par un identificateur unique
+        appelé adresse MAC (Medium Access Control) :
+        \vspace{5pt}
+        \bi
+        \itemsep5pt
+        \item 24 premiers bits : numéro constructeur
+        \item 24 derniers bits : numéro attribué par le constructeur
+        \ei
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net3
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (3)}
+    \subt{Internet Protocol}
+
+    \vspace{8pt}
+    Pour permettre la communication entre machines de sous réseaux différents,
+    le protocole IP est utilisé!
+
+    \vspace{8pt}
+    Les adresses IP sont représentées sur 4 octets.
+
+    \onslide<2->{
+        \vspace{8pt}
+        Adress Resolution Protocol : trouver l'adresse Ethernet d'une machine
+        distante dont on ne connaît que l'adresse IP.
+
+        \vspace{8pt}
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.35]{tux_wifi.png}
+        \end{figure}
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net4
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (4)}
+    \subt{TCP / UDP et diffusion}
+
+    \vspace{8pt}
+    Transmission Control Protocol (TCP) :
+    \bi
+    \item mode connecté : contrôle de flux, acquittement
+    \item fiable : les données arrivent dans l'ordre (répétées si perdues)
+    \ei
+
+    \onslide<2->{
+        \vspace{8pt}
+        User Datagram Protocol (UDP) :
+        \bi
+        \item non connecté : pas d'acquittement
+        \item non fiable : données non répétées si perdues
+        \ei
+    }
+
+    \onslide<3->{
+        \vspace{8pt}
+        Diffusion :
+        \bi
+        \item unicast : envoie d'un message à une IP de classe A, B ou C
+                        spécifique
+        \item broadcast : envoie d'un message à toutes les IP
+        \item multicast : envoie d'un message à toutes les IP de classe
+                          D d'un groupe multicast
+        \ei
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net5
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (5)}
+    \subt{Port}
+
+    \vspace{10pt}
+    Plusieurs applications sont disponibles sur un seul serveur. Pour discuter
+    de manière particulière avec une application, un numéro de port est
+    donc nécessaire.
+
+    \vspace{10pt}
+    Par exemple :
+    \vspace{5pt}
+    \bi
+    \item ftp : 21
+    \item ssh : 22
+    \item http : 80
+    \ei
+
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{socket.png}
+    \end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net6
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (6)}
+    \subt{Les commandes utiles}
+
+    \vspace{15pt}
+    \bi
+    \itemsep12pt
+    \item {\textbf{ifconfig}} : configuration d'une interface réseau
+    \item {\textbf{netstat}} : affiche les connexions réseaux, les ports
+                               ouverts, ... (machine local)
+    \item {\textbf{nmap}} : scanneur de port, exploration du réseau
+    \item {\textbf{ssh}} : connexion sur machine distante
+    \item {\textbf{wireshark}} : analyseur réseau
+    \item ftp, telnet, tcpdump, route, traceroute, ...
+    \ei
+
+    \myhref{https://debian-handbook.info/browse/fr-FR/stable/sect.network-diagnosis-tools.html}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net7
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (7)}
+    \subt{Les sockets}
+
+    \vspace{15pt}
+    Tube permettant de faire dialoguer des machines distantes via le réseau IP!
+
+    \onslide<2->{
+        \vspace{10pt}
+        Pour chaque socket, on doit indiquer :
+        \bi
+        \itemsep12pt
+        \item Le domaine : IPv4, IPv6 ou local
+        \item Le protocole : UDP / TCP
+        \item Le port : integer
+        \ei
+    }
+
+    \onslide<3->{
+        \vspace{15pt}
+        Une socket est manipulée via un file descriptor!
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net8
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (8)}
+    \subt{socket.c}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% mult1
+%------------------------------------------------------------------------------
+\begin{frame}{Multiplexage d'entrées (1)}
+    \subt{Pourquoi?}
+
+    \vspace{15pt}
+    Dans un système communiquant, un même process doit généralement gérer
+    l'arrivée et l'envoie d'informations à travers plusieurs canaux de type
+    différents.
+
+    \onslide<2->{
+        \vspace{15pt}
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.5]{mult.jpg}
+        \end{figure}
+
+        \vspace{15pt}
+        => l'appel system {\textbf{select}} est utilisé pour le multiplexage!
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% mult2
+%------------------------------------------------------------------------------
+\begin{frame}{Multiplexage d'entrées (2)}
+    \subt{Concept}
+
+    \vspace{15pt}
+    Étapes du multiplexage :
+    \begin{enumerate}
+    \itemsep8pt
+    \item j'indique au kernel les fd que je souhaite écouter
+    \item tant que rien ne se passe, attente passive (pas de consommation CPU)
+    \item quand une donnée est disponible, le kernel réveil le processus
+    \item le processus regarde quel fd est prêt
+    \item les données sont lues
+    \item puis on retourne dans l'état d'attente passive jusqu'à la prochaine
+          fois
+    \end{enumerate}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% mult3
+%------------------------------------------------------------------------------
+\begin{frame}{Multiplexage d'entrées (3)}
+    \subt{Les appels systèmes}
+
+    \vspace{15pt}
+    Cinq appels système principaux :
+    \vspace{5pt}
+    \bi
+    \itemsep12pt
+    \item {\textbf{select}} : indique le set de fd à écouter
+    \item {\textbf{FD\_ZERO}} : initialise un set de fd vide
+    \item {\textbf{FD\_SET}} : ajoute un fd dans un set
+    \item {\textbf{FD\_CLR}} : enlève un fd d'un set
+    \item {\textbf{FD\_ISSET}} : vérifie si un fd est présent dans un set
+    \ei
+\end{frame}
+
+%------------------------------------------------------------------------------
+% mult4
+%------------------------------------------------------------------------------
+\begin{frame}{Multiplexage d'entrées (4)}
+    \subt{mult.c}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -500,6 +793,12 @@ sem_init(&mutex, 0, 1);
     \centering
     \vspace{20pt}
     \LARGE{
+        Vivement les travaux pratiques pour apprendre à maîtriser la force!
+
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.35]{yoda.png}
+        \end{figure}
     }
 
 \end{frame}
