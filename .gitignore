@@ -13,6 +13,18 @@ lectures/2_processus/code/sigaction
 lectures/2_processus/code/thread
 lectures/2_processus/code/maxthread
 lectures/2_processus/code/unlthread
+lectures/3_ipc_net/code/fd
+lectures/3_ipc_net/code/pipe
+lectures/3_ipc_net/code/named_pipe
+lectures/3_ipc_net/code/mq_client
+lectures/3_ipc_net/code/mq_server
+lectures/3_ipc_net/code/shm_drinker
+lectures/3_ipc_net/code/shm_server
+lectures/3_ipc_net/code/socket_client
+lectures/3_ipc_net/code/socket_server
+lectures/3_ipc_net/code/socket_udp_client
+lectures/3_ipc_net/code/socket_udp_server
+lectures/3_ipc_net/code/mult
 
 # pdf
 lectures/1_intro/intro.pdf
@@ -22,6 +34,7 @@ lectures/2_processus/processus_notes.pdf
 lectures/3_ipc_net/ipc_net.pdf
 lectures/3_ipc_net/ipc_net_notes.pdf
 lectures/full/full.pdf
+lectures/full/full_content.pdf
 
 # exercises
 exercises/ais/include

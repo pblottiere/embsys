@@ -69,6 +69,17 @@
     }
 \end{frame}
 
+%------------------------------------------------------------------------------
+% exam
+%------------------------------------------------------------------------------
+%\begin{frame}{Projet}
+%    \vspace{10pt}
+%    \begin{figure}
+%        \centering
+%        \includegraphics[scale=0.4]{rocket_launcher.jpg}
+%    \end{figure}
+%\end{frame}
+
 %<**lecture_content>
 %------------------------------------------------------------------------------
 % lecture
@@ -90,7 +101,7 @@
         \item Descripteur de fichier
         \item IPC : qu'est-ce?
         \item Pipe
-        \item File de message
+        \item File de messages
         \item Mémoire partagée
         \item Sémaphore
         \item Programmation réseau
@@ -143,7 +154,7 @@
     \subt{/proc/<PID>/fd/}
 
     \vspace{20pt}
-    Une liste de tous les file descriptor d'un processus est disponible dans
+    Une liste de tous les file descriptors d'un processus est disponible dans
     le {\textbf{/proc}} :
 
     \vspace{15pt}
@@ -152,6 +163,21 @@
         \includegraphics[scale=0.7]{fd_proc.png}
     \end{figure}
 
+\end{frame}
+
+%------------------------------------------------------------------------------
+% fd3
+%------------------------------------------------------------------------------
+\begin{frame}{Descripteur de fichier (3)}
+    \subt{Exemple (fd.c)}
+
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/fd.c}
+
+    \vspace{-15pt}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.60]{fd.png}
+    \end{figure}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -228,12 +254,10 @@
     \item {\textbf{close}} : fermeture du tube
     \ei
 
-    \vspace{15pt}
-    \begin{lstlisting}
-#include <unistd.h>
-
-pipe(int pipefd[2]);
-    \end{lstlisting}
+    \onslide<2->{
+        \vspace{15pt}
+        => une écriture dans un pipe dont l'extrémité est fermée échoue!
+    }
 
 \end{frame}
 
@@ -243,7 +267,19 @@ pipe(int pipefd[2]);
 \begin{frame}{Pipe (3)}
     \subt{pipe.c}
 
-    TODO
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/pipe.c}
+
+    \onslide<2->{
+        \begin{figure}
+            \vspace{-20pt}
+            \includegraphics[scale=0.7]{pipe_error.png}
+        \end{figure}
+
+        \begin{figure}
+            \vspace{-100pt}
+            \hspace{180pt}\includegraphics[scale=0.4]{tux_why.png}
+        \end{figure}
+    }
 
 \end{frame}
 
@@ -260,7 +296,7 @@ pipe(int pipefd[2]);
     \onslide<2->{
         \vspace{15pt}
         Contrairement au tube simple résidant en mémoire, un tube nommé possède
-        une représentation au sein du système de fichier.
+        une représentation au sein du système de fichiers.
 
         \vspace{5pt}
         \begin{figure}
@@ -305,7 +341,15 @@ int mkfifo(const char * pipe_name, mode_t mode);
 \begin{frame}{Pipe (6)}
     \subt{named\_pipe.c}
 
-    TODO
+    \vspace{10pt}
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/named_pipe.c}
+
+    \onslide<2->{
+        \begin{figure}
+            \includegraphics[scale=0.7]{named_pipe.png}
+        \end{figure}
+    }
+
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -368,9 +412,15 @@ mqd_t mq_send(mqd_t mq, const char * msg,
 % msg3
 %------------------------------------------------------------------------------
 \begin{frame}{File de messages (3)}
-    \subt{mq.c}
+    \subt{mq\_server.c / mq\_client.c}
 
-    TODO
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/mq_server.c}
+
+    \vspace{-90pt}
+    \begin{figure}
+        \hspace{80pt} \includegraphics[scale=0.7]{mq.png}
+    \end{figure}
+
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -422,9 +472,13 @@ int shm_open(const char * name, int flags,
 % shm3
 %------------------------------------------------------------------------------
 \begin{frame}{Mémoire partagée (3)}
-    \subt{shm.c}
+    \subt{shm\_server.c / shm\_drinker.c}
 
-    TODO : shm source code + dans filesystem
+    \begin{figure}
+        \includegraphics[scale=0.7]{shm.png}
+    \end{figure}
+
+    => mais peut avoir des problèmes d'accès concurrent!
 
 \end{frame}
 
@@ -494,34 +548,27 @@ sem_init(&mutex, 0, 1);
 % sem4
 %------------------------------------------------------------------------------
 \begin{frame}{Sémaphore (4)}
-    \subt{Sémaphore nomé}
+    \subt{Sémaphore nommé}
 
     \vspace{10pt}
-    De même que pour les tubes, un nom peut être associé à la sémaphore
+    De même que pour les tubes, un nom peut être associé au sémaphore
     pour permettre à d'autres processus de l'utiliser!
 
     \vspace{10pt}
     \onslide<2->{
-        Les sept appels systèmes :
+        Les sept appels système :
         \bi
         \itemsep5pt
-        \item {\textbf{sem\_init}} : initialisation de la sémaphore
+        \item {\textbf{sem\_init}} : initialisation du sémaphore
         \item {\textbf{sem\_open}} x 2 : deux prototypes d'ouverture
                                         (créateur/utilisateur)
-        \item {\textbf{sem\_close}} : fermeture de la sémaphore
-        \item {\textbf{sem\_unlink}} : destruction de la sémaphore
-        \item {\textbf{sem\_wait}} : attente bloquante de la sémaphore
-        \item {\textbf{sem\_post}} : relache la sémaphore
+        \item {\textbf{sem\_close}} : fermeture du sémaphore
+        \item {\textbf{sem\_unlink}} : destruction du sémaphore
+        \item {\textbf{sem\_wait}} : attente bloquante du sémaphore
+        \item {\textbf{sem\_post}} : relache le sémaphore
         \ei
     }
 
-\end{frame}
-
-%------------------------------------------------------------------------------
-% sem5
-%------------------------------------------------------------------------------
-\begin{frame}{Sémaphore (5)}
-    \subt{sem.c}
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -543,7 +590,7 @@ sem_init(&mutex, 0, 1);
 % net2
 %------------------------------------------------------------------------------
 \begin{frame}{Programmation réseau (2)}
-    \subt{Materiels et MAC}
+    \subt{Matériels et MAC}
 
     \vspace{8pt}
     Les principaux éléments d'un réseau :
@@ -583,7 +630,7 @@ sem_init(&mutex, 0, 1);
 
     \onslide<2->{
         \vspace{8pt}
-        Adress Resolution Protocol : trouver l'adresse Ethernet d'une machine
+        Adress Resolution Protocol : trouver l'adresse MAC d'une machine
         distante dont on ne connaît que l'adresse IP.
 
         \vspace{8pt}
@@ -640,7 +687,7 @@ sem_init(&mutex, 0, 1);
     \vspace{10pt}
     Plusieurs applications sont disponibles sur un seul serveur. Pour discuter
     de manière particulière avec une application, un numéro de port est
-    donc nécessaire.
+    donc nécessaire en plus de l'adresse IP.
 
     \vspace{10pt}
     Par exemple :
@@ -651,6 +698,7 @@ sem_init(&mutex, 0, 1);
     \item http : 80
     \ei
 
+    \vspace{-15pt}
     \begin{figure}
         \centering
         \includegraphics[scale=0.5]{socket.png}
@@ -669,7 +717,7 @@ sem_init(&mutex, 0, 1);
     \itemsep12pt
     \item {\textbf{ifconfig}} : configuration d'une interface réseau
     \item {\textbf{netstat}} : affiche les connexions réseaux, les ports
-                               ouverts, ... (machine local)
+                               ouverts, ... (machine locale)
     \item {\textbf{nmap}} : scanneur de port, exploration du réseau
     \item {\textbf{ssh}} : connexion sur machine distante
     \item {\textbf{wireshark}} : analyseur réseau
@@ -687,7 +735,7 @@ sem_init(&mutex, 0, 1);
     \subt{Les sockets}
 
     \vspace{15pt}
-    Tube permettant de faire dialoguer des machines distantes via le réseau IP!
+    Tube permettant de faire dialoguer des machines distantes via le réseau IP.
 
     \onslide<2->{
         \vspace{10pt}
@@ -696,13 +744,13 @@ sem_init(&mutex, 0, 1);
         \itemsep12pt
         \item Le domaine : IPv4, IPv6 ou local
         \item Le protocole : UDP / TCP
-        \item Le port : integer
+        \item Le port : int
         \ei
     }
 
     \onslide<3->{
         \vspace{15pt}
-        Une socket est manipulée via un file descriptor!
+        Un socket est manipulé via un file descriptor.
     }
 
 \end{frame}
@@ -711,7 +759,57 @@ sem_init(&mutex, 0, 1);
 % net8
 %------------------------------------------------------------------------------
 \begin{frame}{Programmation réseau (8)}
-    \subt{socket.c}
+    \subt{Appels système}
+
+    \vspace{10pt}
+    Côté client TCP :
+    \bi
+    \item {\textbf{socket}} : création du socket
+    \item {\textbf{connect}} : connexion à un socket (adresse / port)
+    \item {\textbf{send / recv}} : discussion
+    \item {\textbf{close}} : fermeture du socket
+    \ei
+
+    \onslide<2->{
+        \vspace{10pt}
+        Côté serveur TCP :
+        \bi
+        \item {\textbf{socket}} : création du socket
+        \item {\textbf{bind}} : assigne adresse/port au socket
+        \item {\textbf{listen}} : attend des connexions
+        \item {\textbf{accept}} : accepte une connexion (bloquant)
+        \item {\textbf{send / recv}} : discussion
+        \item {\textbf{close}} : fermeture du socket
+        \ei
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% net9
+%------------------------------------------------------------------------------
+\begin{frame}{Programmation réseau (9)}
+    \subt{Appels système}
+
+    \vspace{10pt}
+    Côté client UDP :
+    \bi
+    \item {\textbf{socket}} : création du socket
+    \item {\textbf{sendto / recvfrom}} : discussion
+    \item {\textbf{close}} : fermeture du socket
+    \ei
+
+    \vspace{20pt}
+    \onslide<2->{
+        Côté serveur UDP :
+        \bi
+        \item {\textbf{socket}} : création du socket
+        \item {\textbf{bind}} : assigne adresse/port au socket
+        \item {\textbf{recvfrom / sendto}} : discussion
+        \item {\textbf{close}} : fermeture du socket
+        \ei
+    }
+
 \end{frame}
 
 %------------------------------------------------------------------------------
@@ -721,8 +819,8 @@ sem_init(&mutex, 0, 1);
     \subt{Pourquoi?}
 
     \vspace{15pt}
-    Dans un système communiquant, un même process doit généralement gérer
-    l'arrivée et l'envoie d'informations à travers plusieurs canaux de type
+    Dans un système communiquant, un même processus doit généralement gérer
+    l'arrivée et l'envoi d'informations à travers plusieurs canaux de type
     différents.
 
     \onslide<2->{
@@ -733,7 +831,7 @@ sem_init(&mutex, 0, 1);
         \end{figure}
 
         \vspace{15pt}
-        => l'appel system {\textbf{select}} est utilisé pour le multiplexage!
+        => l'appel système {\textbf{select}} est utilisé pour le multiplexage!
     }
 
 \end{frame}
@@ -748,7 +846,7 @@ sem_init(&mutex, 0, 1);
     Étapes du multiplexage :
     \begin{enumerate}
     \itemsep8pt
-    \item j'indique au kernel les fd que je souhaite écouter
+    \item on indique au kernel les fd que je souhaite écouter
     \item tant que rien ne se passe, attente passive (pas de consommation CPU)
     \item quand une donnée est disponible, le kernel réveil le processus
     \item le processus regarde quel fd est prêt
@@ -783,6 +881,8 @@ sem_init(&mutex, 0, 1);
 %------------------------------------------------------------------------------
 \begin{frame}{Multiplexage d'entrées (4)}
     \subt{mult.c}
+
+    \lstinputlisting[label=samplecode, basicstyle=\tiny]{code/mult.c}
 \end{frame}
 
 %------------------------------------------------------------------------------
