@@ -6,10 +6,13 @@ notes:
 	xelatex ipc_net_notes.tex
 	rm *_notes.tex
 
+handout: pdf
+	python ../../tools/handout.py ipc_net.tex
+
 all: pdf notes
 
 clean:
-	rm -f *.aux *.log *.nav *.out *.pdf *.snm *.toc
+	rm -f *.aux *.log *.nav *.out *.pdf *.snm *.toc *.vrb *handout.tex
 
 edit:
 	blackbox_edit_start notes.tex.gpg
