@@ -386,11 +386,11 @@ int mkfifo(const char * pipe_name, mode_t mode);
 \begin{frame}[fragile]{File de messages (2)}
     \subt{Comment?}
 
-    \vspace{10pt}
+    \vspace{6pt}
     Les cinq appels système principaux :
-    \vspace{5pt}
+    \vspace{3pt}
     \bi
-    \itemsep8pt
+    \itemsep6pt
     \item {\textbf{mq\_open}} : ouverture d'une file
     \item {\textbf{mq\_close}} : fermeture de la file
     \item {\textbf{mq\_unlink}} : destruction de la file
@@ -398,7 +398,10 @@ int mkfifo(const char * pipe_name, mode_t mode);
     \item {\textbf{mq\_receive}} : réception d'un message
     \ei
 
-    \vspace{10pt}
+    \vspace{8pt}
+    Lors de la compilation, linker avec {\textbf{-lrt}}.
+
+    \vspace{8pt}
     \begin{lstlisting}
 #include <mqueue.h>
 
@@ -460,6 +463,9 @@ mqd_t mq_send(mqd_t mq, const char * msg,
     \item {\textbf{mmap}} : projection de la structure de données sur le segment
     \item {\textbf{shm\_unlink}} : destruction du segment
     \ei
+
+    \vspace{10pt}
+    Lors de la compilation, linker avec {\textbf{-lrt}}.
 
     \vspace{10pt}
     \begin{lstlisting}

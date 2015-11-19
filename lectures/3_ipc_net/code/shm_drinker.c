@@ -29,8 +29,8 @@ int main()
 
     while(1)
     {
-        if ( (*glass) > 0.1)
-            (*glass) = (*glass) - 0.35;
+        if ( (*glass) > 0.3)
+            (*glass) = (*glass) - 0.3;
         printf("glass: %.1f\n", (*glass));
         sleep(3);
     }
