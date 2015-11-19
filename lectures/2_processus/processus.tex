@@ -279,20 +279,20 @@
 \begin{frame}{Outils (1)}
     \subt{Lister les processus en cours : commande ps}
 
+    \vspace{-15pt}
     \begin{figure}
         \centering
-        \includegraphics[scale=0.45]{ps_au.png}
+        \includegraphics[scale=0.55]{ps_au.png}
     \end{figure}
 
     \onslide<2->{
         Les champs principaux :
         \bi
-        \itemsep5pt
+        \itemsep2pt
         \item USER : propriétaire du processus
         \item PID : numéro d'identification du processus
         \item CPU : pourcentage du temps CPU consacré
         \item MEM : mémoire totale utilisée par le processus
-        \item TTY : terminal associé. Un \textit{?} si il n'y en a pas
         \item STAT : code d'état du process
         \item TIME : temps CPU utilisé
         \item COMMAND : nom de la commande
@@ -355,11 +355,11 @@
 \begin{frame}{Outils (4)}
     \subt{/proc}
 
-    \vspace{5pt}
+    \vspace{3pt}
     Il existe un répertoire /proc/<PID> par processus qui contient toutes les
     informations le concernant :
     \bi
-    \itemsep8pt
+    \itemsep5pt
     \item cmdline : ligne de commande
     \item limits : limites des ressources
     \item mem : mémoire tenue par le processus
@@ -367,10 +367,9 @@
     \ei
 
     \onslide<2->{
-        \vspace{5pt}
         \begin{figure}
             \centering
-            \includegraphics[scale=0.6]{proc_ex.png}
+            \includegraphics[scale=0.55]{proc_ex.png}
         \end{figure}
     }
 
@@ -435,9 +434,10 @@
 
     \lstinputlisting[label=samplecode]{code/pid.c}
 
+    \vspace{-20pt}
     \begin{figure}
         \centering
-        \includegraphics[scale=0.6]{pid.png}
+        \includegraphics[scale=0.55]{pid.png}
     \end{figure}
 
     \incnote{ident2}
@@ -531,13 +531,13 @@
     \itemsep8pt
     \item duplique le processus appelant (PID différent)
     \item les processus fils ne partagent pas le même espace mémoire que le père
-    \item a un cout très faible en ressources (mécanisme COW)
+    \item a un coût très faible en ressources (mécanisme COW)
     \ei
 
     \onslide<2->{
         \begin{figure}
             \centering
-            \includegraphics[scale=0.7]{fork.png}
+            \includegraphics[scale=0.6]{fork.png}
         \end{figure}
     }
 
@@ -629,7 +629,7 @@
 \begin{frame}{Terminaison d'un processus (1)}
     \subt{Généralité}
 
-    \vspace{8pt}
+    \vspace{5pt}
     Un processus peut se terminer :
     \bi
     \item volontairement : tâche terminée, erreur gérée, ...
@@ -637,22 +637,21 @@
     \ei
 
     \onslide<2->{
-        \vspace{8pt}
+        \vspace{5pt}
         Un processus retourne un code d'erreur. Pour être portable :
         \bi
-        \itemsep12pt
         \item un main doit toujours retourner un {\textbf{int}}!
         \item utiliser EXIT\_SUCCESS et EXIT\_FAILURE
         \ei
     }
 
     \onslide<3-> {
-        \vspace{8pt}
+        \vspace{5pt}
         Ce code d'erreur est ensuite lu par le père :
 
         \begin{figure}
             \centering
-            \includegraphics[scale=0.6]{code_retour.png}
+            \includegraphics[scale=0.55]{code_retour.png}
         \end{figure}
     }
 
@@ -963,7 +962,7 @@ int pthread_create(pthread_t * thread,
 
     \begin{figure}
         \centering
-        \includegraphics[scale=0.6]{maxthread.png}
+        \includegraphics[scale=0.55]{maxthread.png}
     \end{figure}
 
     \incnote{pthread7}
