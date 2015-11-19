@@ -14,6 +14,8 @@ int main()
         return EXIT_FAILURE;
     }
 
+    printf("fd: %d\n", fd);
+
     write(fd, "HEY YOU!!!!\n", 12);
     sleep(30); // just a sleep to observe some thing
 

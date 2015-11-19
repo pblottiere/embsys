@@ -153,14 +153,14 @@
 \begin{frame}{Descripteur de fichier (2)}
     \subt{/proc/<PID>/fd/}
 
-    \vspace{20pt}
+    \vspace{10pt}
     Une liste de tous les file descriptors d'un processus est disponible dans
     le {\textbf{/proc}} :
 
-    \vspace{15pt}
+    \vspace{10pt}
     \begin{figure}
         \centering
-        \includegraphics[scale=0.7]{fd_proc.png}
+        \includegraphics[scale=0.55]{fd_proc.png}
     \end{figure}
 
 \end{frame}
@@ -176,7 +176,8 @@
     \vspace{-15pt}
     \begin{figure}
         \centering
-        \includegraphics[scale=0.60]{fd.png}
+        \vspace{-30pt}
+        \hspace{80pt}\includegraphics[scale=0.55]{fd.png}
     \end{figure}
 \end{frame}
 
@@ -271,13 +272,13 @@
 
     \onslide<2->{
         \begin{figure}
-            \vspace{-20pt}
-            \includegraphics[scale=0.7]{pipe_error.png}
+            \vspace{-40pt}
+            \hspace{50pt}\includegraphics[scale=0.55]{pipe_error.png}
         \end{figure}
 
         \begin{figure}
             \vspace{-100pt}
-            \hspace{180pt}\includegraphics[scale=0.4]{tux_why.png}
+            \hspace{220pt}\includegraphics[scale=0.4]{tux_why.png}
         \end{figure}
     }
 
@@ -346,7 +347,7 @@ int mkfifo(const char * pipe_name, mode_t mode);
 
     \onslide<2->{
         \begin{figure}
-            \includegraphics[scale=0.7]{named_pipe.png}
+            \includegraphics[scale=0.55]{named_pipe.png}
         \end{figure}
     }
 
@@ -418,7 +419,7 @@ mqd_t mq_send(mqd_t mq, const char * msg,
 
     \vspace{-90pt}
     \begin{figure}
-        \hspace{80pt} \includegraphics[scale=0.7]{mq.png}
+        \hspace{80pt} \includegraphics[scale=0.45]{mq.png}
     \end{figure}
 
 \end{frame}
@@ -475,7 +476,7 @@ int shm_open(const char * name, int flags,
     \subt{shm\_server.c / shm\_drinker.c}
 
     \begin{figure}
-        \includegraphics[scale=0.7]{shm.png}
+        \includegraphics[scale=0.5]{shm.png}
     \end{figure}
 
     => mais peut avoir des problèmes d'accès concurrent!
