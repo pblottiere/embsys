@@ -5,6 +5,7 @@
 \RequirePackage{graphicx}
 \RequirePackage{fontspec}
 \RequirePackage{listings}
+\RequirePackage{pgfpages}
 
 % beamer options
 \setbeameroption{hide notes}
@@ -64,5 +65,16 @@
 
 % some macros
 \newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+
+% handout mode
+\mode<handout>{
+    \usetheme{default}
+    \setbeamercolor{normal text}{fg=background,bg=foreground}
+    \setbeamercolor{subtitle}{fg=gray}
+    \setbeamercolor{item}{fg=background}
+    \pgfpagesuselayout{2 on 1}[a4paper,border shrink=2.5mm]
+    \pgfpageslogicalpageoptions{1}{border code=\pgfusepath{stroke}}
+    \pgfpageslogicalpageoptions{2}{border code=\pgfusepath{stroke}}
+}
 
 \endinput
