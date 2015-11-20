@@ -2,8 +2,29 @@
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
+#include <stdlib.h>
 
 #include "nmea.h"
+
+#define NOT_TO_KMH 1.852
+
+int iteration = 0;
+
+//-----------------------------------------------------------------------------
+int not_to_kmh_str(float not, size_t size, char * format, char * kmh_str)
+{
+    float kmh = NOT_TO_KMH * not;
+    snprintf(kmh_str, size, format, kmh);
+
+    iteration++;
+    if (iteration == 2)
+    {
+        char * bug;
+        free(bug);
+    }
+
+    return kmh;
+}
 
 //-----------------------------------------------------------------------------
 int current_date_str(char * str)
@@ -89,6 +110,77 @@ int nmea_gll(struct NMEA_GLL *gll)
 
     // valid
     gll->frame[35] = 'A';
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
+int nmea_vtg(struct NMEA_VTG *vtg)
+{
+    // set to zero
+    memset(&vtg->frame[0], 0, NMEA_VTG_SIZE);
+
+    // header
+    memcpy(&vtg->frame[0], NMEA_HEADER, 3);
+
+    // frame name
+    memcpy(&vtg->frame[3], NMEA_FRAME_VTG, 3);
+
+    // separator
+    vtg->frame[6] = NMEA_SEPARATOR;
+
+    // course real
+    char course_real_str[NMEA_COURSE_SIZE];
+    snprintf(course_real_str, NMEA_COURSE_SIZE, "%05.1f", vtg->course_real);
+    memcpy(&vtg->frame[7], course_real_str, NMEA_COURSE_SIZE);
+
+    // separator
+    vtg->frame[12] = NMEA_SEPARATOR;
+
+    // true track
+    vtg->frame[13] = 'T';
+
+    // separator
+    vtg->frame[14] = NMEA_SEPARATOR;
+
+    // course magnetic
+    char course_magn_str[NMEA_COURSE_SIZE];
+    snprintf(course_magn_str, NMEA_COURSE_SIZE, "%05.1f", vtg->course_magn);
+    memcpy(&vtg->frame[15], course_magn_str, NMEA_COURSE_SIZE);
+
+    // separator
+    vtg->frame[20] = NMEA_SEPARATOR;
+
+    // true track
+    vtg->frame[21] = 'M';
+
+    // separator
+    vtg->frame[22] = NMEA_SEPARATOR;
+
+    // not speed
+    char speed_not_str[NMEA_SPEED_SIZE];
+    snprintf(speed_not_str, NMEA_SPEED_SIZE, "%05.1f", vtg->speed_not);
+    memcpy(&vtg->frame[23], speed_not_str, NMEA_SPEED_SIZE);
+
+    // separator
+    vtg->frame[28] = NMEA_SEPARATOR;
+
+    // true track
+    vtg->frame[29] = 'N';
+
+    // separator
+    vtg->frame[28] = NMEA_SEPARATOR;
+
+    // kmh speed
+    char speed_kmh_str[NMEA_SPEED_SIZE];
+    not_to_kmh_str(vtg->speed_not, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);
+    memcpy(&vtg->frame[29], speed_kmh_str, NMEA_SPEED_SIZE);
+
+    // separator
+    vtg->frame[34] = NMEA_SEPARATOR;
+
+    // true track
+    vtg->frame[35] = 'K';
 
     return 0;
 }
