@@ -1,0 +1,308 @@
+= TP1 : Généralités et outils (1 heure)
+:author: Blottiere Paul
+:encoding: utf-8
+:imagesdir: ./images
+
+== embsys
+
+L'ensemble des cours, exemple de cours, PDF et TP sont disponibles sur le dépôt
+github https://github.com/pblottiere/embsys.
+
+Si vous voulez cloner entièrement le dépôt :
+
+-----
+$ git clone https://github.com/pblottiere/embsys
+-----
+
+Si vous voulez cloner le dépôt mais avoir simplement les labs dans votre
+répertoire de travail :
+
+-----
+$ git clone -n https://github.com/pblottiere/embsys --depth 1
+$ cd embsys
+$ git checkout HEAD labs
+-----
+
+Si vous n'avez pas *git* :
+
+-----
+-----
+
+
+== Norme NMEA 0183
+
+image::gps.jpeg[]
+
+=== National Marine Electronics Association
+
+_La norme NMEA 0183 est une spécification pour la communication entre
+équipements marins, dont les équipements GPS. Elle est définie et contrôlée
+par la National Marine Electronics Association (NMEA), association américaine
+ de fabricants d'appareils électroniques maritimes, basée à Severna Park au
+ Maryland (États-Unis d'Amérique).
+La norme 0183 utilise une simple communication série pour transmettre une
+phrase à un ou plusieurs écoutants. Une trame NMEA utilise tous les
+caractères ASCII. (Wikipedia)_
+
+Ces trames NMEA 0183 sont de tailles variables et codées en ASCII (caractères
+8 bits) contrairement aux trames NMEA 2000. Elles commencent toutes par le
+caractère *$* (excepté les trames venant de l'AIS commençant par *!*). Les deux
+caractères suivant indiquent le type de matériel. Ainsi, on a par exemple pour
+les trois premiers octets :
+
+    * $GP : trame GPS
+    * $HC : trame compas
+    * $RA : trame radar
+    * ...
+
+Grâce aux équipements marins, une carte en ligne indique en temps réel la
+position des navires : http://www.marinetraffic.com/fr/.
+
+=== Communication série
+
+Une communication série (ou USB) transmet ces trames et un ordinateur peut alors
+les récupérer. Dans le cadre du TP, nous allons travailler via un simulateur
+
+Lors de l'utilisation d'un port USB-Série, une entrée est créée par le kernel
+dans le répertoire */dev/*. En examinant les sorties du kernel, on peut trouver
+ le port exact :
+
+-----
+$ dmesg
+...
+[15976.212024] usb 2-2: new full-speed USB device number 2 using uhci_hcd
+[15976.375039] usb 2-2: New USB device found, idVendor=067b, idProduct=2303
+[15976.375044] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[15976.375047] usb 2-2: Product: USB-Serial Controller
+[15976.375049] usb 2-2: Manufacturer: Prolific Technology Inc.
+[15978.090200] usbcore: registered new interface driver usbserial
+[15978.090219] usbcore: registered new interface driver usbserial_generic
+[15978.090234] usbserial: USB Serial support registered for generic
+[15978.174057] usbcore: registered new interface driver pl2303
+[15978.174078] usbserial: USB Serial support registered for pl2303
+[15978.174101] pl2303 2-2:1.0: pl2303 converter detected
+[15978.186178] usb 2-2: pl2303 converter now attached to ttyUSB0
+-----
+
+Ici, on s'attend à avoir un port */dev/ttyUSB0*.
+
+Dans le cadre du TP, le simulateur va lui aussi créer une entrée dans
+le */dev/*. Cependant, cette entrée étant virtuelle et créée par programmation,
+ elle ne sera pas visible à travers les messages kernel.
+
+== Compilation du simulateur GPS
+
+Le simulateur GPS se trouve dans le répertoire *labs/gps/* qui contient lui même :
+
+    * src : répertoire contenant les sources
+    * bin : répertoire contenant les binaires générés
+    * lib : répertoire contenant les librairies générées
+    * include : répertoire contenant les headers après compilation
+    * Makefile : fichier définissant les règles de compilation
+    * run.sh : fichier lançant le simulateur GPS
+
+Lancer la compilation :
+
+-----
+make
+-----
+
+Deux librairies sont compilées *lib/libnmea.so* et *lib/libptmx.so* ainsi que
+deux binaires *bin/gps* et *bin/reader*.
+
+== Exercice 1 : GDB et fichier core
+
+Une fois le simulateur GPS compilé, le lancer grâce au script
+*labs/ais/run.sh* :
+
+-----
+$ sh run.sh
+PTTY: /dev/pts/4
+-----
+
+*Question 1* : _Que se passe-t-il au bout de quelques secondes? Qu'en
+               déduisez vous?_
+
+*Question 2* : _Quel signal a reçu le processus pour se terminer ainsi? Comment
+               le vérifiez vous?_
+
+Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
+la génération d'un fichier core est généralement désactivée :
+
+-----
+$ ulimit -c
+0
+-----
+
+Ici la commande renvoie grâce au paramètre *-c* la taille du fichier core à
+générer. La taille étant 0, aucun fichier n'est généré. Pour y remédier :
+
+-----
+$ ulimit -c unlimited
+$ ulimit -c
+unlimited
+-----
+
+Relancer le simulateur GPS. Suite au crash, un fichier core doit être généré
+dans le répertoire courant.
+
+Nous allons ici utiliser GDB pour analyser le dump mémoire afin de trouver
+l'origine de l'erreur. GDB est un outils très complet fournissant de très
+nombreuses commandes.
+
+Pour lancer GDB et analyser un fichier core :
+
+-----
+$ gdb <binary> <core>
+-----
+
+Ensuite, dans le prompt GDB, utiliser la commande *bt* (pour *backtrace*) afin
+de savoir comment votre programme en est arrivé là (image de la pile).
+
+*Question 3* : _Grâce à GDB et au fichier *core* généré, analyser la source du
+               problème. Quelle partie du code est fausse? Pourquoi?_
+
+GDB peut être aussi lancé de manière interactive :
+
+-----
+$ gdb <binary>
+-----
+
+Une fois dans le prompt, il faut lancer la commande *r* (comme *run*).
+
+*Question 4* : _Que se passe-t-il quand vous lancez la commande? Pourquoi?_
+
+Suite au problème, aller dans le répertoire *labs/gps/bin* et lancer la commande
+suivante :
+
+-----
+ldd ./gps
+-----
+
+*Question 5* : _À quoi sert la commande ldd? Quelle information supplémentaire
+               cela vous apporte-t-il?_
+
+*Question 6* : _Comment résoudre ce problème en tant qu'utilisateur? (ne pas
+               hésiter à regarder le fichier *labs/gps/run.sh*)_
+
+Relancer ldd et GDB pour vérifier que votre solution a porté ses fruits.
+
+Il existe aussi une version de GDB pour déboguer à distance. Il y
+a alors un GDBServer tournant sur la cible où le programme à déboguer est
+exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
+et communique avec le serveur grâce au réseau.
+
+*Question 7* : _Dans quel contexte ce type d'outils peut être intéressant?_
+
+== LD_PRELOAD
+
+Maintenant que le problème est identifié, nous allons le résoudre. Cependant,
+ nous partons du principe que le code source du simulateur *NE DOIT PAS ÊTRE
+MODIFIÉ*. Pour corriger le problème, nous allons utiliser la variable
+d'environnement *LD_PRELOAD*. Cette variable permet de _hooker_ certaines
+fonctions.
+
+Utilisation :
+-----
+LD_PRELOAD=<libhook.so> <binary>
+-----
+
+En faisant ainsi, le binaire cherchera d'abord en priorité les fonctions dont il
+a besoin dans *libhook.so*! Pour que cela fonctionne, il faut que les fonctions
+définies dans libhook aient exactement le même prototype.
+
+*Question 8* : _Implémentez la fonction à l'origine du problème au sein du
+               repéré au sein du simulateur GPS mais cette fois-çi sans
+               erreurs. Écrire un Makefile pour la compilation._
+
+*Question 9* : _Utilisez LD_PRELOAD pour hooker le binaire *labs/gps/bin/gps*
+               avec votre propre librairie et ainsi empêcher le simulateur GPS
+               de bugger._
+
+Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
+peut réaliser la même opération sur les librairies systèmes. Par exemple, le
+simulateur GPS utilise la fonction *printf*.
+
+*Question 10* : _Utiliser le *man* pour déterminer le prototype de *printf*
+                et hookez le simulateur pour que ce dernier ne puisse plus
+                être interrompu par le signal SIGINT (Ctrl-C)._
+
+*Question 11* : _Comment faire pour interrompre le processus étant donné
+                que ce dernier ne répond plus au Ctrl-C?_
+
+Pour les parties suivantes, enlevez le hook du *printf* pour assurer un
+fonctionnement valide.
+
+*NOTE* : LD_PRELOAD peut servir dans bien des situations...
+
+== GPS reader
+
+Lors du lancement du simulateur GPS, nous obtenons le message suivant :
+
+-----
+$ sh run.sh
+PTTY: /dev/pts/3
+-----
+
+*Question 11* : _Selon vous, à quoi correspond le champs indiqué par
+                *PTTY*?_
+
+Dans le répertoire *labs/gps/bin/*, il y a un binaire *reader* permettant de
+lire les trames NMEA envoyées par le simulateur.
+
+*Question 12* : _Lancez le reader sans paramètre pour avoir l'aide et déduire
+                son utilisation. Observez les trames NMEA._
+
+*Question 13* : _Modifier le code du *reader* dans *gps/src/bin/reader/* afin
+                qu'il puisse écouter les trames venant de deux simulateurs
+                GPS différents (ports paramétrables au lancement). Vérifiez le
+                bon fonctionnement en lançant deux instances du simulateur
+                GPS._
+
+== minicom
+
+Dans le cas d'une communication série avec du matériel, il est toujours
+intéressant d'observer les trames. En effet, on peut par exemple comprendre un
+protocole de communication grâce à de la rétro ingénierie. Pour cela, il existe
+des programmes tel que *gtkterm*, *PuTTY*, *picocom* et bien d'autres. Lors de
+ce TP, nous allons utiliser *minicom*.
+
+*Question 14* : _Grâce à l'aide en ligne de commande de *minicom* (option
+                *-h*), se connecter au port du simulateur GPS et observez les
+                trames passées._
+
+*Question 15* : _Naviguez dans l'aide de minicom (Ctrl-A Z) pour récupérer la
+                configuration du port de communication. Expliquez brièvement
+                la signification de ces paramètres._
+
+*Question 16* : _Utiliser minicom pour capturer un extrait de la
+                communication dans un fichier._
+
+
+== Conclusion : les points à connaître après le TP
+
+En programmation de base :
+
+    * compilation d'un binaire et d'une librairie partagée grâce à un Makefile
+    * gestion de base des signaux
+    * démultiplexage d'entrées par file descriptor (*select*, *FD_SET*, ...)
+    * passage de paramètres en ligne de commande (*getop*)
+    * LD_LIBRARY_PATH
+    * LD_PRELOAD
+
+Les commandes du terminal :
+
+    * dmesg
+    * ldd
+    * kill
+    * ulimit
+    * man
+
+Les outils :
+
+    * gdb
+    * minicom
+
+Les concepts :
+
+    * liaison série

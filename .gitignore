@@ -56,3 +56,6 @@ core
 # build
 *.o
 /lectures/3_ipc_net/notes.tex
+/labs/1_tools/corr/ld_preload/hack.c
+/labs/1_tools/corr/ld_preload/run.sh
+/labs/1_tools/corr/ld_preload/Makefile
