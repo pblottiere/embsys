@@ -39,9 +39,10 @@ lectures/full/full.pdf
 lectures/full/full_content.pdf
 
 # exercises
-exercises/ais/include
-exercises/ais/bin
-exercises/ais/lib
+labs/gps/include
+labs/gps/bin
+labs/gps/lib
+core
 
 # tex
 *.aux

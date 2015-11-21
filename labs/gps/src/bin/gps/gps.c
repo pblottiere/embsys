@@ -102,11 +102,9 @@ int main()
     // work
     while(1)
     {
-        printf("write gll frame...\n");
         write_gll(ptmx.fd);
         sleep(2);
 
-        printf("write vtg frame...\n");
         write_vtg(ptmx.fd);
         sleep(2);
     }
