@@ -1,4 +1,5 @@
 labs/1_tools/corr/ld_preload/hack.c
+labs/1_tools/corr/ld_preload/run.sh
 lectures/1_intro/notes.tex
 lectures/2_processus/notes.tex
 lectures/3_ipc_net/notes.tex
