@@ -35,7 +35,8 @@ int current_date_str(char * str)
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
 
-    sprintf(str, "%d%d%d", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+    sprintf(str, "%02d%02d%02d", timeinfo->tm_hour, timeinfo->tm_min,
+            timeinfo->tm_sec);
 }
 
 //-----------------------------------------------------------------------------

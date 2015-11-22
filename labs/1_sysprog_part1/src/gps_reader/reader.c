@@ -4,11 +4,12 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <termios.h>
 
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv [])
 {
-    char * port;
+    char * port = NULL;
 
     // parse comand line
     if (argc != 3)
@@ -37,21 +38,33 @@ int main(int argc, char *argv [])
     int fd = open(port, O_RDWR | O_NOCTTY);
     if (fd == -1)
     {
-        fprintf(stderr, "Error on open(): %s\n", strerror(errno));
+        perror("open");
         exit(EXIT_FAILURE);
     }
+    tcflush(fd, TCIOFLUSH);
 
     // read port
     char buff[50];
+    fd_set fdset;
 
     while(1)
     {
-        bzero(&buff, sizeof(buff));
-        size_t bytes = read(fd, &buff, sizeof(buff));
+        bzero(buff, sizeof(buff));
 
-        if (bytes > 0)
+        FD_ZERO(&fdset);
+        FD_SET(fd, &fdset);
+
+        select(fd+1, &fdset, NULL, NULL, NULL);
+
+        if (FD_ISSET(fd, &fdset))
         {
-            printf("buff (%d): %s\n", bytes, buff);
+            int bytes = read (fd, buff, sizeof(buff));
+
+            if (bytes > 0)
+            {
+                printf("%s\n", buff);
+                fflush(stdout);
+            }
         }
     }
 

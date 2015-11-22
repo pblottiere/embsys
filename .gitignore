@@ -60,3 +60,5 @@ core
 /labs/1_tools/corr/ld_preload/hack.c
 /labs/1_tools/corr/ld_preload/run.sh
 /labs/1_tools/corr/ld_preload/Makefile
+/labs/1_sysprog_part1/corr/fork_pipe/reader.c
+/labs/1_sysprog_part1/corr/fork_pipe/Makefile

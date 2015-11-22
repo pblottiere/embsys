@@ -11,9 +11,8 @@ Lectures are separated in several parts:
   * Linux System Programming : processus, pthread, signals, mutex, IPC, ... (lect2 and lect3)
   * ...
 
-## Exercises
+## Labs
 
 Several exercises are available :
 
-  * Tools, processus and threads
-  * IPC and network programming
+  * Linux System Programming (labs1 and labs2)

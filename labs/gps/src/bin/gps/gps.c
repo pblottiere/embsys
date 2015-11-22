@@ -102,11 +102,11 @@ int main()
     // work
     while(1)
     {
+        sleep(2);
         write_gll(ptmx.fd);
-        sleep(2);
 
-        write_vtg(ptmx.fd);
         sleep(2);
+        write_vtg(ptmx.fd);
     }
 
     ptmxclose(&ptmx);
