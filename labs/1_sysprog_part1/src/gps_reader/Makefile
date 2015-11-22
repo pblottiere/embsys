@@ -1,6 +1,8 @@
 GCC = gcc
-BIN = reader
+BIN = gps_reader
 
 all:
 	$(GCC) reader.c -o $(BIN)
-	mv $(BIN) ../../../bin
+
+clean:
+	rm -f $(BIN)

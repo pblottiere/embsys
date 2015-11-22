@@ -23,11 +23,7 @@ $ cd embsys
 $ git checkout HEAD labs
 -----
 
-Si vous n'avez pas *git* :
-
------
------
-
+Si vous n'avez pas *git*, téléchargez l'archive *labs.tar.gz*.
 
 == Norme NMEA 0183
 
@@ -290,10 +286,11 @@ En programmation de base :
     * LD_LIBRARY_PATH
     * LD_PRELOAD
 
-Les commandes du terminal :
+Les commandes :
 
     * dmesg
     * ldd
+    * ps
     * kill
     * ulimit
     * man

@@ -1,15 +1,12 @@
 GCC = gcc
 
-all: libptmx libnmea gps reader
+all: libptmx libnmea gps
 
 init:
 	mkdir -p bin lib include
 
 gps: init
 	cd src/bin/gps && make
-
-reader: init
-	cd src/bin/reader && make
 
 libptmx: init
 	cd src/lib/ptmx && make
