@@ -17,7 +17,7 @@ float lat = 48.608958;
 float lon = 7.682288;
 float course_real = 54.7;
 float course_magn = 34.4;
-float speed_not = 5.5;
+float speed_knot = 5.5;
 
 //-----------------------------------------------------------------------------
 void signals_handler(int signal_number)
@@ -35,7 +35,7 @@ int write_vtg(int fd)
     struct NMEA_VTG vtg;
     vtg.course_real = course_real;
     vtg.course_magn = course_magn;
-    vtg.speed_not = speed_not;
+    vtg.speed_knot = speed_knot;
 
     if ( nmea_vtg(&vtg) == -1)
     {
@@ -49,7 +49,7 @@ int write_vtg(int fd)
 
     course_real += 0.01;
     course_magn += 0.01;
-    speed_not += 0.01;
+    speed_knot += 0.01;
 
     return bytes;
 }

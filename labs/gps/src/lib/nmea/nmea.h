@@ -30,7 +30,7 @@ struct NMEA_VTG
     char frame[NMEA_VTG_SIZE];
     float course_real; // deg
     float course_magn; // deg
-    float speed_not;
+    float speed_knot;
     float speed_kmh;
 };
 

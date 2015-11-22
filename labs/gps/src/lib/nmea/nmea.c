@@ -6,21 +6,20 @@
 
 #include "nmea.h"
 
-#define NOT_TO_KMH 1.852
+#define KNOT_TO_KMH 1.852
 
 int iteration = 0;
 
 //-----------------------------------------------------------------------------
-int not_to_kmh_str(float not, size_t size, char * format, char * kmh_str)
+int knot_to_kmh_str(float not, size_t size, char * format, char * kmh_str)
 {
-    float kmh = NOT_TO_KMH * not;
+    float kmh = KNOT_TO_KMH * not;
     snprintf(kmh_str, size, format, kmh);
 
     iteration++;
     if (iteration == 2)
     {
-        char * bug;
-        free(bug);
+        puts(NULL);
     }
 
     return kmh;
@@ -159,9 +158,9 @@ int nmea_vtg(struct NMEA_VTG *vtg)
     vtg->frame[22] = NMEA_SEPARATOR;
 
     // not speed
-    char speed_not_str[NMEA_SPEED_SIZE];
-    snprintf(speed_not_str, NMEA_SPEED_SIZE, "%05.1f", vtg->speed_not);
-    memcpy(&vtg->frame[23], speed_not_str, NMEA_SPEED_SIZE);
+    char speed_knot_str[NMEA_SPEED_SIZE];
+    snprintf(speed_knot_str, NMEA_SPEED_SIZE, "%05.1f", vtg->speed_knot);
+    memcpy(&vtg->frame[23], speed_knot_str, NMEA_SPEED_SIZE);
 
     // separator
     vtg->frame[28] = NMEA_SEPARATOR;
@@ -174,7 +173,7 @@ int nmea_vtg(struct NMEA_VTG *vtg)
 
     // kmh speed
     char speed_kmh_str[NMEA_SPEED_SIZE];
-    not_to_kmh_str(vtg->speed_not, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);
+    knot_to_kmh_str(vtg->speed_knot, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);
     memcpy(&vtg->frame[29], speed_kmh_str, NMEA_SPEED_SIZE);
 
     // separator

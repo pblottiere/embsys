@@ -46,6 +46,50 @@ Le compte rendu :
 
 Le travail peut être effectué en binôme.
 
+== Avant toutes choses, rappel sur les pointeurs
+
+Un morceau de code source mettant en avant le principe de pointeur  en C :
+
+[source,c]
+-----
+#include <stdio.h>
+
+void print_str(char * str)
+{
+    printf("%s\n", str);
+}
+
+void print_valeur(int valeur)
+{
+    printf("%x\n", valeur);
+}
+
+int main()
+{
+    int valeur = 10;
+    int * pointeur_valeur = &valeur;
+
+    int * pointeur2_valeur;
+    pointeur2_valeur = &valeur;
+
+    printf("%x\n", valeur);
+    printf("%x\n", *pointeur_valeur);
+    printf("%x\n", pointeur_valeur);
+    printf("%x\n", &valeur);
+
+    char str[10] = "SKYWALKER";
+    print_str(str);
+}
+-----
+
+Lors de l'exécution :
+-----
+a
+a
+bf8b89e4
+bf8b89e4
+SKYWALKER
+-----
 
 == Norme NMEA 0183
 
@@ -74,11 +118,10 @@ les trois premiers octets :
 Par exemple :
 
 -----
-$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 $GPGSA,A,3,04,05,,09,12,,,24,,,,,2.5,1.3,2.1*39
-$GPGSV,2,1,08,01,40,083,46,02,17,308,41,12,07,344,39,14,22,228,45*75
-$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
-$GPGLL,4916.45,N,12311.12,W,225444,A,*1D
+$GPGGA,123519,4807.038,N,01131.324,E,1,08,0.9,545.4,M,46.9,M, , *42
+$GPGLL,4916.45,N,12311.12,W,225444,A
+$GPVTG,054.7,T,034.4,M,005.5,N,010.2,K
 ...
 -----
 
@@ -161,7 +204,7 @@ PTTY: /dev/pts/X
                déduisez vous?_
 
 *Question 2* : _Quel signal a reçu le processus pour se terminer ainsi? Comment
-               le vérifiez vous?_
+               vérifiez vous le numéro du signal reçu?_
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -213,7 +256,7 @@ Une fois dans le prompt, il faut lancer la commande *r* (comme *run*).
 *Question 5* : _Que se passe-t-il quand vous lancez GDB en mode intéractif sur
                le binaire *gps*? Pourquoi?_
 
-Suite au problème repéré à la *Question 4*, aller dans le répertoire
+Suite au problème repéré à la *Question 5*, aller dans le répertoire
 *labs/gps/bin* et lancez la commande suivante :
 
 -----
@@ -221,7 +264,7 @@ ldd ./gps
 -----
 
 *Question 6* : _À quoi sert la commande ldd? Quelle information supplémentaire
-               cela vous apporte-t-il (par rapport à la *Question 4*)?_
+               cela vous apporte-t-il (par rapport à la *Question 5*)?_
 
 *Question 7* : _Comment résoudre ce problème en tant qu'utilisateur? (ne pas
                hésiter à regarder le fichier *labs/gps/run.sh*)_
@@ -254,13 +297,17 @@ En faisant ainsi, le binaire cherchera d'abord en priorité les fonctions dont i
 a besoin dans *libhook.so*! Pour que cela fonctionne, il faut que les fonctions
 définies dans libhook aient exactement le même prototype.
 
+Pour les questions suivantes, créez un répertoire de travail
+*labs/1_sysprog_part1/src/ld_preload* dans lequel vous allez placé votre code
+source.
+
 *Question 9* : _Implémentez la fonction à l'origine du problème repéré au sein
                du simulateur GPS mais cette fois-çi sans erreurs et dans un
-               fichier séparé._
+               fichier séparé (dans le répertoire de travail)._
 
 *Question 10* : _Écrivez un Makefile pour la compilation de cette fonction sous
                 forme d'une librairie partagée (s'inspirer de
-                *labs/gps/src/lib/ptmx/Makefile*)._
+                *labs/gps/src/lib/ptmx/Makefile*) et compilez._
 
 *Question 11* : _Utilisez LD_PRELOAD pour hooker le binaire *labs/gps/bin/gps*
                 avec votre propre librairie et ainsi empêcher le simulateur GPS
@@ -268,19 +315,19 @@ définies dans libhook aient exactement le même prototype.
 
 Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
-simulateur GPS utilise la fonction *printf*.
+simulateur GPS utilise la fonction *printf* dès son lancement.
 
 *Question 12* : _Utiliser le *man* pour déterminer le prototype de *printf*.
                 Comment est appellé ce type de fonction?_
 
 *Question 13* : _Hookez le simulateur pour que ce dernier ne puisse plus
-                être interrompu par le signal SIGINT (Ctrl-C) en passant
-                par la fonction *printf*. Pour cela, utilisez la fonction
-                *sigaction* pour mettre en place un gestionnaire de signaux
-                (s'inspirer de *gps/src/bin/gps/gps.c*)._
+                être interrompu par le signal SIGINT (Ctrl-C) en
+                réimplémentant la fonction *printf*. Pour cela, utilisez la
+                fonction *sigaction* pour mettre en place un gestionnaire de
+                signaux (s'inspirer de *gps/src/bin/gps/gps.c*)._
 
 *Question 14* : _Comment faire pour interrompre le processus étant donné
-                que ce dernier ne répond plus au Ctrl-C?_
+                que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes._
 
 Pour les parties suivantes, enlevez le hook du *printf* pour assurer un
 fonctionnement valide du simulateur.
