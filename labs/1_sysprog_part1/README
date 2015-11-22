@@ -332,7 +332,8 @@ Un binaire *gps_reader* est alors généré.
                 de la trame GLL au fils grâce au pipe._
 
 *Question 21* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
-                utiliser *syslog* pour afficher l'heure dans la console._
+                utiliser *syslog* pour afficher l'heure dans la console ainsi
+                que le PID du père._
 
 ////
 == Exercice 4 : minicom
