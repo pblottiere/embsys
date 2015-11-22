@@ -1,3 +1,4 @@
+labs/1_sysprog_part1/corr/fork_pipe/Makefile
 labs/1_sysprog_part1/corr/fork_pipe/reader.c
 labs/1_sysprog_part1/corr/ld_preload/hack.c
 labs/1_sysprog_part1/corr/ld_preload/Makefile
