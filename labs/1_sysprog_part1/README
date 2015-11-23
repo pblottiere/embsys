@@ -1,5 +1,5 @@
 = TP1 : Programmation Système (partie 1) - 2 heures
-:author: Blottiere Paul
+:author: Blottière Paul
 :encoding: utf-8
 :imagesdir: ./images
 
@@ -50,7 +50,7 @@ Le travail peut être effectué en binôme.
 
 == Avant toutes choses, rappel sur les pointeurs
 
-Un morceau de code source rappellant le principe de pointeur en C :
+Un morceau de code source rappelant le principe de pointeur en C :
 
 [source,c]
 -----
@@ -109,7 +109,7 @@ caractères ASCII. (Wikipedia)_
 Ces trames NMEA 0183 sont de tailles variables et codées en ASCII (caractères
 8 bits) contrairement aux trames NMEA 2000. Elles commencent toutes par le
 caractère *$* (excepté les trames venant de l'AIS commençant par *!*). Les deux
-caractères suivant indiquent le type de matériel. Ainsi, on a par exemple pour
+caractères suivants indiquent le type de matériel. Ainsi, on a par exemple pour
 les trois premiers octets :
 
     * $GP : trame GPS
@@ -183,7 +183,7 @@ même :
     * Makefile : fichier définissant les règles de compilation
     * run.sh : fichier lançant le simulateur GPS
 
-Lancer la compilation :
+Lancez la compilation :
 
 -----
 make
@@ -227,12 +227,12 @@ $ ulimit -c
 unlimited
 -----
 
-Relancer le simulateur GPS. Suite au crash, un fichier core doit être généré
+Relancez le simulateur GPS. Suite au crash, un fichier core doit être généré
 dans le répertoire courant.
 
 Nous allons ici utiliser GDB pour analyser le dump mémoire afin de trouver
-l'origine de l'erreur. GDB est un outils très complet fournissant de très
-nombreuses commandes. Nous allons ici en voir simplement quelques unes.
+l'origine de l'erreur. GDB est un outils très complet fournissant de
+nombreuses commandes.
 
 Pour lancer GDB et analyser un fichier core :
 
@@ -240,14 +240,12 @@ Pour lancer GDB et analyser un fichier core :
 $ gdb <binary> <core>
 -----
 
-Ensuite, dans le prompt GDB, utiliser la commande *bt* (pour *backtrace*) afin
+Ensuite, dans le prompt GDB, utilisez la commande *bt* (pour *backtrace*) afin
 de savoir comment votre programme en est arrivé là (image de la pile).
 
-*Question 3* : _Grâce à GDB et au fichier *core* généré, analyser la source du
+*Question 3* : _Grâce à GDB et au fichier *core* généré, analysez la source du
                problème du binaire *gps*. Quelle partie du code est fausse?
                Pourquoi?_
-
-*Question 4* : _À quoi sert la fonction *snprintf*?_
 
 GDB peut être aussi lancé de manière interactive :
 
@@ -257,21 +255,21 @@ $ gdb <binary>
 
 Une fois dans le prompt, il faut lancer la commande *r* (comme *run*).
 
-*Question 5* : _Que se passe-t-il quand vous lancez GDB en mode intéractif sur
+*Question 4* : _Que se passe-t-il quand vous lancez GDB en mode interactif sur
                le binaire *gps*? Pourquoi?_
 
-Suite au problème repéré à la *Question 5*, allez dans le répertoire
-*labs/gps/bin* et lancez la commande suivante :
+Suite au problème repéré, allez dans le répertoire *labs/gps/bin* et
+lancez la commande suivante :
 
 -----
 ldd ./gps
 -----
 
-*Question 6* : _À quoi sert la commande ldd? Quelle information supplémentaire
-               cela vous apporte-t-il (par rapport à la *Question 5*)?_
+*Question 5* : _À quoi sert la commande ldd? Quelle information supplémentaire
+               cela vous apporte-t-il?_
 
-*Question 7* : _Comment résoudre ce problème en tant qu'utilisateur? (ne pas
-               hésiter à regarder le fichier *labs/gps/run.sh*)_
+*Question 6* : _Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
+                à regarder le fichier *labs/gps/run.sh*_
 
 Relancez ldd puis GDB pour vérifier que votre solution a porté ses fruits.
 
@@ -280,7 +278,7 @@ a alors un GDBServer tournant sur la cible où le programme à déboguer est
 exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
 et communique avec le serveur grâce au réseau.
 
-*Question 8* : _Dans quel contexte ce type d'outils peut être intéressant?_
+*Question 7* : _Dans quel contexte ce type d'outils peut être intéressant?_
 
 === Ce qu'il faut retenir
 
@@ -308,7 +306,7 @@ Utilisation :
 LD_PRELOAD=<libhook.so> <binary>
 -----
 
-En faisant ainsi, le binaire cherchera d'abord en priorité les fonctions dont il
+En faisant ainsi, le binaire cherchera en priorité les fonctions dont il
 a besoin dans *libhook.so*! Pour que cela fonctionne, il faut que les fonctions
 définies dans libhook aient exactement le même prototype.
 
@@ -319,15 +317,15 @@ Pour les questions suivantes, allez dans le répertoire de travail
     * Makefile
     * run.sh
 
-*Question 9* : _Implémentez dans le fichier hook.c la fonction à l'origine du
+*Question 8* : _Implémentez dans le fichier hook.c la fonction à l'origine du
                problème repéré au sein du simulateur GPS mais cette fois-çi
-               sans erreurs._
+               sans erreur._
 
-*Question 10* : _Éditez le Makefile pour compiler hook.c sous la forme d'une
+*Question 9* : _Éditez le Makefile pour compiler hook.c sous la forme d'une
                 librairie partagée nommée libhook.so (s'inspirer de
                 *labs/gps/src/lib/ptmx/Makefile*). Testez la compilation._
 
-*Question 11* : _Éditez le fichier run.sh pour utiliser LD_PRELOAD au moment
+*Question 10* : _Éditez le fichier run.sh pour utiliser LD_PRELOAD au moment
                 de lancer le simulateur et ainsi hooker le binaire avec la
                 librairie libhook.so. Exécutez run.sh : le simulateur ne doit
                 plus partir en segfault._
@@ -336,17 +334,17 @@ Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
 simulateur GPS utilise la fonction *printf* dès son lancement.
 
-*Question 12* : _Utilisez le *man* pour déterminer le prototype de la fonction
+*Question 11* : _Utilisez le *man* pour déterminer le prototype de la fonction
                 *printf* (expliquez comment vous utilisez *man* dans ce cas et
-                pourquoi). Comment est appellé ce type de fonction?_
+                pourquoi). Comment est appelé ce type de fonction?_
 
-*Question 13* : _Hookez le simulateur pour que ce dernier ne puisse plus
+*Question 12* : _Hookez le simulateur pour que ce dernier ne puisse plus
                 être interrompu par le signal SIGINT (Ctrl-C) en
                 réimplémentant la fonction *printf* dans libhook.so. Pour cela,
                 utilisez la fonction *sigaction* pour mettre en place un
                 gestionnaire de signaux (s'inspirer de *gps/src/bin/gps/gps.c*)._
 
-*Question 14* : _Comment faire pour interrompre le processus étant donné
+*Question 13* : _Comment faire pour interrompre le processus étant donné
                 que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes._
 
 Pour les parties suivantes, enlevez le hook du *printf* pour assurer un
@@ -359,7 +357,7 @@ fonctionnement valide du simulateur.
     * comment compiler des fichiers C pour obtenir une librairie partagée
     * le fonctionnement global d'un Makefile
     * comment utiliser le *man*
-    * la mise en place d'un gestionnaire de signal grâce à *sigaction*
+    * la mise en place d'un gestionnaire de signaux grâce à *sigaction*
     * l'utilité et le fonctionnement de *LD_PRELOAD*
 
 == Exercice 3 : select, fork et pipe
@@ -373,7 +371,7 @@ $ sh run.sh
 PTTY: /dev/pts/3
 -----
 
-*Question 15* : _Selon vous, à quoi correspond le champs indiqué par
+*Question 14* : _Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?_
 
 Pour la suite, placez vous dans le répertoire *labs/1_sysprog/src/gps_reader*
@@ -381,7 +379,7 @@ contenant :
 
     * reader.c : le code du reader que nous allons modifier
     * Makefile : les règles de compilation
-    * util.c / util.h : fournit des fonctions pratiques pour l'exercice
+    * util.c / util.h : des fonctions utiles pour l'exercice
 
 Pour compiler, lancez :
 
@@ -391,38 +389,38 @@ make
 
 Un binaire *gps_reader* est alors généré.
 
-Lancez le reader sans paramètre pour avoir l'aide et déduire son utilisation.
+Lancez le reader sans paramètre pour avoir l'aide et en déduire son utilisation.
 Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
-*Question 16* : _En regardant le code de reader.c, y a-t-il quelque chose qui
+*Question 15* : _En regardant le code de reader.c, y a-t-il quelque chose qui
                 vous chagrine?_
 
-*Question 17* : _Grâce à des recherches Internet (ou en fouinant dans le code
-                du simulateur), déterminer dans quel trame et dans quel champs
+*Question 16* : _Grâce à des recherches Internet (ou en fouinant dans le code
+                du simulateur), déterminez dans quelle trame et dans quel champs
                 la date est définie._
 
-*Question 18* : _Quelles fonctions sont utilisées dans reader.c pour
+*Question 17* : _Quelles fonctions sont utilisées dans reader.c pour
                 ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                 Comment s'appelle ce type de programmation?_
 
-*Question 19* : _Modifiez le code de reader.c afin qu'il puisse écouter les
-                trames venant de deux simulateurs GPS différents (ports
+*Question 18* : _Modifiez le code de reader.c afin qu'il puisse écouter les
+                trames provenant de deux simulateurs GPS différents (ports
                 paramétrables au lancement). Vérifiez le bon fonctionnement en
                 lançant deux instances du simulateur GPS._
 
-*Question 20* : _Utilisez l'appel système *fork* et faites en sorte que le père
+*Question 19* : _Utilisez l'appel système *fork* et faites en sorte que le père
                 s'occupe de la lecture des ports (le fils ne fait rien pour
                 l'instant)._
 
-*Question 21* : _Créez un pipe et faites en sorte que le père envoie la date
-                (6 octets) de la trame GLL au fils grâce au pipe. Vous pouvez
+*Question 20* : _Créez un pipe et faites en sorte que le père envoie la date
+                 de la trame GLL au fils grâce au pipe. Vous pouvez
                 utiliser les fonctions du fichier util.h pour vous aider._
 
-*Question 22* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
+*Question 21* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
                 utiliser *syslog* pour afficher l'heure dans la console ainsi
                 que le PID du père._
 
-*Question 23* : _La taille des messages échangés entre le père et le fils grâce
+*Question 22* : _La taille des messages échangés entre le père et le fils grâce
                 au pipe étant toujours la même, quel autre mécanisme IPC
                 aurait-on pu utiliser?_
 
