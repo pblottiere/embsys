@@ -2,7 +2,7 @@ GCC = gcc
 BIN = gps_reader
 
 all:
-	$(GCC) reader.c -o $(BIN)
+	$(GCC) util.c reader.c -o $(BIN) -I. -I../../../gps/include
 
 clean:
 	rm -f $(BIN)

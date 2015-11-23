@@ -3,10 +3,11 @@
 :encoding: utf-8
 :imagesdir: ./images
 
+== Généralités
 
-== embsys
+=== embsys
 
-L'ensemble des cours, exemples de cours, PDF et TP sont disponibles sur le dépôt
+L'ensemble des cours, exemples, PDF et TP sont disponibles sur le dépôt
 github https://github.com/pblottiere/embsys.
 
 Si vous voulez cloner entièrement le dépôt :
@@ -24,12 +25,12 @@ $ cd embsys
 $ git checkout HEAD labs
 -----
 
-Si vous n'avez pas *git*, téléchargez l'archive *labs.tar.gz*.
+Si vous n'avez pas *git*, téléchargez le ZIP sur la page d'acceuil de *embsys*.
 
 Le TP d'aujourd'hui se trouve ici : https://github.com/pblottiere/embsys/1_sysprog_part1.
 
 
-== Compte rendu
+=== Compte rendu
 
 Un compte rendu est demandé pour le TP sous forme d'archive (tarball, zip,
 ...) contenant :
@@ -46,9 +47,10 @@ Le compte rendu :
 
 Le travail peut être effectué en binôme.
 
+
 == Avant toutes choses, rappel sur les pointeurs
 
-Un morceau de code source mettant en avant le principe de pointeur  en C :
+Un morceau de code source rappellant le principe de pointeur en C :
 
 [source,c]
 -----
@@ -91,9 +93,9 @@ bf8b89e4
 SKYWALKER
 -----
 
-== Norme NMEA 0183
+== Simulateur GPS
 
-=== National Marine Electronics Association
+=== National Marine Electronics Association (Norme NMEA 0183)
 
 _La norme NMEA 0183 est une spécification pour la communication entre
 équipements marins, dont les équipements GPS. Elle est définie et contrôlée
@@ -169,7 +171,7 @@ Dans le cadre du TP, le simulateur va lui aussi créer une entrée dans
 le */dev/*. Cependant, cette entrée étant virtuelle et créée par programmation,
  elle ne sera pas visible à travers les messages kernel.
 
-== Compilation du simulateur GPS
+=== Compilation du simulateur
 
 Le simulateur GPS se trouve dans le répertoire *labs/gps/* qui contient lui
 même :
@@ -191,6 +193,8 @@ Deux librairies sont compilées *lib/libnmea.so* et *lib/libptmx.so* ainsi que
 le binaire *bin/gps*.
 
 == Exercice 1 : GDB et fichier core
+
+=== Les questions
 
 Une fois le simulateur GPS compilé, le lancer grâce au script
 *labs/gps/run.sh* :
@@ -256,7 +260,7 @@ Une fois dans le prompt, il faut lancer la commande *r* (comme *run*).
 *Question 5* : _Que se passe-t-il quand vous lancez GDB en mode intéractif sur
                le binaire *gps*? Pourquoi?_
 
-Suite au problème repéré à la *Question 5*, aller dans le répertoire
+Suite au problème repéré à la *Question 5*, allez dans le répertoire
 *labs/gps/bin* et lancez la commande suivante :
 
 -----
@@ -269,7 +273,7 @@ ldd ./gps
 *Question 7* : _Comment résoudre ce problème en tant qu'utilisateur? (ne pas
                hésiter à regarder le fichier *labs/gps/run.sh*)_
 
-Relancer ldd et GDB pour vérifier que votre solution a porté ses fruits.
+Relancez ldd puis GDB pour vérifier que votre solution a porté ses fruits.
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
@@ -278,9 +282,20 @@ et communique avec le serveur grâce au réseau.
 
 *Question 8* : _Dans quel contexte ce type d'outils peut être intéressant?_
 
-*NOTE* : Un debugger est le BFF du développeur!
+=== Ce qu'il faut retenir
 
-== Exercice 2 : LD_PRELOAD et gestionnaire de signaux
+    * l'utilité de *ulimit* et comment déclencher la génération d'un fichier core
+    * à quoi sert *GDB* et comment l'utiliser
+    * l'utilité de *ldd*
+    * pourquoi, quand et comment utiliser la variable d'environnement
+      *LD_LIBRARY_PATH*
+
+Ces outils vous permettront de savoir comment réagir face à un logiciel buggé
+(GDB est le BFF du développeur)!
+
+== Exercice 2 : LD_PRELOAD et sigaction
+
+=== Les questions
 
 Maintenant que le problème est identifié, nous allons le résoudre. Cependant,
  nous partons du principe que le code source du simulateur *NE DOIT PAS ÊTRE
@@ -297,34 +312,39 @@ En faisant ainsi, le binaire cherchera d'abord en priorité les fonctions dont i
 a besoin dans *libhook.so*! Pour que cela fonctionne, il faut que les fonctions
 définies dans libhook aient exactement le même prototype.
 
-Pour les questions suivantes, créez un répertoire de travail
-*labs/1_sysprog_part1/src/ld_preload* dans lequel vous allez placé votre code
-source.
+Pour les questions suivantes, allez dans le répertoire de travail
+*labs/1_sysprog_part1/src/ld_preload*. Vous devrez travailler sur trois fichiers:
 
-*Question 9* : _Implémentez la fonction à l'origine du problème repéré au sein
-               du simulateur GPS mais cette fois-çi sans erreurs et dans un
-               fichier séparé (dans le répertoire de travail)._
+    * hook.c
+    * Makefile
+    * run.sh
 
-*Question 10* : _Écrivez un Makefile pour la compilation de cette fonction sous
-                forme d'une librairie partagée (s'inspirer de
-                *labs/gps/src/lib/ptmx/Makefile*) et compilez._
+*Question 9* : _Implémentez dans le fichier hook.c la fonction à l'origine du
+               problème repéré au sein du simulateur GPS mais cette fois-çi
+               sans erreurs._
 
-*Question 11* : _Utilisez LD_PRELOAD pour hooker le binaire *labs/gps/bin/gps*
-                avec votre propre librairie et ainsi empêcher le simulateur GPS
-                de bugger._
+*Question 10* : _Éditez le Makefile pour compiler hook.c sous la forme d'une
+                librairie partagée nommée libhook.so (s'inspirer de
+                *labs/gps/src/lib/ptmx/Makefile*). Testez la compilation._
+
+*Question 11* : _Éditez le fichier run.sh pour utiliser LD_PRELOAD au moment
+                de lancer le simulateur et ainsi hooker le binaire avec la
+                librairie libhook.so. Exécutez run.sh : le simulateur ne doit
+                plus partir en segfault._
 
 Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
 simulateur GPS utilise la fonction *printf* dès son lancement.
 
-*Question 12* : _Utiliser le *man* pour déterminer le prototype de *printf*.
-                Comment est appellé ce type de fonction?_
+*Question 12* : _Utilisez le *man* pour déterminer le prototype de la fonction
+                *printf* (expliquez comment vous utilisez *man* dans ce cas et
+                pourquoi). Comment est appellé ce type de fonction?_
 
 *Question 13* : _Hookez le simulateur pour que ce dernier ne puisse plus
                 être interrompu par le signal SIGINT (Ctrl-C) en
-                réimplémentant la fonction *printf*. Pour cela, utilisez la
-                fonction *sigaction* pour mettre en place un gestionnaire de
-                signaux (s'inspirer de *gps/src/bin/gps/gps.c*)._
+                réimplémentant la fonction *printf* dans libhook.so. Pour cela,
+                utilisez la fonction *sigaction* pour mettre en place un
+                gestionnaire de signaux (s'inspirer de *gps/src/bin/gps/gps.c*)._
 
 *Question 14* : _Comment faire pour interrompre le processus étant donné
                 que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes._
@@ -334,7 +354,17 @@ fonctionnement valide du simulateur.
 
 *NOTE* : LD_PRELOAD peut servir dans bien des situations...
 
+=== Ce qu'il faut retenir
+
+    * comment compiler des fichiers C pour obtenir une librairie partagée
+    * le fonctionnement global d'un Makefile
+    * comment utiliser le *man*
+    * la mise en place d'un gestionnaire de signal grâce à *sigaction*
+    * l'utilité et le fonctionnement de *LD_PRELOAD*
+
 == Exercice 3 : select, fork et pipe
+
+=== Les questions
 
 Lors du lancement du simulateur GPS, nous obtenons le message suivant :
 
@@ -346,41 +376,64 @@ PTTY: /dev/pts/3
 *Question 15* : _Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?_
 
-Nous allons maintenant compiler un binaire permettant de lire les trames NMEA
-émises par le GPS. Pour cela :
+Pour la suite, placez vous dans le répertoire *labs/1_sysprog/src/gps_reader*
+contenant :
+
+    * reader.c : le code du reader que nous allons modifier
+    * Makefile : les règles de compilation
+    * util.c / util.h : fournit des fonctions pratiques pour l'exercice
+
+Pour compiler, lancez :
 
 -----
-cd 1_sysprog_part1/src/gps_reader
 make
 -----
 
 Un binaire *gps_reader* est alors généré.
 
-*Question 16* : _Lancez le reader sans paramètre pour avoir l'aide et déduire
-                son utilisation. Observez les trames NMEA. Grâce à des
-                recherches Internet (ou en fouinant dans le code du simulateur),
-                déterminer dans quel trame et dans quel champs la date est
-                définie._
+Lancez le reader sans paramètre pour avoir l'aide et déduire son utilisation.
+Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
-*Question 17* : _Quelles fonctions sont utilisées pour ouvrir et lire le port
-                virtuel du simulateur? Comment s'appelle ce type de
-                programmation?_
+*Question 16* : _En regardant le code de reader.c, y a-t-il quelque chose qui
+                vous chagrine?_
 
-*Question 18* : _Modifiez le code du *reader* afin qu'il puisse écouter les
+*Question 17* : _Grâce à des recherches Internet (ou en fouinant dans le code
+                du simulateur), déterminer dans quel trame et dans quel champs
+                la date est définie._
+
+*Question 18* : _Quelles fonctions sont utilisées dans reader.c pour
+                ouvrir/écouter/lire/fermer le port virtuel du simulateur?
+                Comment s'appelle ce type de programmation?_
+
+*Question 19* : _Modifiez le code de reader.c afin qu'il puisse écouter les
                 trames venant de deux simulateurs GPS différents (ports
                 paramétrables au lancement). Vérifiez le bon fonctionnement en
                 lançant deux instances du simulateur GPS._
 
-*Question 19* : _Utilisez l'appel système *fork* et faites en sorte que le père
+*Question 20* : _Utilisez l'appel système *fork* et faites en sorte que le père
                 s'occupe de la lecture des ports (le fils ne fait rien pour
                 l'instant)._
 
-*Question 20* : _Créez un pipe et faites en sorte que le père envoie la date
-                de la trame GLL au fils grâce au pipe._
+*Question 21* : _Créez un pipe et faites en sorte que le père envoie la date
+                (6 octets) de la trame GLL au fils grâce au pipe. Vous pouvez
+                utiliser les fonctions du fichier util.h pour vous aider._
 
-*Question 21* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
+*Question 22* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
                 utiliser *syslog* pour afficher l'heure dans la console ainsi
                 que le PID du père._
+
+*Question 23* : _La taille des messages échangés entre le père et le fils grâce
+                au pipe étant toujours la même, quel autre mécanisme IPC
+                aurait-on pu utiliser?_
+
+=== Ce qu'il faut retenir
+
+    * comment utiliser *getopt* pour passer des paramètres en ligne de commande
+      à votre application
+    * comment utiliser *select* pour monitorer plusieurs file descriptors
+    * comment utiliser *fork*
+    * comment utiliser un *pipe* pour établir une IPC
+    * l'utilisation globale de *syslog*
 
 ////
 == Exercice 4 : minicom
@@ -402,28 +455,3 @@ ce TP, nous allons utiliser *minicom*.
 *Question 16* : _Utiliser minicom pour capturer un extrait de la
                 communication dans un fichier._
 ////
-
-== Conclusion : les points à connaître après le TP
-
-En programmation de base :
-
-    * compilation d'un binaire et d'une librairie partagée grâce à un Makefile
-    * gestion de base des signaux
-    * lecture de port série (*select*, *FD_SET*, ...)
-    * passage de paramètres en ligne de commande (*getopt*)
-    * LD_LIBRARY_PATH
-    * LD_PRELOAD
-
-Les commandes :
-
-    * dmesg
-    * ldd
-    * ps
-    * kill
-    * ulimit
-    * man
-
-Les outils :
-
-    * gdb
-    * minicom

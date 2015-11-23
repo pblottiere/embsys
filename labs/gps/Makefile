@@ -1,11 +1,9 @@
-GCC = gcc
-
-all: libptmx libnmea gps
+all: init libptmx libnmea gps
 
 init:
 	mkdir -p bin lib include
 
-gps: init
+gps:
 	cd src/bin/gps && make
 
 libptmx: init
@@ -19,3 +17,8 @@ clean:
 	rm -rf bin
 	rm -rf lib
 	rm -rf include
+
+ok: init libptmx libnmea_ok gps
+
+libnmea_ok:
+	cd src/lib/nmea && make ok

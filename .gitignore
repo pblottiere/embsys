@@ -44,6 +44,8 @@ labs/gps/include
 labs/gps/bin
 labs/gps/lib
 core
+labs/1_sysprog_part1/corr/fork_pipe/gps_reader
+labs/1_sysprog_part1/src/gps_reader/gps_reader
 
 # tex
 *.aux
