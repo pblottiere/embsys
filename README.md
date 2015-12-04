@@ -9,7 +9,7 @@ Lectures are separated in several parts:
 
   * Introduction (lect1)
   * Linux System Programming : processus, pthread, signals, mutex, IPC, ... (lect2 and lect3)
-  * ...
+  * Kernel architectures and Linux module programming (lect4)
 
 ## Labs
 
