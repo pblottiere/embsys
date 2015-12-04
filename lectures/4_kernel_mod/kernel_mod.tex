@@ -117,7 +117,7 @@
     \vspace{3pt}
     \bi
     \itemsep4pt
-    \item gère la partie matérielle (mémoire, processeur, périphérique, ...)
+    \item gère la partie matérielle (mémoire, processeurs, périphériques, ...)
     \item offre la gestion des ressources matérielles à travers des appels
           système
     \item gère les tâches à exéctuer (ordonnancement)
@@ -167,7 +167,7 @@
     \onslide<2->
     {
         \vspace{8pt}
-        Ces niveaux sont appellés {\textbf{Anneau de protection} ou \textbf{Ring}}.
+        Ces niveaux sont appelés {\textbf{Anneaux de protection} ou \textbf{Rings}}.
 
         \begin{figure}
             \centering
@@ -184,7 +184,7 @@
     \subt{Ring}
 
     \vspace{10pt}
-    Dans un processeur x86, la notion d'anneau est représentée via le champs
+    Dans un processeur x86, la notion d'anneau est représentée via le champ
     {\textbf{Input/Output Privilege Level}} du registre EFLAG :
 
     \vspace{10pt}
@@ -195,7 +195,7 @@
 
     \onslide<2->{
         \vspace{8pt}
-        => le champs IOPL ne peut être modifié qu'avec le niveau de privilège le
+        => le champ IOPL ne peut être modifié qu'avec le niveau de privilège le
         plus élevé!
     }
 
@@ -216,7 +216,7 @@
           travers le kernel via les appels système. Chaque processus exécuté
           dans l'espace utilisateur possède sa propre plage de mémoire virtuelle.
     \onslide<2->{
-        \item Espace kernel : réservé pour le kernel et ses modules. Possède le
+        \item Espace kernel : réservé pour le kernel et ses drivers. Possède le
               niveau de privilège le plus élevé.
         \ei
     }
@@ -269,7 +269,7 @@
         \itemsep8pt
         \item empreinte mémoire dépendante du nombre de drivers
         \item difficile à maintenir
-        \item une erreur dans un driver met en danger tous le système (kernel
+        \item une erreur dans un driver met en danger tout le système (kernel
               space)
         \ei
     }
@@ -284,14 +284,14 @@
 
     \vspace{15pt}
     Dans un noyau monolithique modulaire, on choisit au moment de la compilation
-    du kernel si un driver doit être inclu dans le "binaire kernel" ou
+    du kernel si un driver doit être inclus dans le "binaire kernel" ou
     bien compilé en tant que {\textbf{module}}.
 
     \onslide<2->
     {
         \vspace{15pt}
         Un module peut être chargé à la volée pour rajouter une fonctionnalité
-        (comme gérer un nouveau type de matériel)!
+        (comme gérer un nouveau type de matériel).
     }
 
     \onslide<3->
@@ -354,8 +354,7 @@
         \vspace{8pt}
         La plupart des services d'un noyau monolithique sont ici exécutés dans
         l'espace utilisateur via des serveurs de fonctionnalités, réduisant ainsi le
-        volume du kernel!
-
+        volume du kernel.
 
         \begin{figure}
             \centering
@@ -465,12 +464,12 @@
 
     \vspace{15pt}
     Le bootloader, en plus de lancer le kernel, charge en mémoire une image
-    compressée du système de fichier (initrd, initramfs, ...).
+    compressée du système de fichiers (initrd, initramfs, ...).
 
     \onslide<2->
     {
         \vspace{15pt}
-        Le kernel décompresse ensuite l'image et monte le système de fichier. On
+        Le kernel décompresse ensuite l'image et monte le système de fichiers. On
         a alors le RFS (Root FileSystem).
 
         \begin{figure}
@@ -515,7 +514,7 @@ BOOT_IMAGE=/boot/vmlinuz-4.1.0-2-686-pae \
     {
         \vspace{10pt}
         Le binaire d'initialisation consulte le fichier {\textbf{inittab}} pour
-        connaitre l'ordre dans lequel il doit démarrer les processus du système.
+        connaître l'ordre dans lequel il doit démarrer les processus du système.
     }
 
 \end{frame}
@@ -533,7 +532,7 @@ BOOT_IMAGE=/boot/vmlinuz-4.1.0-2-686-pae \
     \vspace{8pt}
     \bi
     \itemsep8pt
-    \item 0 : arrêt le système
+    \item 0 : arrêt du système
     \item 1 ou S : mode maintenance
     \item 2, 3, 4 ou 5 : mode multi-utilisateurs
     \item 6 : redémarrage du système
@@ -620,7 +619,7 @@ BOOT_IMAGE=/boot/vmlinuz-4.1.0-2-686-pae \
 
     \vspace{10pt}
     L'utilitaire {\textbf{mknod}} peut être utilisé pour créer des noeuds au
-    sein du système de fichier :
+    sein du système de fichiers :
 
     \vspace{10pt}
     \lstnod
@@ -687,7 +686,7 @@ crw-rw---- 1 root dial 4, 67 déc. 3 21:50 /dev/ttyS3
     \vspace{20pt}
     L'accès à une ressource matérielle via un fichier de type caractère est
     direct et non bufferisé. La plupart des périphériques sont de type
-    caractère!
+    caractère.
 
     \onslide<2->
     {
@@ -703,19 +702,20 @@ crw-rw---- 1 root dial 4, 67 déc. 3 21:50 /dev/ttyS3
 \begin{frame}{Administrer les modules sous Linux (1)}
     \subt{Où sont-ils?}
 
-    \vspace{10pt}
+    \vspace{3pt}
     Sous Linux, un module kernel étend sans reboot les fonctionnalités du noyau
     et est représenté par des fichiers ayant l'extension {\textbf{.ko}} (comme
     Kernel Object).
 
     \begin{figure}
         \centering
-        \includegraphics[scale=0.5]{modules.png}
+        \includegraphics[scale=0.6]{modules.png}
         \src{https://drivers.suse.com/doc/SolidDriver/Kernel_Modules.html}{Modules}
     \end{figure}
 
     \onslide<2->
     {
+        \vspace{-14pt}
         Les modules sont présents dans le répertoire
         {\textit{/lib/modules/version}}.
     }
@@ -746,7 +746,7 @@ load_module() {
     \subt{Phases de chargement}
 
     \vspace{15pt}
-    Lorsque le kernel a besoin d'une foncitonnalité qu'il ne trouve pas dans son
+    Lorsque le kernel a besoin d'une fonctionnalité qu'il ne trouve pas dans son
     espace, le démon kernel {\textbf{kmod}} lance l'utilitaire {\textbf{modprobe}}
     pour charger le module :
 
@@ -806,12 +806,13 @@ load_module() {
     \subt{Déchargement}
 
     \vspace{20pt}
-    Un module ne peut pas être déchargé si il est actuellement utilisé.
+    Un module ne peut pas être déchargé si il est actuellement utilisé ou
+    nécessaire pour d'autres modules chargés.
 
     \onslide<2->
     {
         \vspace{20pt} On peut voir le nombre de processus utilisant un module via
-        la commande {\textbf{lsmod}} ou bien en étudiant le troisième champs du
+        la commande {\textbf{lsmod}} ou bien en étudiant le troisième champ du
         fichier virtuel {\textbf{/proc/modules}}.
     }
 
@@ -867,7 +868,7 @@ c1001040 t xen_hypercall_set_gdt
 }
 
 \begin{frame}{Développement de module kernel (2)}
-    \subt{Les appels systèmes}
+    \subt{Les appels système}
 
     \vspace{12pt}
     Un module étant exécuté dans l'espace kernel, il n'a pas accès aux
@@ -876,7 +877,7 @@ c1001040 t xen_hypercall_set_gdt
     \onslide<2->
     {
         \vspace{12pt}
-        Seuls les fonctions fournies par le kernel lui même sont accessibles. Elles
+        Seules les fonctions fournies par le kernel lui même sont accessibles. Elles
         sont définies dans le fichier virtuel /proc/kallsyms :
 
         \vspace{12pt}
@@ -947,7 +948,7 @@ MODULE_PARAM_DESC(varname, "VARNAME DOCUMENTATION")
 
     \vspace{20pt}
     Pour cela, les fonctions {\textbf{create\_proc\_entry}}, {\textbf{copy\_to\_user}}
-    et {\textbf{copy\_from\_user}} sont utilisées!
+    et {\textbf{copy\_from\_user}} sont utilisées.
 
     \onslide<2->
     {
@@ -965,8 +966,8 @@ MODULE_PARAM_DESC(varname, "VARNAME DOCUMENTATION")
 \defverbatim{\lstfops}{
     \begin{lstlisting}
 struct file_operations fops = {
-    .read = device_read,
-    .open = device_open
+    .read = custom_device_read,
+    .open = custom_device_open
 };
     \end{lstlisting}
 }
@@ -982,8 +983,8 @@ struct file_operations fops = {
     \onslide<2->
     {
         \vspace{15pt}
-        Par défaut, les actions pointent vers un pointeur NULL. Si le développeur
-        du module veut customiser l'action d'ouverture et de lecture du device :
+        Par défaut, les actions pointent vers NULL. Si le développeur du module
+        veut customiser l'action d'ouverture et de lecture du device :
         \vspace{8pt}
         \lstfops
     }
@@ -997,7 +998,7 @@ struct file_operations fops = {
     \subt{Les états}
 
     \vspace{15pt}
-    Un module peut gérer l'états des tâches qui communiquent avec lui et même
+    Un module peut gérer l'état des tâches qui communiquent avec lui et même
     les ajouter dans des WaitQ que le scheduler réveillera au moment opportun!
 
     \vspace{15pt}
