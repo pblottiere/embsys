@@ -30,7 +30,7 @@ void decode_frame(char * frame)
         float longitude = get_longitude(frame);
 
         // fill shared memory
-        if (time != -1)
+        if ((time != -1) && (latitude != -1) && (longitude != -1))
         {
             hnd.shdata->time = time;
             hnd.shdata->latitude = latitude;
@@ -78,12 +78,6 @@ int main(int argc, char *argv [])
             if (bytes > 0)
                 decode_frame(buff);
         }
-
-        printf("%s\n", buff);
-        printf("%f\n", hnd.shdata->latitude);
-        printf("%f\n", hnd.shdata->longitude);
-        printf("%d\n", hnd.shdata->time);
-        fflush(stdout);
     }
 
     // close handlers
