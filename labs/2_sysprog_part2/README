@@ -100,12 +100,12 @@ Ouvrez un second terminal et lancez le binaire *shm_writer* :
 
 -----
 $ cd embsys/labs/2_sysprog_part2/src/shm_writer
-$ ./shm_writer -p /dev/pts/X -s myshm
+$ ./shm_writer -p /dev/pts/X -s myshm -l sem
 
 -----
 
 *Question 1* : _Selon vous, à quoi correspond le paramètre *myshm* indiquée via
-               l'option *-s* de *shm_writer*?_
+               l'option *-s* de *shm_writer*? Et *sem*?_
 
 *Question 2* : _Où peut-on trouver la représentation du segment de mémoire
                partagée sur le système de fichiers?_
@@ -149,7 +149,7 @@ obtenir :
 
 -----
 $ make
-* ./shm_reader -s myshm
+* ./shm_reader -s myshm -l sem
 time : XXXXXX
 
 time : XXXXXX
@@ -163,18 +163,23 @@ Dans le main de *shm_reader*, le paramètre *handlers* est défini en tant que
 variable globale.
 
 *Question 8* : _Quelle est la particularité d'une variable globale? Comment
-               fait-on pour définir une telle variable?__
+               fait-on pour définir une telle variable?_
 
 *Question 9* : _Dans le *main* de shm_reader.c, complétez la boucle *while* de
                la fonction shmreader afin que les champs *latitude* et
                *longitude* du segment de mémoire partagée *handlers.shdata*
                soient affichés en même temps que le champs *time*._
 
+*Question 10* : _Inspirez vous de la fonction *decode* de
+                shm_writer/shm_writer.c pour lever/baisser le sémaphore lors
+                de la lecture du segment de mémoire partagée dans la fonction
+                *display*._
+
 Recompilez et exécutez *shm_reader*. Vous devez obtenir :
 
 -----
 $ make
-$ ./forwarder -s myshm
+$ ./shm_reader -s myshm -l sem
 time : XXXX
 latitude : XXXX
 longitude : XXXX
@@ -186,15 +191,34 @@ longitude : XXXX
 ...
 -----
 
+Modifiez la fonction *sem_open* utilisée dans la fonction *hndopen* et définie
+dans *shm_writer/handler.c* de cette manière :
+
+-----
+// handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR, 1);
+handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR, 0);
+-----
+
+Recompilez *shm_writer*. Relancez *shm_writer* puis *shm_reader*.
+
+*Question 11* : _Que se passe t-il côté *shm_reader*? Pourquoi? Quel effet a eu
+                la modification précédente?_
+
+Rétablissez l'appel à *sem_open* du fichier *shm_writer.handler.c* ainsi :
+
+-----
+handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR, 1);
+-----
+
 Lorsque l'utilisateur interrompt le processus via Ctrl-C, la fonction *hndclose*
 n'est jamais appellée et les handlers d'entrées/sorties ne sont pas fermés
 correctement.
 
-*Question 10* : _Mettez en place un gestionnaire de signaux qui appelle la
+*Question 12* : _Mettez en place un gestionnaire de signaux qui appelle la
                 fonction *hndclose* lors d'une interruption. Inspirez vous de
                 *shm_writer/shm_writer.c*._
 
-*Quesiton 11* : _Comparez la fonction *hndclose* définie dans
+*Quesiton 13* : _Comparez la fonction *hndclose* définie dans
                 *shm_writer/handler.c* avec celle définie dans
                 *shm_reader/handler.c*. Quelle différence voyez vous? Expliquez._
 
@@ -202,8 +226,9 @@ correctement.
 
     * la notion de variable globale
     * les fonctions permettant de gérer les segments de mémoire partagée :
-      *shm_open*, *ftruncate*, *mmap* et *shm_unlink.
-    * la mise en place d'un gestionnaire de signaux via *sigaction*
+      *shm_open*, *ftruncate*, *mmap* et *shm_unlink*.
+    * l'utilisation de *sem_open*, *sem_wait* et *sem_post*.
+    * la mise en place d'un gestionnaire de signaux via *sigaction*.
 
 == Exercice 2 : thread et mutex
 

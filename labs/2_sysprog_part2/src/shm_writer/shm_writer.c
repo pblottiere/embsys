@@ -32,9 +32,11 @@ void decode_frame(char * frame)
         // fill shared memory
         if ((time != -1) && (latitude != -1) && (longitude != -1))
         {
+            sem_wait(hnd.sem);
             hnd.shdata->time = time;
             hnd.shdata->latitude = latitude;
             hnd.shdata->longitude = longitude;
+            sem_post(hnd.sem);
         }
     }
 }

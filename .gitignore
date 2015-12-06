@@ -48,6 +48,7 @@ core
 labs/1_sysprog_part1/corr/fork_pipe/gps_reader
 labs/1_sysprog_part1/src/gps_reader/gps_reader
 labs/2_sysprog_part2/src/shm_writer/shm_writer
+labs/2_sysprog_part2/src/shm_reader/shm_reader
 
 # tex
 *.aux

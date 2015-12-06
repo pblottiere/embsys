@@ -3,11 +3,14 @@
 
 #include <util.h>
 #include <shdata.h>
+#include <semaphore.h>
 
 //-----------------------------------------------------------------------------
 struct HANDLERS
 {
     int gpsfd;
+    sem_t * sem;
+    char * semname;
     int shmfd;
     char * shm;
     struct SHDATA *shdata;

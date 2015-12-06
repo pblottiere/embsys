@@ -7,27 +7,32 @@
 //-----------------------------------------------------------------------------
 void print_usage()
 {
-	fprintf(stderr, "Invalid usage: forwarder -s shm\n");
+	fprintf(stderr, "Invalid usage: forwarder -s shm -l sem\n");
 }
 
 //-----------------------------------------------------------------------------
 int parse_args(int argc, char *argv[], struct OPTS *opts)
 {
 	char * shm = NULL;
+    char * sem = NULL;
 
 	// parse comand line
-    if (argc != 3)
+    if (argc != 5)
     {
 		print_usage();
 		return -1;
     }
 
-    char * options = "s:";
+    char * options = "l:s:";
     int option;
     while((option = getopt(argc, argv, options)) != -1)
     {
         switch(option)
         {
+			case 'l':
+				sem = optarg;
+				break;
+
 			case 's':
 				shm = optarg;
 				break;
@@ -46,6 +51,7 @@ int parse_args(int argc, char *argv[], struct OPTS *opts)
 	}
 
 	opts->shm = shm;
+    opts->sem = sem;
 
 	return 0;
 }

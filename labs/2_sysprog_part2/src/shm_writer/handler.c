@@ -11,6 +11,8 @@
 void hndinit(struct HANDLERS *handlers)
 {
     handlers->gpsfd = -1;
+    handlers->sem = NULL;
+    handlers->semname = NULL;
     handlers->shmfd = -1;
     handlers->shm = NULL;
     handlers->shdata = NULL;
@@ -22,8 +24,18 @@ int hndopen(struct OPTS opts, struct HANDLERS *handlers)
     // init handlers
     hndinit(handlers);
 
+    // open semaphore
+    handlers->semname = opts.sem;
+    handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT,
+                             S_IRUSR|S_IWUSR, 1);
+    if (handlers->sem == SEM_FAILED)
+    {
+        perror ("sem_open");
+        goto err;
+    }
+
     // open gps port
-    handlers->gpsfd = open(opts.port, O_RDWR | O_NOCTTY);
+    handlers->gpsfd = open(opts.port, O_RDWR|O_NOCTTY);
     if (handlers->gpsfd == -1)
     {
         perror("open");
@@ -67,6 +79,13 @@ int hndclose(struct HANDLERS *handlers)
     // close gps port
     if (handlers->gpsfd != -1)
         close(handlers->gpsfd);
+
+    // close semaphore
+    if (handlers->sem != NULL)
+        sem_close(handlers->sem);
+
+    if (handlers->semname != NULL)
+        sem_unlink(handlers->semname);
 
     // close shm
     if (handlers->shmfd != -1)

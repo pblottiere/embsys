@@ -1,10 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <strings.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <signal.h>
-#include <math.h>
 
 #include <opts.h>
 #include <handler.h>
@@ -16,9 +12,12 @@ void *shmreader()
 {
     while(1)
     {
-        printf("\n");
-        printf("time: %d\n", handlers.shdata->time);
-        fflush(stdout);
+        if(handlers.shdata != NULL)
+        {
+            printf("\n");
+            printf("time: %d\n", handlers.shdata->time);
+            fflush(stdout);
+        }
         usleep(500000);
     }
 }
