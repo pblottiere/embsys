@@ -73,8 +73,8 @@ int write_gll(int fd)
         bytes = write(fd, gll.frame, sizeof(gll.frame));
     }
 
-    lat += 0.00001;
-    lon += 0.00001;
+    lat += 0.001;
+    lon += 0.001;
 
     return bytes;
 }
