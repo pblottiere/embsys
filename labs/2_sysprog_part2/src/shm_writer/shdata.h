@@ -3,9 +3,9 @@
 
 struct SHDATA
 {
-	float latitude;
-	float longitude;
-	int time;
+    float latitude;
+    float longitude;
+    int time;
 };
 
 #endif // SHDATA_H

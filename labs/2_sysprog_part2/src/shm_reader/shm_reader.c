@@ -25,20 +25,20 @@ void *shmreader()
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv [])
 {
-	// parse args
-	struct OPTS opts;
-	if (parse_args(argc, argv, &opts) == -1)
-		exit(EXIT_FAILURE);
+    // parse args
+    struct OPTS opts;
+    if (parse_args(argc, argv, &opts) == -1)
+        exit(EXIT_FAILURE);
 
-	// open handlers
-	if (hndopen(opts, &handlers) == -1)
-		exit(EXIT_FAILURE);
+    // open handlers
+    if (hndopen(opts, &handlers) == -1)
+        exit(EXIT_FAILURE);
 
     // run
     shmreader();
 
-	// close
+    // close
     hndclose(&handlers);
 
-	exit(EXIT_SUCCESS);
+    exit(EXIT_SUCCESS);
 }

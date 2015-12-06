@@ -10,9 +10,9 @@
 struct HANDLERS
 {
     sem_t * sem;
-	char * shm;
-	int shmfd;
-	struct SHDATA *shdata;
+    char * shm;
+    int shmfd;
+    struct SHDATA *shdata;
 };
 
 //-----------------------------------------------------------------------------

@@ -4,8 +4,8 @@
 //-----------------------------------------------------------------------------
 struct OPTS
 {
-	char * port;
-	char * shm;
+    char * port;
+    char * shm;
     char * sem;
 };
 
