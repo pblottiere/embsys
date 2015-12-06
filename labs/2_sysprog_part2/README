@@ -1,0 +1,302 @@
+= TP2 : Programmation Système (partie 2)
+:author: Blottière Paul
+:email: blottiere.paul@gmail.com
+:encoding: utf-8
+
+== Généralités
+
+=== embsys
+
+L'ensemble des cours, exemples, PDF et TP sont disponibles sur le dépôt
+github https://github.com/pblottiere/embsys.
+
+Si vous voulez cloner entièrement le dépôt :
+
+-----
+$ git clone https://github.com/pblottiere/embsys
+-----
+
+Si vous voulez cloner le dépôt mais avoir simplement les labs dans votre
+répertoire de travail :
+
+-----
+$ git clone -n https://github.com/pblottiere/embsys --depth 1
+$ cd embsys
+$ git checkout HEAD labs
+-----
+
+Si vous souhaitez mettre à jour un dépôt que vous avez préalablement cloné :
+
+-----
+$ cd embsys
+$ git pull
+-----
+
+Si vous n'avez pas *git*, téléchargez le ZIP sur la page d'acceuil de *embsys*.
+
+Le TP d'aujourd'hui se trouve ici : https://github.com/pblottiere/embsys/labs/2_sysprog_part2.
+
+=== Simulateur GPS
+
+Dans le cadre de ce TP, nous allons réutiliser le simulateur GPS étudié lors du
+permier TP. Tout d'abord, il faut compiler le simulateur :
+
+-----
+$ cd labs/gps
+$ make ok
+-----
+
+Nous lancerons le simulateur plus tard dans le TP grâce au script *run.sh*.
+
+=== Mémoire partagée : shm_writer
+
+Comme vu dans le TP précédent, le simulateur GPS envoie les données sur un
+port virtuel à travers /dev/pts/X. Le binaire *shm_writer*
+présent dans le répertoire 2_sysprog_part2/src/shw_writer lit les données
+envoyées par le simulateur GPS sur le port virtuel et écrit en mémoire partagée
+les informations *latitude*, *longitude* et *time*.
+
+Pour compiler le binaire *shm_writer* :
+
+-----
+$ cd labs/2_sysprog_part2/src/shm_writer
+$ make
+-----
+
+Les données en mémoire partagée sur représentées via la structure SHDATA
+définie dans le header shm_writer/shdata.h :
+
+-----
+struct SHDATA
+{
+    float latitude;
+    float longitude;
+    int time;
+};
+-----
+
+== Exercice 1 : mémoire partagée et sémaphore
+
+Dans le cadre de ce premier exercice, nous allons naviguer dans le code source
+des répertoires 2_sysprog_part2/src/shm_writer et
+2_sysprog_part2/src/shm_reader.
+
+Le but de l'exercice est de lire la mémoire partagée remplie par le binaire
+*shm_writer* et d'afficher ces informations à l'écran toutes les secondes en
+modifiant le code de *shm_reader*.
+
+=== Les questions
+
+Tout d'abord, ouvrez un terminal et lancez le simulateur GPS :
+
+-----
+$ cd embsys/labs/gps
+$ sh run.sh
+PTTY: /dev/pts/X
+
+-----
+
+Ouvrez un second terminal et lancez le binaire *shm_writer* :
+
+-----
+$ cd embsys/labs/2_sysprog_part2/src/shm_writer
+$ ./shm_writer -p /dev/pts/X -s myshm
+
+-----
+
+*Question 1* : _Selon vous, à quoi correspond le paramètre *myshm* indiquée via
+               l'option *-s* de *shm_writer*?_
+
+*Question 2* : _Où peut-on trouver la représentation du segment de mémoire
+               partagée sur le système de fichiers?_
+
+Placez vous dans le répertoire 2_sysprog_part2/src/shm_writer.
+
+*Question 3* : _En étudiant la fonction *hndopen* implémentée dans le fichier
+               *handler.c*, décrivez les fonctions utilisées pour gérer le
+               segment de mémoire partagée._
+
+*Question 4* : _Quelle fonction utilise le paramètre *myshm* passé en ligne de
+               commande?_
+
+*Question 5* : _Quel flag en particulier indique une *création* de segment
+               et pas seulement une ouveture en lecture/écriture?_
+
+Placez vous maintenant dans le répertoire 2_sysprog_part2/src/shm_reader.
+
+*Question 6* : _Modifiez la fonction *hndopen* implémentée dans *handler.c*
+               pour ouvrir le segment de mémoire partagée en lecture/écriture.
+               Les champs *shm*, *shmfd* et *shdata* de la structure *handlers*
+               passée en paramètre doivent être mis à jour._
+
+En voulant compiler le binaire *shm_reader*, vous devez obtenir ceci :
+
+-----
+$ make
+/tmp/ccawsZJY.o: In function `hndopen':
+handler.c:(.text+0x66): undefined reference to `shm_open'
+collect2: error: ld returned 1 exit status
+-----
+
+Pour utiliser les fonctions liées à la mémoire partagée, la librairie *realtime*
+est nécessaire.
+
+*Question 7* : _En s'inspirant de *shm_writer/Makefile*, modifiez le fichier
+               *shm_reader/Makefile* pour que la compilation passe._
+
+Une fois la compilation réalisée avec succès, exécutez *shm_reader*. Vous devez
+obtenir :
+
+-----
+$ make
+* ./shm_reader -s myshm
+time : XXXXXX
+
+time : XXXXXX
+
+...
+-----
+
+*Question 7* : _Expliquez l'évolution de la valeur *time* affichée à l'écran._
+
+Dans le main de *shm_reader*, le paramètre *handlers* est défini en tant que
+variable globale.
+
+*Question 8* : _Quelle est la particularité d'une variable globale? Comment
+               fait-on pour définir une telle variable?__
+
+*Question 9* : _Dans le *main* de shm_reader.c, complétez la boucle *while* de
+               la fonction shmreader afin que les champs *latitude* et
+               *longitude* du segment de mémoire partagée *handlers.shdata*
+               soient affichés en même temps que le champs *time*._
+
+Recompilez et exécutez *shm_reader*. Vous devez obtenir :
+
+-----
+$ make
+$ ./forwarder -s myshm
+time : XXXX
+latitude : XXXX
+longitude : XXXX
+
+time : XXXX
+latitude : XXXX
+longitude : XXXX
+
+...
+-----
+
+Lorsque l'utilisateur interrompt le processus via Ctrl-C, la fonction *hndclose*
+n'est jamais appellée et les handlers d'entrées/sorties ne sont pas fermés
+correctement.
+
+*Question 10* : _Mettez en place un gestionnaire de signaux qui appelle la
+                fonction *hndclose* lors d'une interruption. Inspirez vous de
+                *shm_writer/shm_writer.c*._
+
+*Quesiton 11* : _Comparez la fonction *hndclose* définie dans
+                *shm_writer/handler.c* avec celle définie dans
+                *shm_reader/handler.c*. Quelle différence voyez vous? Expliquez._
+
+=== Ce qu'il faut retenir
+
+    * la notion de variable globale
+    * les fonctions permettant de gérer les segments de mémoire partagée :
+      *shm_open*, *ftruncate*, *mmap* et *shm_unlink.
+    * la mise en place d'un gestionnaire de signaux via *sigaction*
+
+== Exercice 2 : thread et mutex
+
+Dans le cadre de ce deuxième exercice, nous allons naviguer dans le code source
+du répertoire *2_sysprog_part2/src/converter*.
+
+Les coordonnées latitude et longitude écrites en mémoire partagée par le
+binaire *shm_writer* sont définies en degré et minute (norme NMEA). Le
+but est ici de mettre en place un thread chargé de convertir ces coordonnées au
+format decimal et de les rendre disponibles à travers une structure globale
+accessible par tous les threads du binaire *converter* et protégée par mutex.
+
+=== Les questions
+
+Le simulateur *gps* et *shm_writer* doivent toujours être actifs pour la suite
+de l'exercice.
+
+Pour la suite de l'exercice, placez vous dans le répertoire
+2_sysprog_part2/src/converter.
+
+Dans un premier temps, compilez et exécutez *converter* :
+
+-----
+$ cd 2_sysprog_part2/src/converter
+$ make
+$ ./converter -s myshm
+time : 0
+latitude : 0
+longitude : 0
+
+time : 0
+latitude : 0
+longitude : 0
+...
+-----
+
+La fonction affichant periodiquement les coordonnées decimales est exécutée
+dans un premier thread par la fonction *display*.
+
+Dans la suite de l'exercice, le but est de mettre en place un deuxième thread
+chargé de mettre à jour les coordonnées decimales qui sont affichées par le
+premier thread.
+
+*Question* : _Décrivez les deux fonctions utilisées dans converter.c pour la
+             mise en place du thread1 affichant les coordonnées._
+
+*Question* : _Utilisez la fonction *pthread_create* et *pthread_detach* afin
+             d'exécuter la fonction *convert* dans un deuxième thread._
+
+Comme dans l'exercice précédent, la structure projetée en mémoire partagée est
+accessible à travers la variable globale *shdata*.
+
+*Question* : _Modifiez la fonction *convert* afin que la variable globale
+             *decimal_coord* soit mise à jour avec les coordonnées decimales
+             et la date. Vous pouvez utiliser la fonction *to_decimal* pour la
+             conversion._
+
+Compilez et exécutez :
+
+-----
+$ make
+$ ./converter -s shm
+time : sqdf
+latitude : qsdf
+longitude : qsdf
+
+time : qsfd
+latitude : qsdf
+longitude : sdqf
+...
+-----
+
+=== Ce qu'il faut retenir
+
+    * les fonctions de base permettant de gérer les threads : pthread_create,
+      pthread_join et pthread_detach
+    * la notion de mutex à travers les fonctions TODO
+
+== Exercice 3 : sockets, timerfd et plugin
+
+Le but de l'exercice est d'envoyer periodiquement les cordonnées de latitude
+et longitude sur le réseau. L'envoi se fera soit par TCP soit par UDP via une
+option passée en ligne de commande. La sélection du mode TCP ou UDP impliquera
+le chargement dynamique de la librairie correspondante (notion de plugin).
+
+=== Les question
+
+Le simulateur *gps* et *shm_writer* doivent toujours être actifs pour la suite
+de l'exercice.
+
+Dans le cadre de ce troisième exercice, nous allons naviguer dans le code source
+du répertoire *2_sysprog_part2/src/forwarder*.
+
+Dans un premier temps, compilez et exécuter
+
+
