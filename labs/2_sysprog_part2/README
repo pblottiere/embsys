@@ -110,7 +110,7 @@ $ ./shm_writer -p /dev/pts/X -s myshm -l lock
 *Question 2* : _Où peut-on trouver la représentation du segment de mémoire
                partagée sur le système de fichiers?_
 
-*Question 3* : _Faîtes un schéma bloc des différents éléments mis en jeu._
+*Question 3* : _Faites un schéma bloc des différents éléments mis en jeu._
 
 Placez vous dans le répertoire 2_sysprog_part2/src/shm_writer.
 
@@ -248,8 +248,7 @@ accessible par tous les threads du binaire *converter* et protégée par mutex.
 Le simulateur *gps* et *shm_writer* doivent toujours être actifs pour la suite
 de l'exercice.
 
-Pour la suite de l'exercice, placez vous dans le répertoire
-2_sysprog_part2/src/converter.
+Placez vous dans le répertoire 2_sysprog_part2/src/converter.
 
 Dans un premier temps, compilez et exécutez *converter* :
 
@@ -274,14 +273,14 @@ Dans la suite de l'exercice, le but est de mettre en place un deuxième thread
 chargé de mettre à jour les coordonnées decimales qui sont affichées par le
 premier thread, le tout vérouillé par un mutex.
 
-*Question 16* : _Faîtes un schéma bloc des éléments à mettre en jeu pour atteindre
+*Question 16* : _Faites un schéma bloc des éléments à mettre en jeu pour atteindre
                 notre but (simulateur GPS et shm_writer compris)._
 
 *Question 17* : _Décrivez les deux fonctions utilisées dans converter.c pour la
                 mise en place du thread1 affichant les coordonnées._
 
-*Question 18* : _Utilisez la fonction *pthread_create* et *pthread_detach* afin
-                d'exécuter la fonction *convert* dans un deuxième thread._
+*Question 18* : _Utilisez la fonction *pthread_create* afin d'exécuter la
+                fonction *convert* dans un deuxième thread._
 
 Comme dans l'exercice précédent, la structure projetée en mémoire partagée est
 accessible à travers la variable globale *handlers.shdata*.
@@ -312,24 +311,61 @@ longitude : XXXX
 === Ce qu'il faut retenir
 
     * les fonctions de base permettant de gérer les threads : *pthread_create*,
-      *pthread_join* et *pthread_detach*.
+      et *pthread_join*.
     * les mutex avec *pthread_mutex_lock* et *pthread_mutex_unlock*.
 
 == Exercice 3 : sockets, timerfd et plugin
 
 Le but de l'exercice est d'envoyer periodiquement les cordonnées de latitude
-et longitude sur le réseau. L'envoi se fera soit par TCP soit par UDP via une
-option passée en ligne de commande. La sélection du mode TCP ou UDP impliquera
-le chargement dynamique de la librairie correspondante (notion de plugin).
+et longitude sur le réseau. L'envoi se fera par UDP.
 
-=== Les question
+=== Les questions
 
 Le simulateur *gps* et *shm_writer* doivent toujours être actifs pour la suite
-de l'exercice.
+de l'exercice. Pour cet exercice, on doit aussi compiler et exécuter le binaire
+*net_reader* dans un terminal séparé :
 
-Dans le cadre de ce troisième exercice, nous allons naviguer dans le code source
-du répertoire *2_sysprog_part2/src/forwarder*.
+-----
+$ cd 2_sysprog_part2/src/net_reader
+$ make
+$ ./net_reader -p 8888
 
-Dans un premier temps, compilez et exécuter
+-----
 
+Dans le cadre de ce troisième exercice, nous allons naviguer dans le code
+source du répertoire *2_sysprog_part2/src/forwarder*.
 
+*Question 21* : _À quoi correspond ici le paramètre 8888? Quel outil
+                pouvez vous utiliser pour vérifier qu'une connexion réseau
+                est bien ouverte?_
+
+*Question 22* : _En analysant le fichier handler.c, indiquez les fonctions
+                liées à la programmation de socket._
+
+*Question 23* : _Toujours dans handler.c, quels flags indique une connexion
+                UDP? Quelle est la particularité de l'UDP par rapport à du
+                TCP?_
+
+*Question 24* : _Encore dans handler.c, à quoi sert le premier paramètre de la
+                fonction *inet_aton*?_
+
+*Question 25* : _Dans la fonction *forward* du fichier forwarder.c, utilisez la
+                fonction *sendto* pour envoyer la variable *message* sur le
+                réseau._
+
+Compilez puis exécutez correctement le binaire *forwarder*. Vous devriez
+obtenir ceci du côté *net_reader* :
+
+-----
+$ ./net_reader -p 8888
+received: 000000/49.3055/8.3795
+received: 223222/49.3065/8.3805
+...
+-----
+
+*Question 26* : _Faites un schéma bloc de tous éléments mis en jeu pour arriver
+                ici._
+
+=== Ce qu'il faut retenir
+
+    * les fonctions liées à la programmation réseau
