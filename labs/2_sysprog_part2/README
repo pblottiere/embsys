@@ -170,7 +170,7 @@ variable globale.
 *Question 11* : _Dans le *main* de shm_reader.c, complétez la boucle *while* de
                la fonction shmreader afin que les champs *latitude* et
                *longitude* du segment de mémoire partagée *handlers.shdata*
-               soient affichés en même temps que le champs *time*._
+               soient affichés en même temps que le champ *time*._
 
 *Question 12* : _Inspirez vous de la fonction *decode_frame* de
                 shm_writer/shm_writer.c pour lever/baisser le sémaphore lors
@@ -314,9 +314,9 @@ longitude : XXXX
       et *pthread_join*.
     * les mutex avec *pthread_mutex_lock* et *pthread_mutex_unlock*.
 
-== Exercice 3 : sockets, timerfd et plugin
+== Exercice 3 : sockets
 
-Le but de l'exercice est d'envoyer periodiquement les cordonnées de latitude
+Le but de l'exercice est d'envoyer periodiquement les coordonnées de latitude
 et longitude sur le réseau. L'envoi se fera par UDP.
 
 === Les questions
