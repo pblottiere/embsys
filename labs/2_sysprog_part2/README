@@ -342,7 +342,7 @@ source du répertoire *2_sysprog_part2/src/forwarder*.
 *Question 22* : _En analysant le fichier handler.c, indiquez les fonctions
                 liées à la programmation de socket._
 
-*Question 23* : _Toujours dans handler.c, quels flags indique une connexion
+*Question 23* : _Toujours dans handler.c, quels flags indiquent une connexion
                 UDP? Quelle est la particularité de l'UDP par rapport à du
                 TCP?_
 
