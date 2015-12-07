@@ -235,7 +235,7 @@ correctement.
 == Exercice 2 : thread et mutex
 
 Dans le cadre de ce deuxième exercice, nous allons naviguer dans le code source
-du répertoire *2_sysprog_part2/src/converter*.
+du répertoire 2_sysprog_part2/src/converter.
 
 Les coordonnées latitude et longitude écrites en mémoire partagée par le
 binaire *shm_writer* sont définies en degré et minute (norme NMEA). Le
@@ -256,7 +256,7 @@ Dans un premier temps, compilez et exécutez *converter* :
 -----
 $ cd 2_sysprog_part2/src/converter
 $ make
-$ ./converter -s myshm
+$ ./converter -s myshm -l lock
 time : 0
 latitude : 0
 longitude : 0
@@ -268,46 +268,52 @@ longitude : 0
 -----
 
 La fonction affichant periodiquement les coordonnées decimales est exécutée
-dans un premier thread par la fonction *display*.
+dans un premier thread par la fonction *display* définie dans converter.c.
 
 Dans la suite de l'exercice, le but est de mettre en place un deuxième thread
 chargé de mettre à jour les coordonnées decimales qui sont affichées par le
-premier thread.
+premier thread, le tout vérouillé par un mutex.
 
-*Question* : _Décrivez les deux fonctions utilisées dans converter.c pour la
-             mise en place du thread1 affichant les coordonnées._
+*Question 16* : _Faîtes un schéma bloc des éléments à mettre en jeu pour atteindre
+                notre but (simulateur GPS et shm_writer compris)._
 
-*Question* : _Utilisez la fonction *pthread_create* et *pthread_detach* afin
-             d'exécuter la fonction *convert* dans un deuxième thread._
+*Question 17* : _Décrivez les deux fonctions utilisées dans converter.c pour la
+                mise en place du thread1 affichant les coordonnées._
+
+*Question 18* : _Utilisez la fonction *pthread_create* et *pthread_detach* afin
+                d'exécuter la fonction *convert* dans un deuxième thread._
 
 Comme dans l'exercice précédent, la structure projetée en mémoire partagée est
-accessible à travers la variable globale *shdata*.
+accessible à travers la variable globale *handlers.shdata*.
 
-*Question* : _Modifiez la fonction *convert* afin que la variable globale
-             *decimal_coord* soit mise à jour avec les coordonnées decimales
-             et la date. Vous pouvez utiliser la fonction *to_decimal* pour la
-             conversion._
+*Question 19* : _Modifiez la fonction *convert* afin que la variable globale
+                *decimal_coord* soit mise à jour avec les coordonnées decimales.
+                Vous pouvez utiliser la fonction *to_decimal* pour la conversion._
 
 Compilez et exécutez :
 
 -----
 $ make
-$ ./converter -s shm
-time : sqdf
-latitude : qsdf
-longitude : qsdf
+$ ./converter -s myshm -l lock
+time : XXXX
+latitude : XXXX
+longitude : XXXX
 
-time : qsfd
-latitude : qsdf
-longitude : sdqf
+time : XXXX
+latitude : XXXX
+longitude : XXXX
 ...
 -----
 
+*Question 20* : _Utilisez la variable mutex *mut* passée en paramètre des
+                fonctions *convert* et *display* pour verrouiller l'accès à
+                *decimal_coord* entre les 2 threads._
+
 === Ce qu'il faut retenir
 
-    * les fonctions de base permettant de gérer les threads : pthread_create,
-      pthread_join et pthread_detach
-    * la notion de mutex à travers les fonctions TODO
+    * les fonctions de base permettant de gérer les threads : *pthread_create*,
+      *pthread_join* et *pthread_detach*.
+    * les mutex avec *pthread_mutex_lock* et *pthread_mutex_unlock*.
 
 == Exercice 3 : sockets, timerfd et plugin
 
