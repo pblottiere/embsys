@@ -39,7 +39,7 @@ Le TP d'aujourd'hui se trouve ici : https://github.com/pblottiere/embsys/labs/2_
 === Simulateur GPS
 
 Dans le cadre de ce TP, nous allons réutiliser le simulateur GPS étudié lors du
-permier TP. Tout d'abord, il faut compiler le simulateur :
+premier TP. Tout d'abord, il faut compiler le simulateur :
 
 -----
 $ cd labs/gps
@@ -52,7 +52,7 @@ Nous lancerons le simulateur plus tard dans le TP grâce au script *run.sh*.
 
 Comme vu dans le TP précédent, le simulateur GPS envoie les données sur un
 port virtuel à travers /dev/pts/X. Le binaire *shm_writer*
-présent dans le répertoire 2_sysprog_part2/src/shw_writer lit les données
+présent dans le répertoire 2_sysprog_part2/src/shm_writer lit les données
 envoyées par le simulateur GPS sur le port virtuel et écrit en mémoire partagée
 les informations *latitude*, *longitude* et *time*.
 
@@ -63,7 +63,7 @@ $ cd labs/2_sysprog_part2/src/shm_writer
 $ make
 -----
 
-Les données en mémoire partagée sur représentées via la structure SHDATA
+Les données en mémoire partagée sont représentées via la structure SHDATA
 définie dans le header shm_writer/shdata.h :
 
 -----
@@ -100,31 +100,33 @@ Ouvrez un second terminal et lancez le binaire *shm_writer* :
 
 -----
 $ cd embsys/labs/2_sysprog_part2/src/shm_writer
-$ ./shm_writer -p /dev/pts/X -s myshm -l sem
+$ ./shm_writer -p /dev/pts/X -s myshm -l lock
 
 -----
 
 *Question 1* : _Selon vous, à quoi correspond le paramètre *myshm* indiquée via
-               l'option *-s* de *shm_writer*? Et *sem*?_
+               l'option *-s* de *shm_writer*? Et *lock*?_
 
 *Question 2* : _Où peut-on trouver la représentation du segment de mémoire
                partagée sur le système de fichiers?_
 
+*Question 3* : _Faîtes un schéma bloc des différents éléments mis en jeu._
+
 Placez vous dans le répertoire 2_sysprog_part2/src/shm_writer.
 
-*Question 3* : _En étudiant la fonction *hndopen* implémentée dans le fichier
+*Question 4* : _En étudiant la fonction *hndopen* implémentée dans le fichier
                *handler.c*, décrivez les fonctions utilisées pour gérer le
                segment de mémoire partagée._
 
-*Question 4* : _Quelle fonction utilise le paramètre *myshm* passé en ligne de
+*Question 5* : _Quelle fonction utilise le paramètre *myshm* passé en ligne de
                commande?_
 
-*Question 5* : _Quel flag en particulier indique une *création* de segment
+*Question 6* : _Quel flag en particulier indique une *création* de segment
                et pas seulement une ouveture en lecture/écriture?_
 
 Placez vous maintenant dans le répertoire 2_sysprog_part2/src/shm_reader.
 
-*Question 6* : _Modifiez la fonction *hndopen* implémentée dans *handler.c*
+*Question 7* : _Modifiez la fonction *hndopen* implémentée dans *handler.c*
                pour ouvrir le segment de mémoire partagée en lecture/écriture.
                Les champs *shm*, *shmfd* et *shdata* de la structure *handlers*
                passée en paramètre doivent être mis à jour._
@@ -141,7 +143,7 @@ collect2: error: ld returned 1 exit status
 Pour utiliser les fonctions liées à la mémoire partagée, la librairie *realtime*
 est nécessaire.
 
-*Question 7* : _En s'inspirant de *shm_writer/Makefile*, modifiez le fichier
+*Question 8* : _En s'inspirant de *shm_writer/Makefile*, modifiez le fichier
                *shm_reader/Makefile* pour que la compilation passe._
 
 Une fois la compilation réalisée avec succès, exécutez *shm_reader*. Vous devez
@@ -149,7 +151,7 @@ obtenir :
 
 -----
 $ make
-* ./shm_reader -s myshm -l sem
+* ./shm_reader -s myshm -l lock
 time : XXXXXX
 
 time : XXXXXX
@@ -157,23 +159,23 @@ time : XXXXXX
 ...
 -----
 
-*Question 7* : _Expliquez l'évolution de la valeur *time* affichée à l'écran._
+*Question 9* : _Expliquez l'évolution de la valeur *time* affichée à l'écran._
 
 Dans le main de *shm_reader*, le paramètre *handlers* est défini en tant que
 variable globale.
 
-*Question 8* : _Quelle est la particularité d'une variable globale? Comment
+*Question 10* : _Quelle est la particularité d'une variable globale? Comment
                fait-on pour définir une telle variable?_
 
-*Question 9* : _Dans le *main* de shm_reader.c, complétez la boucle *while* de
+*Question 11* : _Dans le *main* de shm_reader.c, complétez la boucle *while* de
                la fonction shmreader afin que les champs *latitude* et
                *longitude* du segment de mémoire partagée *handlers.shdata*
                soient affichés en même temps que le champs *time*._
 
-*Question 10* : _Inspirez vous de la fonction *decode* de
+*Question 12* : _Inspirez vous de la fonction *decode_frame* de
                 shm_writer/shm_writer.c pour lever/baisser le sémaphore lors
                 de la lecture du segment de mémoire partagée dans la fonction
-                *display*._
+                *shmreader* de shm_reader.c._
 
 Recompilez et exécutez *shm_reader*. Vous devez obtenir :
 
@@ -201,10 +203,10 @@ handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR, 0);
 
 Recompilez *shm_writer*. Relancez *shm_writer* puis *shm_reader*.
 
-*Question 11* : _Que se passe t-il côté *shm_reader*? Pourquoi? Quel effet a eu
+*Question 13* : _Que se passe t-il côté *shm_reader*? Pourquoi? Quel effet a eu
                 la modification précédente?_
 
-Rétablissez l'appel à *sem_open* du fichier *shm_writer.handler.c* ainsi :
+Rétablissez l'appel à *sem_open* du fichier *shm_writer/handler.c* ainsi :
 
 -----
 handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR, 1);
@@ -214,11 +216,11 @@ Lorsque l'utilisateur interrompt le processus via Ctrl-C, la fonction *hndclose*
 n'est jamais appellée et les handlers d'entrées/sorties ne sont pas fermés
 correctement.
 
-*Question 12* : _Mettez en place un gestionnaire de signaux qui appelle la
+*Question 14* : _Mettez en place un gestionnaire de signaux qui appelle la
                 fonction *hndclose* lors d'une interruption. Inspirez vous de
                 *shm_writer/shm_writer.c*._
 
-*Quesiton 13* : _Comparez la fonction *hndclose* définie dans
+*Question 15* : _Comparez la fonction *hndclose* définie dans
                 *shm_writer/handler.c* avec celle définie dans
                 *shm_reader/handler.c*. Quelle différence voyez vous? Expliquez._
 
