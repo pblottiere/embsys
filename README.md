@@ -11,12 +11,14 @@ Lectures are separated in several parts:
   * Linux System Programming : processus, pthread, signals, mutex, IPC, ...
     (lect2 and lect3)
   * Kernel architectures and Linux module programming (lect4)
+  * Bus and communication devices : PCI, I2C, RS232, ... (lect5)
 
 ## Labs
 
 Several exercises are available :
 
   * Linux System Programming (labs1 and labs2)
+  * Filesystem discovery as root (labs3 and labs4)
 
 ## Dependancies
 
