@@ -32,6 +32,6 @@ if len(sys.argv) == 2:
     if os.path.isfile(tex):
         texfile = copy_tex_with_handout_mode(tex)
 
-        cmd = "xelatex %s" % texfile
+        cmd = "xelatex -recorder %s" % texfile
         proc = subprocess.Popen(cmd, shell=True)
         proc.communicate()

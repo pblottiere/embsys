@@ -13,7 +13,7 @@ all: pdf notes
 
 clean:
 	rm -f *.aux *.log *.nav *.out *.pdf *.snm *.toc *.vrb \
-		*handout.tex
+		*handout.tex *.fls
 
 edit:
 	blackbox_edit_start notes.tex.gpg

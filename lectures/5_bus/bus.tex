@@ -7,72 +7,14 @@
 %------------------------------------------------------------------------------
 % configuration
 %------------------------------------------------------------------------------
-\RequirePackage{etex}
-\usepackage{../../themes/dbt}
-\usepackage{catchfilebetweentags}
-
-\setbeameroption{hide notes}
-\setbeamertemplate{caption}{\raggedright\insertcaption\par}
-
-\graphicspath{{images/}}
-
-% a few macros
-\newcommand{\bi}{\begin{itemize}}
-\newcommand{\ei}{\end{itemize}}
-\newcommand{\ig}{\includegraphics}
-\newcommand{\myhref}[1]{\href{#1}{\tt \tiny #1}}
-\newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
-\newcommand{\src}[2]{\vspace{-10pt}\caption{\href{#1}{\centering \tt \tiny [#2]}}}
+\input{../../tools/conf.tex}
 
 %------------------------------------------------------------------------------
 % title
 %------------------------------------------------------------------------------
-% slide
-\title{Systèmes d'exploitation pour l'embarqué}
-\subtitle{UV 5.2 - Exécution et Concurrence}
+\input{../../tools/intro.tex}
 
-\author{\href{}{Paul Blottière}}
-\institute{
-    \href{http://www.ensta-bretagne.fr/}{ENSTA Bretagne} \\[2pt]
-    \href{}{\tt \scriptsize 8 Décembre 2015}
-}
-\date{
-    \href{https://github.com/pblottiere}{\tt \scriptsize https://github.com/pblottiere} \\[2pt]
-    %\href{blottiere.paul@gmail.com}{\tt \scriptsize blottiere.paul@gmail.com}
-}
-
-% info
-\begin{document}
-
-{
-\setbeamertemplate{footline}{} % no page number here
-\frame{
-    \titlepage
-    \incnote{title}
-} }
-
-%------------------------------------------------------------------------------
-% amélioration continue
-%------------------------------------------------------------------------------
-\begin{frame}{Amélioration continue}
-    \subt{Contributions}
-    \vspace{12pt}
-
-    \begin{center}
-    \includegraphics[scale=0.7]{github.png}
-    \end{center}
-
-    \bi
-    \itemsep12pt
-    \item Dépôt du cours : \href{https://github.com/pblottiere/embsys}{\tt \scriptsize https://github.com/pblottiere/embsys}
-
-    \onslide<2->{
-        \item Souhaits d'amélioration, erreurs, idées de TP, ... : ouverture d'Issues (avec le bon label!)
-        \item Apports de corrections : Pull Request
-        \ei
-    }
-\end{frame}
-
+%<**lecture_content>
 %------------------------------------------------------------------------------
 % lecture
 %------------------------------------------------------------------------------
@@ -886,5 +828,6 @@ if ((file = open(filename, O_RDWR)) < 0) {
     \ei
 
 \end{frame}
+%<//lecture_content>
 
 \end{document}

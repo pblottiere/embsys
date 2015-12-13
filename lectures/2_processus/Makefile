@@ -1,5 +1,5 @@
 pdf:
-	xelatex processus.tex
+	xelatex -recorder processus.tex
 
 notes:
 	python ../../tools/with_notes.py processus.tex
@@ -12,7 +12,7 @@ handout: pdf
 all: pdf notes
 
 clean:
-	rm -f *.aux *.log *.nav *.out *.pdf *.snm *.toc *handout.tex *.vrb
+	rm -f *.aux *.log *.nav *.out *.pdf *.snm *.toc *handout.tex *.vrb *.fls
 
 edit:
 	blackbox_edit_start notes.tex.gpg

@@ -54,6 +54,7 @@ labs/2_sysprog_part2/src/shm_reader/shm_reader
 *.aux
 *.vrb
 *.log
+*.fls
 *.nav
 *.out
 *.snm

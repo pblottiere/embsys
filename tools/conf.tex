@@ -1,0 +1,21 @@
+\RequirePackage{etex}
+\usepackage{currfile-abspath}
+\usepackage{../../themes/dbt}
+\usepackage{catchfilebetweentags}
+
+\setbeameroption{hide notes}
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+\graphicspath{{images/}}
+\getmainfile
+\getabspath{\themainfile}
+\let\mainabsdir\theabsdir
+\let\mainabspath\theabspath
+
+\newcommand{\insertcode}[2]{\lstinputlisting[label=samplecode, basicstyle=#1]{\mainabsdir/code/#2}}
+\newcommand{\bi}{\begin{itemize}}
+\newcommand{\ei}{\end{itemize}}
+\newcommand{\ig}{\includegraphics}
+\newcommand{\myhref}[1]{\href{#1}{\tt \scriptsize #1}}
+\newcommand{\incnote}[1]{\note{\ExecuteMetaData[notes.tex]{#1}}}
+\newcommand{\src}[2]{\vspace{-10pt}\caption{\href{#1}{\centering \tt \tiny [#2]}}}
