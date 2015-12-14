@@ -92,7 +92,7 @@ input pci
     \subt{/proc}
 
     \vspace{20pt}
-    Système de fichier virtuel {\textit{procfs}} qui contient quelques
+    Système de fichiers virtuels {\textit{procfs}} qui contient quelques
     informations sur la configuration matérielle en plus des paramètres
     logiciels du noyau.
 
@@ -113,7 +113,7 @@ input pci
     \onslide<2->
     {
         \vspace{20pt}
-        Système de fichier virtuel {\textit{sysfs}} géré par le kernel et
+        Système de fichiers virtuels {\textit{sysfs}} géré par le kernel et
         fournissant des informations basiques sur les périphériques connectés
         au système.
     }
@@ -161,8 +161,8 @@ input pci
     \bi
     \itemsep12pt
     \item mdev (de busybox) est davantage utilisé que udev sur les petits
-          systèmes (démon udevd peut consommé plus d'1 MB de RAM).
-    \item le mécansime de hotplug peut être désactivé
+          systèmes (démon udevd peut consommer plus d'1 MB de RAM).
+    \item le mécansime de hotplug peut être désactivé.
     \ei
 
     \vspace{10pt}
@@ -263,7 +263,7 @@ input pci
     \subt{Adressage}
 
     \vspace{5pt}
-    Un bus PCI est défini sous Linux par quatres numéros :
+    Un bus PCI est défini sous Linux par quatre numéros :
     \bi
     \itemsep5pt
     \item domaine : 16 bits
@@ -548,7 +548,8 @@ CONFIG_GPIO_ACPI=y
     \subt{Port à tout faire}
 
     \vspace{15pt}
-    Le DB25 est souvent utilisé comme un melting pot d'entrées/sorties.
+    Le DB25 est souvent utilisé comme un melting pot d'entrées/sorties sans
+    lien avec la communication parallèle.
 
     \onslide<2->
     {
@@ -688,7 +689,7 @@ CONFIG_GPIO_ACPI=y
               contrôle de flux, ...)
         \item {\textbf{cfsetospeed}} / {\textbf{cfsetispeed}} : le débit
         \item {\textbf{tcsetattr}} : mise en place effective de la configuration
-        \item {\textbf{fcntl}} : lecture bloquante ou pas
+        \item {\textbf{fcntl}} : lecture bloquante ou non
         \item {\textbf{open}} / {\textbf{read}} / {\textbf{clos}}e : gestion du
               file descriptor
         \ei
@@ -802,7 +803,7 @@ if ((file = open(filename, O_RDWR)) < 0) {
     \centering
     \vspace{20pt}
     \LARGE{
-        Il existe de très nombreux protocole de communication et connaître
+        Il existe de très nombreux protocoles de communication et connaître
         les principaux est indispensable.
 
         \begin{figure}
