@@ -12,13 +12,16 @@ Lectures are separated in several parts:
     (lect2 and lect3)
   * Kernel architectures and Linux module programming (lect4)
   * Bus and communication devices : PCI, I2C, RS232, ... (lect5)
+  * Memory and file system (lect 6)
+  * Embedded systems tools and compilation steps : busybox, buildroot, uboot,
+    ... (lect 7)
 
 ## Labs
 
 Several exercises are available :
 
   * Linux System Programming (labs1 and labs2)
-  * Filesystem discovery as root (labs3 and labs4)
+  * Filesystem discovery as root (labs3)
 
 ## Dependancies
 
