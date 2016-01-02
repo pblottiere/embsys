@@ -6,6 +6,7 @@ notes.tex
 
 # lectures
 lectures/full/full_content.tex
+lectures/full/code
 lectures/2_processus/code/pid
 lectures/2_processus/code/fork
 lectures/2_processus/code/signals
