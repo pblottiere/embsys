@@ -7,7 +7,7 @@ reminders in system programming.
 
 Lectures are separated in several parts:
 
-  * Introduction  licenses, POSIX, opensource vs free software, ... (lect1)
+  * Introduction : licenses, POSIX, opensource vs free software, ... (lect1)
   * Linux System Programming : processus, pthread, signals, mutex, IPC, ...
     (lect2 and lect3)
   * Kernel architectures and Linux module programming (lect4)
