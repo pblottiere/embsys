@@ -27,14 +27,14 @@
     \vspace{8pt}
 
     \begin{enumerate}
-        \itemsep10pt
+        \itemsep6pt
         \item Autotools et menuconfig
         \item Une distribution minimale
         \item Cross-compilation
         \item Compilation du kernel
         \item Busybox
         \item U-Boot
-        \item Buildroot vs Yocto Project
+        \item Automatisation (Buildroot, Yocto Project, ...)
         \item QEMU
         \item gdbserver
     \end{enumerate}
@@ -573,14 +573,472 @@ config MODVERSIONS
 \begin{frame}{Compilation du kernel (1)}
     \subt{Les sources}
 
+    \vspace{10pt}
+    Le code source de Linux peut être récupéré sur le github de Mr
+    Torvalds : https://github.com/torvalds/linux.
 
+    \onslide<2->
+    {
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.23]{kernel-size.png}
+        \end{figure}
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ker2
+%------------------------------------------------------------------------------
+\begin{frame}{Compilation du kernel (2)}
+    \subt{Arborescence}
+
+    \vspace{15pt}
+    Les répertoires principaux :
+    \bi
+    \itemsep8pt
+    \item arch : code spécifique aux architecture matérielles
+    \item Documentation : informations au format texte
+    \item drivers : les pilotes de périphériques (i2c, gpio, ...)
+    \item include : les headers
+    \item kernel : les sources du kernel à proprement parlé
+    \item net : le code des couches réseau
+    \item ...
+    \ei
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ker3
+%------------------------------------------------------------------------------
+\begin{frame}{Compilation du kernel (3)}
+    \subt{Les couches}
+
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.2]{kernel_onion.png}
+        \src{http://keithcu.com/wordpress/?page_id=599}{Kernel sources}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ker4
+%------------------------------------------------------------------------------
+\begin{frame}{Compilation du kernel (4)}
+    \subt{Configuration}
+
+    \vspace{15pt}
+    Une configuration par défaut est disponible pour les différentes
+    architectures matérielles : ce sont les fichiers <ARCH>\_defconfig.
+
+    \onslide<2->
+    {
+        \vspace{15pt}
+        Par exemple :
+        \bi
+        \itemsep10pt
+        \item arch/x86/configs/i386\_defconfig
+        \item arch/x86/configs/x86\_64\_defconfig
+        \item arch/arm/configs/mini2440\_defconfig
+        \item arch/powerpc/configs/ppc40x\_defconfig
+        \ei
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ker5
+%------------------------------------------------------------------------------
+\defverbatim{\lstkconf}
+{
+    \begin{lstlisting}
+> uname -a
+Linux debian 4.2.0-1-amd64 4.2.6-1 x86_64 GNU/Linux
+> make sunxi_defconfig
+***
+*** Can't find default configuration
+*** "arch/x86/configs/sunxi_defconfig"!
+***
+scripts/kconfig/Makefile:108: recipe for target
+'sunxi_defconfig' failed
+> make ARCH=arm sunxi_defconfig
+#
+# configuration written to .config
+#
+    \end{lstlisting}
+}
+
+\begin{frame}{Compilation du kernel (5)}
+    \subt{Configuration}
+
+    \vspace{10pt}
+    Pour utiliser une configuration d'une architecture différente de celle
+    courante :
+
+    \vspace{10pt}
+    \lstkconf
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ker6
+%------------------------------------------------------------------------------
+\defverbatim{\lstcomp}
+{
+    \begin{lstlisting}
+> make ARCH=arm CROSS_COMPILE=/path/to/compiler
+...
+BUILD   arch/x86/boot/bzImage
+Setup is 15708 bytes (padded to 15872 bytes).
+System is 6008 kB
+CRC 734d60c8
+Kernel: arch/x86/boot/bzImage is ready  (#1)
+    \end{lstlisting}
+}
+
+\begin{frame}{Compilation du kernel (6)}
+    \subt{Compilation}
+
+    \vspace{15pt}
+    Une fois configuré, on peut compiler le kernel :
+    \vspace{5pt}
+    \lstcomp
+
+    \onslide<2->
+    {
+        \vspace{5pt}
+        => le fichier {\textbf{bzImage}} est la partie statique du kernel!
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% ker7
+%------------------------------------------------------------------------------
+\defverbatim{\lstmod}
+{
+    \begin{lstlisting}
+> mkdir fake_rfs
+> make modules_install INSTALL_MOD_PATH=./fake_rfs
+scripts/kconfig/conf  --silentoldconfig Kconfig
+INSTALL crypto/echainiv.ko
+INSTALL drivers/thermal/x86_pkg_temp_thermal.ko
+...
+INSTALL net/netfilter/xt_nat.ko
+DEPMOD  4.4.0-rc5
+> ls fake_rfs/lib/modules/4.4.0-rc5/
+... kernel ... modules.alias modules.dep ...
+> ls fake_rfs/lib/modules/4.4.0-rc5/kernel/
+crypto  drivers  fs  net
+    \end{lstlisting}
+}
+
+\begin{frame}{Compilation du kernel (7)}
+    \subt{Les modules}
+
+    \vspace{10pt}
+    Les modules (fichiers .ko) doivent être installés sur un RFS :
+    \vspace{5pt}
+    \lstmod
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% busybox
+%------------------------------------------------------------------------------
+\begin{frame}{Busybox (1)}
+    \subt{Qu'est ce?}
+
+    \vspace{15pt}
+    Dans le cadre d'un système embarqué, l'environnement d'outils et
+    d'application fournis à travers le RFS doit :
+    \bi
+    \itemsep8pt
+    \item être de volume réduit
+    \item avoir une consommation en ressources réduite
+    \item être portable sur diverses architectures matérielles
+    \ei
+
+    \onslide<2->
+    {
+        \vspace{10pt}
+        => pour cela, le projet Busybox est utilisé dans quasiment tous les
+        équipements basés sur des distributions customisées.
+
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.5]{busybox.png}
+        \end{figure}
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% busybox2
+%------------------------------------------------------------------------------
+\begin{frame}{Busybox (2)}
+    \subt{Configuration}
+
+    \vspace{15pt}
+    La configuration de Busybox utilise aussi KConfig et est disponible grâce
+    à la commande {\textbf{make menuconfig}}.
+
+    \onslide<2->
+    {
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.5]{busybox_conf.png}
+        \end{figure}
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% busybox3
+%------------------------------------------------------------------------------
+\defverbatim{\lstbusyinst}
+{
+    \begin{lstlisting}
+> make ARCH=arm CROSS_COMPILE=/path/to/binary
+HOSTCC  scripts/basic/fixdep
+HOSTCC  scripts/basic/split-include
+HOSTCC  scripts/basic/docproc
+...
+DOC     BusyBox.txt
+DOC     busybox.1
+DOC     BusyBox.html
+> mkdir fake_rfs
+> make install CONFIG_PREFIX=./fake_rfs/
+./fake_prefix///bin/ash -> busybox
+./fake_prefix///bin/base64 -> busybox
+...
+\end{lstlisting}
+}
+
+\begin{frame}{Busybox (3)}
+    \subt{Installation}
+
+    \vspace{15pt}
+    Pour la compilation et l'installation :
+    \vspace{5pt}
+    \lstbusyinst
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% busybox4
+%------------------------------------------------------------------------------
+\defverbatim{\lstbusyres}
+{
+    \begin{lstlisting}
+> ls fake_rfs
+total 820
+  drwxr-xr-x 2 4096 Dec 21 18:01 .
+  drwxr-xr-x 5 4096 Dec 21 18:01 ..
+  lrwxrwxrwx 1 7 Dec 21 18:01 ash -> busybox
+  l-rwxr-xr-x 1 829680 Dec 21 18:01 busybox
+  lrwxrwxrwx 1 7 Dec 21 18:01 cat -> busybox
+  lrwxrwxrwx 1 7 Dec 21 18:01 base64 -> busybox
+  ...
+    \end{lstlisting}
+}
+
+\begin{frame}{Busybox (4)}
+    \subt{Liens symboliques}
+
+    \vspace{15pt}
+    \lstbusyres
+
+    \onslide<2->
+    {
+        \vspace{5pt}
+        => busybox est un binaire unique fournissant les commandes grâce à un jeu
+        de liens symboliques
+    }
+
+    \onslide<3->
+    {
+        \vspace{5pt}
+        => la taille du binaire est limitée par mututalisation des fonctions
+        communes
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot1
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (1)}
+    \subt{Les bootloaders}
+
+    \vspace{15pt}
+    Un bootloader est notamment chargé d'exécuter le kernel et est capable
+    d'utiliser les fonctions matérielles de base :
+
+    \bi
+    \itemsep8pt
+    \item la mémoire vive et mémoire flash
+    \item les ports série
+    \item le réseau filaire (Ethernet)
+    \ei
+
+    \onslide<2->
+    {
+        \vspace{15pt}
+        Pour les plateformes x86, GRUB est généralement utilisé.
+
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.5]{grub-menu.jpg}
+        \end{figure}
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot2
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (2)}
+    \subt{JTAG}
+
+    \vspace{15pt}
+    L'installation d'un bootloader sur carte peut être réalisée par liaison
+    série (si un bootloader est déjà présent) ou bien par JTAG : {\textbf{Join
+    Test Action Group}}.
+
+    \onslide<2->
+    {
+        \vspace{15pt}
+        => l'installation du bootloader est une étape critique et peut rendre une
+        carte inutilisable!
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot3
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (3)}
+    \subt{JTAG et Raspberry Pi}
+
+    \vspace{15pt}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{rpi_jtag.png}
+    \end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot4
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (4)}
+    \subt{JTAG et Xbox 360}
+
+    \vspace{15pt}
+    Un hack connu de la Xbox 360 est d'ajouter la possibilité de lire des jeux
+    sur disque dur, clé USB ou par FTP.
+
+    \onslide<2->
+    {
+        \vspace{15pt}
+        Pour cela, il faut se connecter sur le port JTAG de la carte mère et
+        charger une nouvelle image NAND!
+
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.7]{xbox_jtag.jpg}
+        \end{figure}
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot5
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (5)}
+    \subt{TFTP}
+
+    \vspace{15pt}
+    {\textbf{Trivial File Transfert Protocol}} : connexion UDP (port 69 par
+    défaut) permettant le transfert de fichier.
+
+    \onslide<2->
+    {
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.4]{tftp.png}
+        \end{figure}
+    }
+
+    \onslide<3->
+    {
+        => très utilisé en embarqué!
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot6
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (6)}
+    \subt{Universal Bootloader}
+
+    \vspace{15pt}
+    Dans le monde de l'embarqué, en dehors des cartes x86, U-Boot est le
+    bootloader le plus répandu.
+
+    \onslide<2->
+    {
+        \vspace{15pt}
+        Utilisation classique :
+        \bi
+        \itemsep8pt
+        \item connexion à la carte par liaison série et accès au prompt U-Boot
+        \item configuration du server TFTP
+        \item téléchargement de l'image kernel et du RFS par TFTP et écriture
+              sur mémoire flash
+        \item modification de la commande de démarrage
+        \item boot
+        \ei
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot7
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (7)}
+    \subt{prompt}
+
+    \vspace{15pt}
+    Le prompt de U-Boot offre de très nombreuses commandes et permet
+    d'enregistrer sur la flash des variables d'environnement.
+
+    \onslide<2->
+    \vspace{5pt}
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.8]{uboot_prompt.png}
+        \end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% uboot8
+%------------------------------------------------------------------------------
+\begin{frame}{U-Boot (8)}
+    \subt{Commandes et variables d'environnement}
+
+    \vspace{5pt}
+    Liste non exhaustive :
+    \vspace{10pt}
+    \bi
+    \itemsep6pt
+    \item {\textbf{run}} : éxécution d'une macro
+    \item {\textbf{bootm}} : démarrage d'une image stockée en mémoire
+    \item {\textbf{bootcmd}} : macro de démarrage (exécutée automatiquement
+          quand {\textbf{bootdelay}} arrive à 0 en autoboot)
+      \item {\textbf{boot}} : équivaut à {\textbf{run bootcmd}}
+    \item {\textbf{setenv}} : affectation d'une variable d'environnement
+    \item {\textbf{saveenv}} : sauvegarde de l'environnement sur la flash
+    \item {\textbf{printenv}} : affichage des variables d'environnement et des
+          macros
+    \ei
 
 \end{frame}
 
 %------------------------------------------------------------------------------
 % auto1
 %------------------------------------------------------------------------------
-\begin{frame}{Automatisation de la phase de build (1)}
+\begin{frame}{Automatisation (1)}
     \subt{Buildroot}
 
     \vspace{15pt}
@@ -613,7 +1071,7 @@ config MODVERSIONS
 %------------------------------------------------------------------------------
 % auto2
 %------------------------------------------------------------------------------
-\begin{frame}{Automatisation de la phase de build (2)}
+\begin{frame}{Automatisation (2)}
     \subt{Yocto Project}
 \end{frame}
 
