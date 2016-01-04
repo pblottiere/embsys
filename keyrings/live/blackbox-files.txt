@@ -3,6 +3,7 @@ labs/1_sysprog_part1/corr/fork_pipe/reader.c
 labs/1_sysprog_part1/corr/ld_preload/hack.c
 labs/1_sysprog_part1/corr/ld_preload/Makefile
 labs/1_sysprog_part1/corr/ld_preload/run.sh
+labs/3_fs_discovery/corr/hotplug.c
 lectures/1_intro/notes.tex
 lectures/2_processus/notes.tex
 lectures/3_ipc_net/notes.tex
