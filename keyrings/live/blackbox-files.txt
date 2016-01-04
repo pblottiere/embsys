@@ -6,6 +6,7 @@ labs/1_sysprog_part1/corr/ld_preload/run.sh
 labs/2_sysprog_part2/corr/converter/converter.c
 labs/2_sysprog_part2/corr/converter/Makefile
 labs/2_sysprog_part2/corr/converter/opts.c
+labs/2_sysprog_part2/corr/converter/opts.h
 labs/2_sysprog_part2/corr/forwarder/forwarder.c
 labs/2_sysprog_part2/corr/forwarder/handler.c
 labs/2_sysprog_part2/corr/forwarder/handler.h
