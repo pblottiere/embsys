@@ -72,3 +72,4 @@ labs/2_sysprog_part2/src/shm_reader/shm_reader
 /labs/1_tools/corr/ld_preload/Makefile
 /labs/1_sysprog_part1/corr/fork_pipe/reader.c
 /labs/1_sysprog_part1/corr/fork_pipe/Makefile
+/labs/3_fs_discovery/corr/hotplug.c
