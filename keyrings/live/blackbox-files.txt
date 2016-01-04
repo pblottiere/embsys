@@ -4,6 +4,7 @@ labs/1_sysprog_part1/corr/ld_preload/hack.c
 labs/1_sysprog_part1/corr/ld_preload/Makefile
 labs/1_sysprog_part1/corr/ld_preload/run.sh
 labs/2_sysprog_part2/corr/converter/converter.c
+labs/2_sysprog_part2/corr/converter/handler.c
 labs/2_sysprog_part2/corr/converter/Makefile
 labs/2_sysprog_part2/corr/converter/opts.c
 labs/2_sysprog_part2/corr/converter/opts.h
