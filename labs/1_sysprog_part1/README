@@ -270,7 +270,7 @@ ldd ./gps
                cela vous apporte-t-il?_
 
 *Question 6* : _Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
-                à regarder le fichier *labs/gps/run.sh*_
+                pas à regarder le fichier *labs/gps/run.sh*_
 
 Relancez ldd puis GDB pour vérifier que votre solution a porté ses fruits.
 
