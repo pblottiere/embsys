@@ -22,6 +22,7 @@ Several exercises are available :
 
   * Linux System Programming (labs1 and labs2)
   * Filesystem discovery as root (labs3)
+  * Embedded system with Armadeus APF28 card (labs4)
 
 ## Dependancies
 
