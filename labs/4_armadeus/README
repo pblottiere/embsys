@@ -79,7 +79,7 @@ L'architecture en image :
 
 image::img/arch.png[width=400, align="center"]
 
-== Exercice 1 (1h45) : Flashage de la carte APF28
+== Exercice 1 (1h30) : Flashage de la carte APF28
 
 === Description de l'exercice
 
@@ -146,6 +146,9 @@ Lorsque vous êtes dans l'interface, allez sur *exit* et appuyez sur *entrée*.
 À partir de ce moment, un fichier de configuration *buildroot/.config* est
 créé et sera utilisé lors de la compilation de la distribution.
 
+v
+v
+v
 *Question 6 (5 min)* : _En étudiant ce fichier de configuration, déterminez l'ABI
                        utilisée (vue en cours). Par rapport aux discussions eues
                        en cours sur les différentes ABI d'une architecture ARM,
@@ -202,6 +205,8 @@ est du 8N1 (bits de données / bits de parité / bit d'arrêt). La carte APF28
 n'échappe pas à la règle, mais il nous manque encore le débit de la ligne
 pour établir une communication.
 
+TODO : stty marche pas. Plutôt fouiller dans l'interface de uboot?
+
 *Question 11 (3 min)* : _Utilisez la commande *stty* pour trouver le débit de
                         communication de la carte._
 
@@ -250,6 +255,8 @@ variable d'environnement correspondante (question précédente) l'adresse IP du
 serveur TFTP. Faite un reset de la carte et observez le fait que l'adresse IP
 est bien persistante.
 
+TODO : utiliser run pour exécuter une macro uboot.
+
 Dans un premier temps, nous pouvons utiliser les commandes *download_* dans le
 prompt U-boot pour tester la connexion avec le serveur TFTP. Si le
 téléchargement se passe bien, nous pouvons lancer la phase d'update des images.
@@ -259,9 +266,72 @@ en flash!
 Dans le prompt U-boot, lancez les commandes d'update (question 14) du
 bootloader, du kernel puis du RFS.
 
-Ensuite, débranchez l'USB et l'Ethernet et rebootez la carte. Connectez vous
-avec minicom et laissez la phase de boot se déroulez jusqu'au boot. Vous arrivez
-alors à un prompt de login de votre distribution! La phase de flashage est alors
-terminée.
+Ensuite, débranchez l'Ethernet et rebootez la carte. Connectez vous avec
+minicom et laissez la phase de boot se déroulez jusqu'au boot. Vous arrivez
+alors à un prompt de login de votre distribution! La phase de flashage est
+alors terminée.
 
-Jouez un peu avec votre distribution fraichement installée. Login : *root*.
+Jouez un peu avec votre distribution fraichement installée. Login : *root*
+(pas de mot de passe).
+
+== Exercice 2 (1 heure) : Cross-compilation
+
+=== Description de l'exercice
+
+À partir du moment ou on possède une carte fonctionnelle, la question de
+cross-compilation se pose. Dans le cas d'une compilation from scratch des images
+à flahser, la cross-compilateur est disponible à travers le BSP. En revanche,
+lors de la récupération d'une carte déjà fonctionnelle, il faut construire
+le cross-compilateur. Nous allons partir de ce dernier point pour ce TP. Le but
+est donc ici :
+
+    * de compiler la chaîne de cross-compilation
+    * de compiler un binaire hello-world écrivant dans /var/log avec syslog
+    * d'uploader le binaire cross-compilé et de le tester
+    * de lancer le binaire au démarrage via un service de l'init.d
+
+Pour cette étape, nous allons partir d'un BSP un peu modifié que vous pouvez
+trouver ici :
+
+----
+> git clone https://github.com/pblottiere/armadeus
+----
+
+=== Questions
+
+*Question 17 (5 min)* : _En étudiant le fichier *buildroot/Makefile*, déterminez la
+                        commande à lancer pour générer simplement la toolchain._
+
+Suite à cette compilation, une chaîne de compilation croisée est disponible
+ici : *buildroot/output/host/usr/bin*.
+
+*Question 18 (2 min)* : _En regardant dans ce répertoire, déterminez quel est le nom
+                        complet du cross-compilateur._
+
+Sous GNU-Linux, les log enregistrés dans le répertoire /var/log sont gérés par
+le démon *syslog*. Vous pouvez trouver un exemple d'utilisation ici :
+*labs/4_armadeus/src/syslog*. Compilez le code avec gcc et testez le.
+
+*Question 19 (5 min) _Utilisez *grep* dans /var/log pour déterminer dans quel
+                     fichier les messages sont écris._
+
+*Question 20 (10 min)* : _En étudiant le fichier syslog.c, décrivez l'utilisation
+                         des fonctions *setlogmask*, *openlog*, *syslog* et
+                         *closelog*.__
+
+*Question 21 (15 min)* : _Écrivez un fichier hw.c chargé d'écrire periodiquement (toutes
+                         les 5 secondes par exemple) la chaine de caractères *Hello
+                         World* /var/log/ grâce à *syslog*._
+
+Compilez le fichier hw.c avec le gcc natif puis testez le fonctionnement de
+votre code sur le PC fixe dans un premier temps. Une fois le fonctionnement
+validé, cross-compilez en suivant cette logique :
+
+----
+PATH=/path/to/cross/compiler/usr/bin <cross_compiler_name> hw.c
+----
+
+Ensuite, téléchargez le binaire sur la carte (TODO) et vérifiez le bon
+fonctionnement.
+
+Lancez le script via init.d.
