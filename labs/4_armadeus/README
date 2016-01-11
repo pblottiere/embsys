@@ -57,23 +57,20 @@ Le but est ici d'appréhender les points suivants :
 
     * la lecture de datasheet
     * la connexion à une carte par liaison série
-    * l'upload et le flashage d'images (bootloader, kernel et rootfs)
-    * la génération d'une chaîne de cross-compilation et des images
+    * l'upload et le flashage d'images (kernel et rootfs)
     * la cross-compilation d'un logiciel utilisateur
-    * l'utilisation des GPIO dans l'espace utilisateur pour gérer une LED lors
-      de la phase de boot
-    * une révision de la liaison série, des sockets et des threads
+    * l'utilisation des GPIO dans l'espace utilisateur
+    * une révision de syslog, de la liaison série et des sockets
 
-Pour aborder chacun de ces points, nous allons réaliser une calculatrice
-distante.
-
-Dans un premier temps, nous allons flasher la carte avec le bootloader,
-le kernel et le RFS. Ensuite nous développerons un programme calculatrice qui
-recevra des commandes (ajouter, soustraire, ...) par liaison série et qui
-renverra les résultats sur un socket. Ce programme devra être cross-compilé.
+Pour aborder chacun de ces points, nous allons réaliser un serveur embarqué sur
+la carte APF28 chargé d'allumer/éteindre periodiquement une LED. La
+fréquence d'allumage pourra être modifiée par liaison série et un message de
+status sera envoyé sur le réseau. Le tout devra être loggé sur le système
+grâce à Syslog.
 
 Il faudra donc aussi un programme côté utilisateur permettant d'envoyer les
-commandes à la calculatrice et de lire les résultats.
+commandes au serveur et de lire les messages envoyés par le serveur sur le
+réseau.
 
 L'architecture en image :
 
@@ -96,10 +93,11 @@ sur une nouvelle carte :
 
 En réalité, pendant cet exercice, nous n'allons pas compiler le BSP, simplement
 pour une question de temps de compilation. Nous allons donc partir d'images
-déjà compilées. Cependant, nous compilerons plus tard dans le TP la chaîne de
-cross-compilation.
+déjà compilées.
 
 === Questions
+
+==== Découverte du BSP
 
 Dans un premier temps, rendez-vous sur le site ci-dessous et récuperez le
 BSP/SDK (Board Support Package) stable, actuellement la version 6.0 :
@@ -109,13 +107,13 @@ http://www.armadeus.com/wiki/index.php?title=Toolchain
 Détarrez la tarball. Suite à l'extraction, vous pouvez observer divers
 répertoires/fichiers.
 
-*Question 1 (1 min)* : _D'après une analyse rapide du contenu, quel type de
+*Question 1 (2 min)* : _D'après une analyse rapide du contenu, quel type de
                        système de build automatisé est utilisé?_
 
 *Question 2 (5 min)* : _Selon vous, que contient le répertoire *patches*? Quels
                         sont les différents sous répertoires et leurs utilités?_
 
-*Question 3 (1 min)* : _D'après l'étude du répertoire *patches* de la question
+*Question 3 (2 min)* : _D'après l'étude du répertoire *patches* de la question
                        précédente, que pouvez vous dire sur le bootloader
                        utilisé?_
 
@@ -130,12 +128,11 @@ De manière générale, il y a globalement trois étapes lors de la compilation 
     3. une règle de compilation se basant sur les éléments configurés lors des
        étapes précédentes.
 
-*Question 4 (2 min)* : _En étudiant le contenu du fichier *Makefile*, indiquez
+*Question 4 (5 min)* : _En étudiant le contenu du fichier *Makefile*, indiquez
                         quelle règle de *configuration* doit être utilisée pour
                         la carte APF28._
 
-Lancez la commande de configuration de la plateforme trouvée lors de l'étape
-précédente.
+Lancez cette commande de configuration.
 
 *Question 5 (15 min)* : _Qu'observez vous? Fouillez le contenu de l'interface,
                         discutez et faite le rapprochement avec les notions
@@ -146,9 +143,6 @@ Lorsque vous êtes dans l'interface, allez sur *exit* et appuyez sur *entrée*.
 À partir de ce moment, un fichier de configuration *buildroot/.config* est
 créé et sera utilisé lors de la compilation de la distribution.
 
-v
-v
-v
 *Question 6 (5 min)* : _En étudiant ce fichier de configuration, déterminez l'ABI
                        utilisée (vue en cours). Par rapport aux discussions eues
                        en cours sur les différentes ABI d'une architecture ARM,
@@ -157,7 +151,7 @@ v
 *Question 7 (2 min)* : _Toujours par rapport aux notions vues en cours,
                        rappellez l'utilité de *busybox*._
 
-*Question 8 (2 min)* : _En étudiant le fichier *Makefile*, déterminez quelle
+*Question 8 (5 min)* : _En étudiant le fichier *Makefile*, déterminez quelle
                        commande faut-il utiliser pour ouvrir le menu de
                        configuration de busybox?_
 
@@ -165,9 +159,9 @@ Lancez cette commande de configuration. Dans une telle interface, l'utilisateur
 peut utiliser la commande */* pour faire une recherche sur une chaine de
 caractères (comme dans vi).
 
-*Question 9 (5 min)* : _Dans le menu de configuration de busybox, déterminez si
-                       busybox fournira *fdisk* et *ping*. Rappellez au passage
-                       l'utilité de ces deux comandes._
+*Question 9 (10 min)* : _Dans le menu de configuration de busybox, déterminez si
+                       busybox fournira *fdisk*, *ping* et *ssh*. Rappellez au
+                       passage l'utilité de ces comandes._
 
 Nous sommes maintenant à un stade où on connaît globalement le BSP de notre
 carte.
@@ -181,14 +175,15 @@ phase de compilation :
 -----
 
 Cependant, la phase de compilation étant trop longue, nous n'allons pas
-réaliser cette étape, mais plutôt partir d'images précompilées disponibles
-ici : *embsys/labs/4_armadeus/images*. Dans le cas d'une compilation via
-le BSP, ces images seraient disponibles ici : *buildroot/output/images*.
+réaliser cette étape, mais plutôt partir d'images précompilées. Dans le cas
+d'une compilation via le BSP, ces images seraient disponibles ici :
+*buildroot/output/images*.
+
+==== Flashage de la carte
 
 Maintenant que nous avons les images, nous allons commencer à travailler
 avec la carte en tant que telle. Tout d'abord, nous allons essayer de
-communiquer par liaison série. La carte peut être alimentée par USB et
-c'est par ce même port USB que nous allons discuter avec l'APF28.
+communiquer par liaison série (via cable USB).
 
 Réalisez donc le montage suivant :
 
@@ -197,46 +192,44 @@ image::img/mont.png[width=250, align="center"]
 Suite à cela, une entrée est créée dans le répertoire */dev* grâce au mécanisme
 de hotplug du kernel et à udev.
 
-*Question 10 (1 min)* : _Quel est l'entrée dans le /dev permettant de comuniquer
-                        avec l'APF28?_
+*Question 10 (2 min)* : _Rappellez l'utilité de la commande *dmesg*. Quel est
+                        l'entrée dans le /dev permettant de comuniquer avec
+                        l'APF28?_
 
 Comme vue en cours, une configuration classique de communication série
 est du 8N1 (bits de données / bits de parité / bit d'arrêt). La carte APF28
-n'échappe pas à la règle, mais il nous manque encore le débit de la ligne
-pour établir une communication.
+n'échappe pas à la règle. Ici, le débit est 115200 bauds.
 
-TODO : stty marche pas. Plutôt fouiller dans l'interface de uboot?
-
-*Question 11 (3 min)* : _Utilisez la commande *stty* pour trouver le débit de
-                        communication de la carte._
-
-*Question 12 (10 min)* : _Utilisez minicom pour vous connecter à la carte et appuyez
+*Question 11 (10 min)* : _Utilisez minicom pour vous connecter à la carte et appuyez
                          sur le bouton *reset* de la carte. Que voyez vous? Que se
-                         passe t-il?._
+                         passe t-il?_
 
-Refaîte une reset de la carte mais cette fois-ci intérompez la phase de boot
-afin d'arriver dans le prompt de U-boot. La commande *printenv* permet
-d'afficher les variables d'environnement/macros actuellement enregistrés sur
-la flash de la carte.
+Refaite un reset de la carte mais cette fois-ci interrompez la phase de boot
+(en appuyant sur une touche pendant le compte à rebour) afin d'arriver dans le
+prompt de U-boot. La commande *printenv* permet d'afficher les variables
+d'environnement/macros actuellement enregistrés sur la flash de la carte.
 
-*Question 13 (10 min)* : _Grâce à la commande *printenv*, déterminez les macros
+*Question 12 (10 min)* : _Grâce à la commande *printenv*, déterminez les macros
                          permettant de télécharger et d'enregistrer de nouvelles
                          versions du bootloader, du kernel et du RFS._
 
-*Question 14 (10 min)* : _En étudiant de plus prêt les commandes permettant
+*Question 13 (10 min)* : _En étudiant de plus prêt les commandes permettant
                          de flasher le kernel et le RFS, déterminez les adresses
-                         flash où doivent être enregistrée ces images._
+                         flash où doivent être enregistrées ces images._
 
 Pour télécharger les images sur la carte, il faut que celles-ci soient sur un
-serveur TFTP (voir cours). Dans notre cas, le PC fixe sera ce serveur. Les
-images doivent être copiées directement dans le répertoire */tftpboot* du
-serveur. Réalisez cette opération.
+serveur TFTP (voir cours). Dans notre cas, il existe un serveur TFTP distant
+ayant l'adresse IP : 172.20.5.2. Les images sont dans le répertoire /tftpboot.
 
-Ensuite, faite le montage suivant :
+Maintenant, connectez la carte APF28 au réseau de l'école par Ethernet.
 
 image::img/mont_tftp.png[width=250, align="center"]
 
-*Question 15 (2 min)* : _Déterminez l'adresse IP du serveur TFTP._
+Nous allons maintenant récupérer une adresse IP par DHCP afin que la carte APF28
+soit sur le réseau.
+
+*Question 14 (2 min)* : _Lancez la commande *dhcp* dans le prompt uboot. Quelle
+                        est l'IP de la carte à l'issue de cette commande?_
 
 Dans le prompt U-boot, la commande *setenv* permet de fixer une variable
 d'environnement et la commande *saveenv* de l'enregistrer sur la flash :
@@ -246,92 +239,131 @@ d'environnement et la commande *saveenv* de l'enregistrer sur la flash :
 > saveenv
 ----
 
-*Question 16 (5 min)* : _En analysant dans U-boot les commandes de téléchargement,
-                        déterminez dans quelle variable d'environnement l'adresse
-                        IP du serveur est enregistrée._
+*Question 15 (5 min)* : _En analysant dans U-boot les commandes de téléchargement
+                        des images, déterminez dans quelle variable
+                        d'environnement l'adresse IP du serveur TFTP est
+                        enregistrée._
 
-Grâce aux commandes *setenv* et *saveenv*, sauvegarder en flash dans la
+Grâce aux commandes *setenv* et *saveenv*, sauvegardez en flash dans la
 variable d'environnement correspondante (question précédente) l'adresse IP du
-serveur TFTP. Faite un reset de la carte et observez le fait que l'adresse IP
-est bien persistante.
+serveur TFTP.
 
-TODO : utiliser run pour exécuter une macro uboot.
+Nous pouvons utiliser la commande *ping* afin de voir si la liaison avec le
+serveur TFTP est opérationnelle :
 
-Dans un premier temps, nous pouvons utiliser les commandes *download_* dans le
-prompt U-boot pour tester la connexion avec le serveur TFTP. Si le
-téléchargement se passe bien, nous pouvons lancer la phase d'update des images.
-Surtout, n'éteignez pas la carte pendant la phase d'enregistrement des images
-en flash!
+----
+> ping ${LA_VARIABLE_STOCKANT_L_IP_DU_SERVEUR_TFTP}
+----
 
-Dans le prompt U-boot, lancez les commandes d'update (question 14) du
-bootloader, du kernel puis du RFS.
+Dans le prompt U-boot, lancez les macros d'update du kernel et du RFS
+(on ne mettera pas à jour le bootloader pendant ce TP) :
 
-Ensuite, débranchez l'Ethernet et rebootez la carte. Connectez vous avec
-minicom et laissez la phase de boot se déroulez jusqu'au boot. Vous arrivez
-alors à un prompt de login de votre distribution! La phase de flashage est
-alors terminée.
+----
+> run update_kernel
+> run update_rootfs
+----
 
-Jouez un peu avec votre distribution fraichement installée. Login : *root*
-(pas de mot de passe).
+Ensuite, rebootez la carte et laissez la phase de boot se dérouler jusqu'au
+bout. Vous arrivez alors à un prompt de login de votre distribution! La phase
+de flashage est alors terminée.
 
-== Exercice 2 (1 heure) : Cross-compilation
+Jouez un peu avec votre distribution fraichement installée :
+
+    * changez le mot de passe root avec la commande *passwd*
+    * connectez vous en SSH sur la carte APF28
+    * copiez un fichier quelconque avec SCP
+    * ...
+
+== Exercice 2 (1h30) : Cross-compilation, GPIO et syslog
 
 === Description de l'exercice
 
-À partir du moment ou on possède une carte fonctionnelle, la question de
+À partir du moment où on possède une carte fonctionnelle, la question de
 cross-compilation se pose. Dans le cas d'une compilation from scratch des images
-à flahser, la cross-compilateur est disponible à travers le BSP. En revanche,
-lors de la récupération d'une carte déjà fonctionnelle, il faut construire
-le cross-compilateur. Nous allons partir de ce dernier point pour ce TP. Le but
-est donc ici :
+à flasher, le cross-compilateur est disponible à travers le BSP. Le but de
+l'exercice est donc :
 
-    * de compiler la chaîne de cross-compilation
-    * de compiler un binaire hello-world écrivant dans /var/log avec syslog
-    * d'uploader le binaire cross-compilé et de le tester
-    * de lancer le binaire au démarrage via un service de l'init.d
-
-Pour cette étape, nous allons partir d'un BSP un peu modifié que vous pouvez
-trouver ici :
-
-----
-> git clone https://github.com/pblottiere/armadeus
-----
+    * d'étudier une chaine de cross-compilation précompilée
+    * de compiler/cross-compiler un binaire hello-world
+    * d'apprendre à utiliser Syslog
+    * de jouer avec une LED pour découvrir l'utilisation des GPIO dans l'espace
+      utilisateur
 
 === Questions
 
-*Question 17 (5 min)* : _En étudiant le fichier *buildroot/Makefile*, déterminez la
-                        commande à lancer pour générer simplement la toolchain._
+==== Cross-compilation
 
-Suite à cette compilation, une chaîne de compilation croisée est disponible
-ici : *buildroot/output/host/usr/bin*.
+Dans un premier temps, écrivez un hello-world et utilisez le gcc natif du PC
+fixe. Utilisez SCP pour copier le binaire résultant sur la carte APF28.
 
-*Question 18 (2 min)* : _En regardant dans ce répertoire, déterminez quel est le nom
-                        complet du cross-compilateur._
+*Question 16 (10 min)* : _Exécutez le binaire sur la carte. Qu'observez-vous? Lancez
+                        la commande *file* sur le binaire. À quoi sert cette commande
+                        selon vous?_
 
-Sous GNU-Linux, les log enregistrés dans le répertoire /var/log sont gérés par
+Un cross-compilateur est accessible sur la machine *saltp7-l* dans le répertoire
+/appli/arma/armadeus/buildroot/output/host/usr/bin. Connectez vous en SSH sur
+cette machine avec votre login personnel.
+
+*Question 17 (5 min)* : _Dans le répertoire cité ci-dessus, déterminez le path
+                        du cross-compilateur pour du code C._
+
+Cross-compilez le hello-world pour l'APF28, copiez le sur la carte et exécutez
+le.
+
+==== Syslog
+
+Sous GNU-Linux, les logs enregistrés dans le répertoire /var/log sont gérés par
 le démon *syslog*. Vous pouvez trouver un exemple d'utilisation ici :
-*labs/4_armadeus/src/syslog*. Compilez le code avec gcc et testez le.
+*labs/4_armadeus/src/syslog*.
 
-*Question 19 (5 min) _Utilisez *grep* dans /var/log pour déterminer dans quel
-                     fichier les messages sont écris._
+*Question 18 (5 min)* : _Compilez le code de syslog avec gcc et testez le._
 
-*Question 20 (10 min)* : _En étudiant le fichier syslog.c, décrivez l'utilisation
+*Question 19 (5 min)* : _Utilisez *grep* dans /var/log pour déterminer dans quel
+                        fichier les messages sont écris._
+
+*Question 20 (15 min)* : _En étudiant le fichier syslog.c, décrivez l'utilisation
                          des fonctions *setlogmask*, *openlog*, *syslog* et
-                         *closelog*.__
+                         *closelog*._
 
-*Question 21 (15 min)* : _Écrivez un fichier hw.c chargé d'écrire periodiquement (toutes
-                         les 5 secondes par exemple) la chaine de caractères *Hello
-                         World* /var/log/ grâce à *syslog*._
+Cross-compilez le fichier syslog.c et testez sur la carte APF28.
 
-Compilez le fichier hw.c avec le gcc natif puis testez le fonctionnement de
-votre code sur le PC fixe dans un premier temps. Une fois le fonctionnement
-validé, cross-compilez en suivant cette logique :
+==== GPIO
+
+Nous allons utiliser un GPIO de l'APF28 pour allumer/éteindre la led présente
+sur la carte à côté du lecteur de mini SD.
+
+Sous Linux, un GPIO est défini par un numéro. En revanche, côté matériel, un
+GPIO est défini par un numéro de banque et un numéro de pin. Dans le cas de
+l'APF28dev, le numéro sous Linux est calculé comme suit :
 
 ----
-PATH=/path/to/cross/compiler/usr/bin <cross_compiler_name> hw.c
+gpio_linux = (32 * bank_number) + pin_number
 ----
 
-Ensuite, téléchargez le binaire sur la carte (TODO) et vérifiez le bon
-fonctionnement.
+*Question 21 (15 min)* : _Trouvez sur internet la datasheet de la plateforme de
+                         développement de l'APF28 et fouillez dans la documentation
+                         pour trouver les numéros caractérisant le GPIO qui
+                         gère la LED utilisateur._
 
-Lancez le script via init.d.
+*Question 22 (2 min)* : _En déduire le numéro du GPIO qui doit être utilisé
+                         sous Linux._
+
+*Question 23 (15 min)* : _Utilisez les notions vues en cours pour allumer et
+                         éteindre la LED dans le shell._
+
+*Question 24 (20 min)* : _Écrivez un code C permettant de gérer la LED. Ce
+                         programme doit agir comme un simple toggle._
+
+////
+== Exercice 3 (2 heure) : Développement d'un serveur de LED
+
+Le but de l'exercice :
+
+    * d'écrire un serveur permettant d'allumer/éteindre une LED periodiquement
+    * le serveur doit permettre la configuration de la fréquence d'allumage de
+      la LED par liaison série
+    * le serveur doit envoyer sur le réseau le status de la LED à chaque
+      changement ainsi que la fréquence courante
+    * le serveur doit logger tous les évènements grâce à Syslog
+    * le serveur doit être démarré au boot par l'init.d
+////
