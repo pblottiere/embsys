@@ -11,23 +11,27 @@
 
 int main(int argc, char *argv[])
 {
-    int sockfd = 0, n = 0;
-    char recvBuff[1024];
+    int sockfd = 0;
+    char *send_buff;
     struct sockaddr_in serv_addr;
 
-    if(argc != 2)
+    // read arguments
+    if(argc != 3)
     {
-        printf("\n Usage: %s <ip of server> \n",argv[0]);
+        printf("\n Usage: %s <ip of server> <msg to send>\n",argv[0]);
         return 1;
     }
 
-    memset(recvBuff, '0',sizeof(recvBuff));
+    send_buff = argv[2];
+
+    // init socket to get a file descriptor
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\n Error : Could not create socket \n");
         return 1;
     }
 
+    // socket configuration to talk on port 5000
     memset(&serv_addr, '0', sizeof(serv_addr));
 
     serv_addr.sin_family = AF_INET;
@@ -39,25 +43,22 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // connect to server
     if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
        printf("\n Error : Connect Failed \n");
        return 1;
     }
 
-    while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
+    int bytes = write(sockfd, send_buff, sizeof(send_buff));
+
+    if(bytes < 0)
     {
-        recvBuff[n] = 0;
-        if(fputs(recvBuff, stdout) == EOF)
-        {
-            printf("\n Error : Fputs error\n");
-        }
+        printf("\n Send error \n");
     }
 
-    if(n < 0)
-    {
-        printf("\n Read error \n");
-    }
+    // close socket
+    close(sockfd);
 
     return 0;
 }

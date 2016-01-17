@@ -305,6 +305,7 @@ cette machine avec votre login personnel.
 *Question 17 (5 min)* : _Dans le répertoire cité ci-dessus, déterminez le path
                         du cross-compilateur pour du code C._
 
+d
 Cross-compilez le hello-world pour l'APF28, copiez le sur la carte et exécutez
 le.
 
@@ -591,12 +592,12 @@ Suite à cette étape, un binaire *src/client/client* est généré.
 
 Le miniserveur écoute sur un port réseau et log les messages reçus grâce à
 syslog. Le client, quant à lui, envoie des messages sur le réseau à une adresse
-IP particulière et sur un port particulier.
+IP particulière et sur un port particulier (par défaut le port 5000 codé en
+dur).
 
 *Question 29 (10 min)* : _Grâce à l'aide des binaires *client* et *miniserver*
-                        (que l'on peut obtenir avec l'option --help), testez
-                        leur bon fonctionnement en local (voir schéma
-                        ci-dessous)._
+                        (lancez les binaires sans options), testez leur bon
+                        fonctionnement en local (voir schéma ci-dessous)._
 
 image::img/miniserver1.png[width=400, align="center"]
 

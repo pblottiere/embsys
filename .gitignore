@@ -67,7 +67,8 @@ labs/4_armadeus/src/autotools/config.status
 labs/4_armadeus/src/autotools/libtool
 labs/4_armadeus/src/autotools/m4/
 labs/4_armadeus/src/autotools/stamp-h1
-labs/4_armadeus/src/autotools/.deps
+.deps
+.dirstamp/
 
 # tex
 *.aux
