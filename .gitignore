@@ -55,6 +55,20 @@ labs/1_sysprog_part1/src/gps_reader/gps_reader
 labs/2_sysprog_part2/src/shm_writer/shm_writer
 labs/2_sysprog_part2/src/shm_reader/shm_reader
 
+labs/4_armadeus/src/autotools/Makefile.in
+labs/4_armadeus/src/autotools/aclocal.m4
+labs/4_armadeus/src/autotools/autom4te.cache/
+labs/4_armadeus/src/autotools/config.h.in
+labs/4_armadeus/src/autotools/config/
+labs/4_armadeus/src/autotools/configure
+labs/4_armadeus/src/autotools/Makefile
+labs/4_armadeus/src/autotools/config.h
+labs/4_armadeus/src/autotools/config.status
+labs/4_armadeus/src/autotools/libtool
+labs/4_armadeus/src/autotools/m4/
+labs/4_armadeus/src/autotools/stamp-h1
+labs/4_armadeus/src/autotools/.deps
+
 # tex
 *.aux
 *.vrb

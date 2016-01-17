@@ -513,7 +513,7 @@ permettant de tester le bon fonctionnement de notre application.
 ----
 > cd labs/4_armadeus/src/autotools
 > ls
-TODO
+autogen.sh  configure.ac  Makefile.am
 ----
 
 Les fichiers *configure.ac* et *Makefile.am* sont les marques de fabriques
@@ -521,8 +521,40 @@ des autotools. On peut alors lancer la phase de configuration :
 
 ----
 > ./autogen.sh
+Running aclocal...
+aclocal: warning: couldn't open directory 'm4': No such file or directory
+Running libtoolize...
+libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
+libtoolize: linking file `config/ltmain.sh'
+libtoolize: Consider adding `AC_CONFIG_MACRO_DIR([m4])' to configure.ac and
+libtoolize: rerunning libtoolize, to keep the correct libtool macros in-tree.
+libtoolize: Consider adding `-I m4' to ACLOCAL_AMFLAGS in Makefile.am.
+Running autoheader...
+Running autoconf...
+Running automake...
+configure.ac:7: installing 'config/ar-lib'
+configure.ac:7: installing 'config/compile'
+configure.ac:11: installing 'config/config.guess'
+configure.ac:11: installing 'config/config.sub'
+configure.ac:6: installing 'config/install-sh'
+configure.ac:6: installing 'config/missing'
 > ./configure
 ...
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+configure:
+
+  autotools 0.1 - Configuration Report
+
+ prefix:            /usr/local
+ exec-prefix:       ${prefix}
+ bin path:          ${exec_prefix}/bin
+ lib path:          ${exec_prefix}/lib
+ include path:      ${prefix}/include
+ etc path:          ${prefix}/etc
+ data path:         ${prefix}/share
+
 ----
 
 Cette phase de configuration, lancée dans un premier temps sans options, vérifie
@@ -530,8 +562,8 @@ si tout le nécessaire (librairies, headers, ...) est présent pour que la phase
 de compilation se passe bien.
 
 *Question 24 (5 min)* : _En analysant le contenu du fichier configure.ac,
-                        déterminez quels sont les headers nécessaires pour la
-                        phase de compilation._
+                        déterminez quel header est vérifié pendant la phase
+                        de configuration._
 
 *Question 25 (5 min)* : _Modifiez le fichier configure.ac pour forcer l'étape
                         de configuration à vérifier la présence d'un header
@@ -540,7 +572,7 @@ de compilation se passe bien.
                         choses dans l'ordre lorsque vous avez terminé._
 
 *Question 26 (5 min)* : _En cherchant sur le net, déterminez à quoi sert la
-                        macro TODO utilisée dans le fichier configure.ac._
+                        macro AC_ENABLE_SHARED utilisée dans le fichier configure.ac._
 
 *Question 27 (5 min)* : _À quoi sert le fichier Makefile.am?_
 
