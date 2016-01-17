@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
     listen(listenfd, 10);
 
     // listen
+    printf("Server is listening...\n");
     while (1)
     {
         connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);

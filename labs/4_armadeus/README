@@ -602,18 +602,32 @@ dur).
 image::img/miniserver1.png[width=400, align="center"]
 
 Lors de la phase de compilation, le compilateur natif est utilisé. Dans le cadre
-d'une cross-compilation, on peut utiliser l'option TODO lors de la configuration
-pour indiquer l'utilisation d'un compilateur spécifique au moment du make.
+d'une cross-compilation, on peut utiliser l'option _--host_ lors de la configuration
+pour indiquer l'utilisation d'un compilateur spécifique au moment du make. Par
+exemple :
 
 ----
-> ./configure TODO
+> ./configure --host=arm-linux
 ...
-> make
-TODO
+checking for arm-linux-gcc... arm-linux-gcc
+...
 ----
+
+Lors de la compilation, le compilateur *arm-linux-gcc* sera alors utilisé.
+Cependant, il faut pour cela que le path du cross-compilateur soit dans la
+variable d'environnement PATH. Comme le compilateur pour l'APF28 se trouve
+sur la machine saltp7-l, il faut se connecter sur celle-çi puis faire :
+
+----
+> export PATH=$PATH:/appli/arma/armadeus/buildroot/output/host/usr/bin
+----
+
+Suite à cela, le cross-compilateur doit être accessible dans le shell sans
+avoir besoin d'indiquer un chemin absolu.
 
 *Question 30 (2 min)* : _Relancez la phase de configuration/compilation pour
-                        cross-compiler le binaire miniserver pour l'APF28._
+                        cross-compiler le binaire miniserver pour l'APF28 sur
+                        saltp7-l._
 
 *Question 31 (15 min)* : _Utilisez le client natif côté PC fixe et le serveur
                          cross-compilé sur l'APF28 pour vérifier leur bon
@@ -646,11 +660,24 @@ Créez un fichier .gitignore dans votre répertoire de travail *led_server* et
 éditez le pour obtenir ceci :
 
 ----
-TODO
+Makefile.in
+aclocal.m4
+autom4te.cache/
+config.h.in
+config/
+configure
+Makefile
+config.h
+config.status
+libtool
+m4/
+stamp-h1
+.deps
+.dirstamp/
 ----
 
 *Question 35 (5 min)* : _Suite à cela, relancez un *git status*. Quel changement
-                        observez vous par rapport à la question TODO?_
+                        observez vous par rapport à la question 34?_
 
 *Question 36 (1 min)* : _Commitez le fichier .gitignore._
 
@@ -668,7 +695,7 @@ l'utilisateur concernant son état : online ou offline.
 
 *Question 37 (15 min)* : _Copiez le répertoire led_server/src/miniserver en
                          led_server/src/led_server et renommez le fichier en
-                         led_server.c. Modifiez les fichiers Makefile.am pour
+                         led_server.c. Modifiez le fichier Makefile.am pour
                          obtenir en plus du client et du miniserver un binaire
                          appellé *led_server* lors de la compilation._
 
@@ -682,37 +709,19 @@ l'utilisateur concernant son état : online ou offline.
 *Question 39 (10 min)* : _Cross-compilez votre miniserver et testez son
                          fonctionnement sur la carte._
 
-Pour lancer un binaire nommé *fake_bin* au démarrage, il faut ajouter le script
-suivant dans le répertoire */etc/init.d* :
+*Question 40 (2 min)* : _Suivez les directives de la page
+                        http://www.armadeus.com/wiki/index.php?title=Automatically_launch_your_application
+                        pour créer un script de lancement automatique nommé
+                        S99minisever._
 
-----
-TODO
-----
+*Question 41 (2 min)* : _Rebootez l'APF28 et observez la LED s'allumer._
 
-*Question 40 (2 min)* : _Modifiez le script précédent pour qu'il démarre non pas
-                        le binaire *fake_bin* mais *miniserver*.
-
-Un tel script est effectivement lancé au démarrage, mais il peut aussi être
-lancé manuellement comme suit :
-
-----
-> /etc/init.d/fake_bin.sh start
-----
-
-*Question 41 (2 min)* : _Copiez le script précédent dans /etc/init.d de l'APF28
-                        et testez le script manuellement grâce à la commande
-                        ci-dessus._
-
-*Question 42 (2 min)* : _Rebootez l'APF28 et observer la LED s'allumer._
-
-Le *miniserver* log aussi avec syslog les messages envoyés par le client.
-
-*Question 43 (5 min)* : _Utilisez le client pour envoyer des messages au
+*Question 42 (5 min)* : _Utilisez le client pour envoyer des messages au
                         serveur. Observez le bon fonctionnement en regardant si
                         le miniserver log bien les messages recu dans le
                         répertoire /var/log._
 
-*Question 44 (2 min)* : _Commitez les modifications apportées (création de
+*Question 43 (2 min)* : _Commitez les modifications apportées (création de
                         led_server, script d'init, ...)._
 
 === Étape 4 (1h30) : PWM
