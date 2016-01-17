@@ -60,13 +60,11 @@ Le but est ici d'appréhender les points suivants :
     * l'upload et le flashage d'images (kernel et rootfs)
     * la cross-compilation d'un logiciel utilisateur
     * l'utilisation des GPIO dans l'espace utilisateur
-    * une révision de syslog, de la liaison série et des sockets
+    * une révision de syslog et des sockets
 
 Pour aborder chacun de ces points, nous allons réaliser un serveur embarqué sur
-la carte APF28 chargé d'allumer/éteindre periodiquement une LED. La
-fréquence d'allumage pourra être modifiée par liaison série et un message de
-status sera envoyé sur le réseau. Le tout devra être loggé sur le système
-grâce à Syslog.
+la carte APF28 chargé de modifier l'intensité lumineuse d'une LED. Cette
+intensité pourra être modifiée grâce à des messages envoyés sur le réseau.
 
 Il faudra donc aussi un programme côté utilisateur permettant d'envoyer les
 commandes au serveur et de lire les messages envoyés par le serveur sur le
@@ -354,16 +352,398 @@ gpio_linux = (32 * bank_number) + pin_number
 *Question 24 (20 min)* : _Écrivez un code C permettant de gérer la LED. Ce
                          programme doit agir comme un simple toggle._
 
-////
-== Exercice 3 (2 heure) : Développement d'un serveur de LED
 
-Le but de l'exercice :
+== Exercice 3 (3h00) : Serveur de LED
 
-    * d'écrire un serveur permettant d'allumer/éteindre une LED periodiquement
-    * le serveur doit permettre la configuration de la fréquence d'allumage de
-      la LED par liaison série
-    * le serveur doit envoyer sur le réseau le status de la LED à chaque
-      changement ainsi que la fréquence courante
-    * le serveur doit logger tous les évènements grâce à Syslog
-    * le serveur doit être démarré au boot par l'init.d
-////
+=== Description de l'exercice
+
+Dans cet exercice, nous allons développer une petite application serveur
+permettant de contrôller une LED reliée à la board APF28. Cette LED devra être
+connectée à une pin PWM pour faire varier la tension, et donc l'intensité
+lumineuse. Une connexion réseau par socket permettra d'envoyer des messages
+au serveur indiquant l'intensité lumineuse souhaitée.
+
+En plus des aspects techniques fondamentaux, nous allons profiter de cet
+exercice pour étudier le système de build GNU (les autotools) ainsi que l'outil
+de gestion de versions GIT.
+
+Voici l'architecture logicielle globale attendue :
+
+image::img/arch.png[width=400, align="center"]
+
+=== Étape 1 (15 min) : GIT
+
+Par définition, un outil de gestion de versions permet basiquement de garder
+l'historique de travail des fichiers d'un projet. Durant la vie du projet, les
+fichiers (par exemple le code source) vont évoluer et grâce à l'outil de gestion
+de versions, une trace de chaque état intermédiaire est accessible. Cela permet
+donc de contrôler le cycle de vie d'un logiciel. On peut d'ailleurs faire un
+snapshot d'un moment particulier pour fixer une version précise d'un logiciel :
+c'est ce qu'on appelle "tagger".
+
+Il existe de nombreux outils de gestion de versions :
+
+    * CVS
+    * Mercurial
+    * SVN
+    * GIT
+    * ...
+
+Celui que nous allons utiliser aujourd'hui est très à la mode : GIT. Pour la
+petite histoire, GIT a été initialement entrepris par Linus Torvald pour gérer
+les versions du kernel Linux car il voulait combler certains manques des outils
+existants.
+
+Il faut savoir qu'il existe la notion de branches permettant par exemple de
+travailler sur une fonctionnalité particulière sans affecter le reste du projet.
+Dans le cadre de cet exercice, nous allons simplement travailler dans la
+branche par défaut : la branche _master_.
+
+Dans un premier temps, créez un répertoire de travail nommé *led_server*. Allez
+dans ce répertoire et initilisez la gestion de version de votre logiciel avec la
+commande suivante :
+
+----
+> cd led_server
+> git init
+Initialized empty Git repository in /YOUR/PATH/led_server/.git/
+----
+
+Un répertoire *.git* est alors créé. À partir de ce moment, les commandes git
+peuvent être appellées dans ce répertoire. Il existe par exemple une commande
+permettant de voir le statut actuel de travail.
+
+----
+> ls -a
+.  ..  .git
+> git status
+On branch master
+
+Initial commit
+
+nothing to commit (create/copy files and use "git add" to track)
+----
+
+On appercoit alors que nous travaillons actuellement sur la branche par défaut
+nommée _master_ et qu'il n'y a rien à *commiter*. La notion de commit est
+relativement simple : une modification a été réalisée et on veut garder dans
+l'historique de travail la version actuelle. Par exemple, créez un fichier README
+(généralement indispensable à un projet) avec pour titre "LED Server" et
+committez. Notez qu'il faut d'abord "tracker" un fichier avant de pouvoir
+lancer un commit sur celui-çi :
+
+----
+> touch README
+> git status
+On branch master
+
+Initial commit
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+    README
+
+nothing added to commit but untracked files present (use "git add" to track)
+> git add README
+> git status
+On branch master
+
+Initial commit
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+    new file:   README
+> git commit -m "My commit message to describe my work"
+[master (root-commit) 4d62e36] My commit message to describe my work
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 README
+> git status
+On branch master
+nothing to commit, working directory clean
+----
+
+Une commande permet aussi de visualiser les différents commits réalisés :
+
+----
+> git log
+Author: Blottiere Paul <blottiere.paul@gmail.com>
+Date:   Sun Jan 17 16:55:12 2016 +0100
+
+    My commit message to describe my work
+----
+
+On peut par exemple faire un tag de notre version actuelle pour indiquer qu'il
+s'agit d'une version 0.1 de notre logiciel :
+
+----
+> git tag 0.1
+> git tag
+0.1
+----
+
+On pourra alors retourner à des tags précédents (par exemple pour naviguer
+dans le code source et analyser les modifications) grâce à la commande
+_git checkout_.
+
+Nous avons ici les prémices de GIT. Cela devrait déjà vous permettre de
+travailler basiquement avec cet outil de gestion de version pendant le reste de
+l'exercice.
+
+=== Étape 2 (1h00) : autotools et cross-compilation
+
+Un outil de build permet de gérer les différentes phases de travail de
+déploiement d'un logiciel :
+
+  * configuration
+  * compilation
+  * installation / désinstallation
+
+Il existe de nombreux systèmes de build, en fonction des langages utilisés, des
+plateformes et plus généralement des besoins et exigences de chacun. Pendant
+cet exercice, nous allons utiliser un système de build ultra-classique : les
+autotools.
+
+Tout d'abord rendez-vous dans le répertoire *labs/4_armadeus/src/autotools*.
+Dans ce mini-projet, les autotools sont utilisés pour gérer l'étape de
+compilation du client de notre serveur de LED. Il y a aussi un mini serveur
+permettant de tester le bon fonctionnement de notre application.
+
+----
+> cd labs/4_armadeus/src/autotools
+> ls
+TODO
+----
+
+Les fichiers *configure.ac* et *Makefile.am* sont les marques de fabriques
+des autotools. On peut alors lancer la phase de configuration :
+
+----
+> ./autogen.sh
+> ./configure
+...
+----
+
+Cette phase de configuration, lancée dans un premier temps sans options, vérifie
+si tout le nécessaire (librairies, headers, ...) est présent pour que la phase
+de compilation se passe bien.
+
+*Question 24 (5 min)* : _En analysant le contenu du fichier configure.ac,
+                        déterminez quels sont les headers nécessaires pour la
+                        phase de compilation._
+
+*Question 25 (5 min)* : _Modifiez le fichier configure.ac pour forcer l'étape
+                        de configuration à vérifier la présence d'un header
+                        inexistant sur le système. Relancez la phase de
+                        configuration et observez les plaintes! Remettez les
+                        choses dans l'ordre lorsque vous avez terminé._
+
+*Question 26 (5 min)* : _En cherchant sur le net, déterminez à quoi sert la
+                        macro TODO utilisée dans le fichier configure.ac._
+
+*Question 27 (5 min)* : _À quoi sert le fichier Makefile.am?_
+
+Lorsque la phase de configuration se passe bien, on peut lancer la phase de
+compilation :
+
+----
+> make
+----
+
+Suite à cette étape, un binaire *src/client/client* est généré.
+
+*Question 28 (10 min)* : _Modifiez le fichier *Makefile.am* pour qu'il compile
+                         le fichier *src/miniserver/miniserver.c* en un binaire
+                         nommé *miniserver*._
+
+Le miniserveur écoute sur un port réseau et log les messages reçus grâce à
+syslog. Le client, quant à lui, envoie des messages sur le réseau à une adresse
+IP particulière et sur un port particulier.
+
+*Question 29 (10 min)* : _Grâce à l'aide des binaires *client* et *miniserver*
+                        (que l'on peut obtenir avec l'option --help), testez
+                        leur bon fonctionnement en local (voir schéma
+                        ci-dessous)._
+
+image::img/miniserver1.png[width=400, align="center"]
+
+Lors de la phase de compilation, le compilateur natif est utilisé. Dans le cadre
+d'une cross-compilation, on peut utiliser l'option TODO lors de la configuration
+pour indiquer l'utilisation d'un compilateur spécifique au moment du make.
+
+----
+> ./configure TODO
+...
+> make
+TODO
+----
+
+*Question 30 (2 min)* : _Relancez la phase de configuration/compilation pour
+                        cross-compiler le binaire miniserver pour l'APF28._
+
+*Question 31 (15 min)* : _Utilisez le client natif côté PC fixe et le serveur
+                         cross-compilé sur l'APF28 pour vérifier leur bon
+                         fonctionnement._
+
+Placez vous dans le répertoire *labs/4_armadeus/src/autotools* et lancez la
+commande *make clean-maintainer*.
+
+*Question 32 (2 min)* : _En observant l'effet, déterminez à quoi sert cette
+                        dernière commande._
+
+*Question 33 (5 min)* : _Copiez les fichiers originaux (c'est à dire sans les
+                        fichiers générés par les autotools) du répertoire
+                        *autotools* dans votre répertoire de travail
+                        *led_server* en gardant la même arborescence. Commitez
+                        vos modifications avec git._
+
+*Question 34 (5 min)* : _Dans votre répertoire *led_server*, lancez la phase de
+                        configuration des autotools. Puis faite un *git status*
+                        et observez le résultat. Qu'en pensez-vous? Que doit-on
+                        faire?_
+
+En effet, comme vous l'avez déduit lors de la question précédente, les fichiers
+générés ne doivent pas être commités car ils sont plateforme dépendants.
+Cependant, leur présence pollue la sortie de *git status*. Il existe avec git
+un moyen d'ignorer purement et simplement des fichiers via l'utilisation d'un
+fichier *.gitignore*.
+
+Créez un fichier .gitignore dans votre répertoire de travail *led_server* et
+éditez le pour obtenir ceci :
+
+----
+TODO
+----
+
+*Question 35 (5 min)* : _Suite à cela, relancez un *git status*. Quel changement
+                        observez vous par rapport à la question TODO?_
+
+*Question 36 (1 min)* : _Commitez le fichier .gitignore._
+
+=== Étape 3 (1h00) : init.d et GPIO
+
+Dans le cas de notre serveur, on va vouloir que celui-ci soit lancé dès le
+démarrage de notre OS. Le serveur va alors tourner en tâche de fond, c'est ce
+qu'on appelle un *démon*.
+
+On va dans un premier temps créer un serveur nommé *led_server* à partir du
+miniserveur étudié dans les question précédentes. Ensuite, nous allons le
+modifier pour que celui-ci allume une LED à son démarrage. Nous pourrons ensuite
+le lancer en tant que démon sur l'APF28. La LED donnera alors une indication à
+l'utilisateur concernant son état : online ou offline.
+
+*Question 37 (15 min)* : _Copiez le répertoire led_server/src/miniserver en
+                         led_server/src/led_server et renommez le fichier en
+                         led_server.c. Modifiez les fichiers Makefile.am pour
+                         obtenir en plus du client et du miniserver un binaire
+                         appellé *led_server* lors de la compilation._
+
+*Question 38 (15 min)* : _En vous inspirant du travail réalisé lors de
+                         l'exercice 2, modifiez le code de led_server.c pour
+                         que la LED utilisateur de l'APF28 s'allume dès que le
+                         serveur est prêt à recevoir des messages. De même,
+                         faite en sorte que la LED s'éteigne lorsque le serveur
+                         s'arrête._
+
+*Question 39 (10 min)* : _Cross-compilez votre miniserver et testez son
+                         fonctionnement sur la carte._
+
+Pour lancer un binaire nommé *fake_bin* au démarrage, il faut ajouter le script
+suivant dans le répertoire */etc/init.d* :
+
+----
+TODO
+----
+
+*Question 40 (2 min)* : _Modifiez le script précédent pour qu'il démarre non pas
+                        le binaire *fake_bin* mais *miniserver*.
+
+Un tel script est effectivement lancé au démarrage, mais il peut aussi être
+lancé manuellement comme suit :
+
+----
+> /etc/init.d/fake_bin.sh start
+----
+
+*Question 41 (2 min)* : _Copiez le script précédent dans /etc/init.d de l'APF28
+                        et testez le script manuellement grâce à la commande
+                        ci-dessus._
+
+*Question 42 (2 min)* : _Rebootez l'APF28 et observer la LED s'allumer._
+
+Le *miniserver* log aussi avec syslog les messages envoyés par le client.
+
+*Question 43 (5 min)* : _Utilisez le client pour envoyer des messages au
+                        serveur. Observez le bon fonctionnement en regardant si
+                        le miniserver log bien les messages recu dans le
+                        répertoire /var/log._
+
+*Question 44 (2 min)* : _Commitez les modifications apportées (création de
+                        led_server, script d'init, ...)._
+
+=== Étape 4 (1h30) : PWM
+
+Le PWM, ou Pulse Mith Modulation, permet de simuler un signal continu en
+moyenne grâce à des signaux discrets (de valeur constante fixe). En image,
+cela donne ceci :
+
+image::img/pwm.png[width=400, align="center"]
+
+Deux paramètres permettent donc de gérer la tension moyenne souhaitée :
+
+  * le *duty_cycle*
+  * la *period*
+
+Dans l'espace utilisateur, la logique d'utilisation est la même que pour les
+GPIO : on passe par des fichiers virtuels de /sys/class pour le contrôle.
+
+La carte APF28 possède un connecteur J10 où se trouve une pin PWM.
+
+*Question 45 (10 min)* : _Fouillez la datasheet de l'APF28dev pour déterminer
+                        le numéro de la pin offrant du PWM ainsi qu'une pin
+                        de masse sur J10._
+
+*Question 46 (10 min)* : _Réalisez le montage ci-dessous. N'oubliez pas que la
+                         broche la plus courte de la LED est le *-*._
+
+image::img/led_res.jpg[width=250, align="center"]
+
+Ensuite, placez vous dans le répertoire /sys/class/pwm et réalisez les commandes
+suivantes afin d'avoir accès au PWM de la pin :
+
+----
+> cd /sys/class/pwm/
+> ls
+pwmchip0
+> export PWM_CHIP=pwmchip0
+> export PWM=4
+> cd pwmchip0/
+> ls
+device     export     npwm       power      subsystem  uevent     unexport
+> echo $PWM > /sys/class/pwm/$PWM_CHIP/export
+> ls
+device     npwm       pwm4       uevent
+export     power      subsystem  unexport
+----
+
+Afin d'activer la pin, réalisez la commande suivante :
+
+----
+> echo 1 > /sys/class/pwm/$PWM_CHIP/pwm$PWM/enable
+----
+
+Maintenant, vous pouvez changer la valeur de la periode ainsi que la valeur
+du duty cycle comme ci-dessous :
+
+----
+> echo 50000 > /sys/class/pwm/$PWM_CHIP/pwm$PWM/duty_cycle
+> echo 100000 > /sys/class/pwm/$PWM_CHIP/pwm$PWM/period
+----
+
+Faite différents tests pour faire varier l'intensité de la LED lumineuse.
+
+*Question 45 (1h00)* : _Modifiez le code de led_server et du client afin que ce
+                       dernier puisse envoyer des commandes au serveur par
+                       réseau pour modifier l'intensité de la LED de l'APF28._
+
