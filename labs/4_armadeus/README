@@ -354,7 +354,7 @@ gpio_linux = (32 * bank_number) + pin_number
                          programme doit agir comme un simple toggle._
 
 
-== Exercice 3 (3h00) : Serveur de LED
+== Exercice 3 (3h45) : Serveur de LED
 
 === Description de l'exercice
 
