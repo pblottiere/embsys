@@ -100,7 +100,7 @@ déjà compilées.
 Dans un premier temps, rendez-vous sur le site ci-dessous et récuperez le
 BSP/SDK (Board Support Package) stable, actuellement la version 6.0 :
 
-http://www.armadeus.com/wiki/index.php?title=Toolchain
+https://github.com/pblottiere/armadeus
 
 Détarrez la tarball. Suite à l'extraction, vous pouvez observer divers
 répertoires/fichiers.
@@ -216,8 +216,8 @@ d'environnement/macros actuellement enregistrés sur la flash de la carte.
                          flash où doivent être enregistrées ces images._
 
 Pour télécharger les images sur la carte, il faut que celles-ci soient sur un
-serveur TFTP (voir cours). Dans notre cas, il existe un serveur TFTP distant
-ayant l'adresse IP : 172.20.5.2. Les images sont dans le répertoire /tftpboot.
+serveur TFTP (voir cours). Dans notre cas, il existe un serveur TFTP sur les
+machines de TP. Les images sont dans le répertoire /tftpboot.
 
 Maintenant, connectez la carte APF28 au réseau de l'école par Ethernet.
 
@@ -298,12 +298,8 @@ fixe. Utilisez SCP pour copier le binaire résultant sur la carte APF28.
                         la commande *file* sur le binaire. À quoi sert cette commande
                         selon vous?_
 
-Un cross-compilateur est accessible sur la machine *saltp7-l* dans le répertoire
-/appli/arma/armadeus/buildroot/output/host/usr/bin. Connectez vous en SSH sur
-cette machine avec votre login personnel.
-
-*Question 17 (5 min)* : _Dans le répertoire cité ci-dessus, déterminez le path
-                        du cross-compilateur pour du code C._
+*Question 17 (5 min)* : _Déterminez le path du cross-compilateur du BSP pour du
+                        code C._
 
 d
 Cross-compilez le hello-world pour l'APF28, copiez le sur la carte et exécutez
@@ -615,19 +611,17 @@ checking for arm-linux-gcc... arm-linux-gcc
 
 Lors de la compilation, le compilateur *arm-linux-gcc* sera alors utilisé.
 Cependant, il faut pour cela que le path du cross-compilateur soit dans la
-variable d'environnement PATH. Comme le compilateur pour l'APF28 se trouve
-sur la machine saltp7-l, il faut se connecter sur celle-çi puis faire :
+variable d'environnement PATH.
 
 ----
-> export PATH=$PATH:/appli/arma/armadeus/buildroot/output/host/usr/bin
+> export PATH=$PATH:<PATH_VERS_LE_BSP>/buildroot/output/host/usr/bin
 ----
 
 Suite à cela, le cross-compilateur doit être accessible dans le shell sans
 avoir besoin d'indiquer un chemin absolu.
 
 *Question 30 (2 min)* : _Relancez la phase de configuration/compilation pour
-                        cross-compiler le binaire miniserver pour l'APF28 sur
-                        saltp7-l._
+                        cross-compiler le binaire miniserver pour l'APF28._
 
 *Question 31 (15 min)* : _Utilisez le client natif côté PC fixe et le serveur
                          cross-compilé sur l'APF28 pour vérifier leur bon
