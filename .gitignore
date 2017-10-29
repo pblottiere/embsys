@@ -1,7 +1,3 @@
-# blackbox
-/keyrings/live/pubring.gpg~
-/keyrings/live/pubring.kbx~
-/keyrings/live/secring.gpg
 notes.tex
 
 # lectures
@@ -42,7 +38,6 @@ lectures/4_kernel_mod/kernel_mod.pdf
 lectures/5_bus/bus.pdf
 lectures/6_mem_fs/mem_fs.pdf
 lectures/7_compil_tools/compil_tools.pdf
-labs/1_sysprog_part1/corr/README_CORR.pdf
 README.pdf
 
 # exercises
@@ -50,7 +45,6 @@ labs/gps/include
 labs/gps/bin
 labs/gps/lib
 core
-labs/sysprog_part1/corr/fork_pipe/gps_reader
 labs/sysprog_part1/src/gps_reader/gps_reader
 labs/sysprog_part2/src/shm_writer/shm_writer
 labs/sysprog_part2/src/shm_reader/shm_reader
@@ -83,25 +77,6 @@ labs/armadeus/src/autotools/stamp-h1
 # build
 *.o
 /lectures/3_ipc_net/notes.tex
-/labs/tools/corr/ld_preload/hack.c
-/labs/tools/corr/ld_preload/run.sh
-/labs/tools/corr/ld_preload/Makefile
-/labs/sysprog_part1/corr/fork_pipe/reader.c
-/labs/sysprog_part1/corr/fork_pipe/Makefile
-/labs/fs_discovery/corr/hotplug.c
-/labs/sysprog_part2/corr/forwarder/forwarder.c
-/labs/sysprog_part2/corr/forwarder/opts.c
-/labs/sysprog_part2/corr/forwarder/Makefile
-/labs/sysprog_part2/corr/forwarder/opts.h
-/labs/sysprog_part2/corr/forwarder/handler.c
-/labs/sysprog_part2/corr/forwarder/handler.h
-/labs/sysprog_part2/corr/converter/converter.c
-/labs/sysprog_part2/corr/converter/opts.c
-/labs/sysprog_part2/corr/converter/Makefile
-/labs/sysprog_part2/corr/converter/opts.h
-/labs/sysprog_part2/corr/converter/handler.c
-/labs/sysprog_part2/corr/converter/handler.h
-/labs/sysprog_part1/corr/README_CORR
 *.so
 *.xml
 labs/sysprog_part2/src/converter/converter
