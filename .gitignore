@@ -102,3 +102,11 @@ labs/4_armadeus/src/autotools/stamp-h1
 /labs/2_sysprog_part2/corr/converter/handler.c
 /labs/2_sysprog_part2/corr/converter/handler.h
 /labs/1_sysprog_part1/corr/README_CORR
+*.so
+*.xml
+labs/2_sysprog_part2/src/converter/converter
+labs/2_sysprog_part2/src/forwarder/forwarder
+labs/2_sysprog_part2/src/net_reader/net_reader
+labs/4_armadeus/src/autotools/src/client/client
+labs/4_armadeus/src/autotools/src/miniserver/miniserver
+exams
