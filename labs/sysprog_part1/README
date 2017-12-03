@@ -254,10 +254,26 @@ GDB peut être aussi lancé de manière interactive :
 $ gdb <binary>
 -----
 
-Une fois dans le prompt, il faut lancer la commande *r* (comme *run*).
+Une fois dans le prompt, il faut lancer la commande *r* (comme *run*) et *bt*
+pour récupérer la backtrace.
+
+Il est aussi possible de placer des breakpoint sur une ligne de code, dans une
+fonction, etc. Puis on peut avancer pas à pas avec *n* ou *s* (en fonction de
+ce que l'on veut faire). Par exemple:
+
+-----
+$ gdb ./bin/gps
+$ break nmea.c:19
+$ r
+...
+$ s
+...
+$ n
+...
+-----
 
 *Question 4* : _Que se passe-t-il quand vous lancez GDB en mode interactif sur
-               le binaire *gps*? Pourquoi?_
+               le binaire *gps*?_
 
 Suite au problème repéré, allez dans le répertoire *labs/gps/bin* et
 lancez la commande suivante :
@@ -274,12 +290,15 @@ ldd ./gps
 
 Relancez ldd puis GDB pour vérifier que votre solution a porté ses fruits.
 
+*Question 7* : _Quelle est la différence entre les commandes *s* et *n* dans
+               le prompt gdb suite à un breakpoint?_
+
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
 exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
 et communique avec le serveur grâce au réseau.
 
-*Question 7* : _Dans quel contexte ce type d'outils peut être intéressant?_
+*Question 8* : _Dans quel contexte ce type d'outils peut être intéressant?_
 
 === Ce qu'il faut retenir
 
@@ -318,15 +337,15 @@ Pour les questions suivantes, allez dans le répertoire de travail
     * Makefile
     * run.sh
 
-*Question 8* : _Implémentez dans le fichier hook.c la fonction à l'origine du
+*Question 9* : _Implémentez dans le fichier hook.c la fonction à l'origine du
                problème repéré au sein du simulateur GPS mais cette fois-çi
                sans erreur._
 
-*Question 9* : _Éditez le Makefile pour compiler hook.c sous la forme d'une
+*Question 10* : _Éditez le Makefile pour compiler hook.c sous la forme d'une
                 librairie partagée nommée libhook.so (s'inspirer de
                 *labs/gps/src/lib/ptmx/Makefile*). Testez la compilation._
 
-*Question 10* : _Éditez le fichier run.sh pour utiliser LD_PRELOAD au moment
+*Question 11* : _Éditez le fichier run.sh pour utiliser LD_PRELOAD au moment
                 de lancer le simulateur et ainsi hooker le binaire avec la
                 librairie libhook.so. Exécutez run.sh : le simulateur ne doit
                 plus partir en segfault._
@@ -335,17 +354,17 @@ Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
 simulateur GPS utilise la fonction *printf* dès son lancement.
 
-*Question 11* : _Utilisez le *man* pour déterminer le prototype de la fonction
+*Question 12* : _Utilisez le *man* pour déterminer le prototype de la fonction
                 *printf* (expliquez comment vous utilisez *man* dans ce cas et
                 pourquoi). Comment est appelé ce type de fonction?_
 
-*Question 12* : _Hookez le simulateur pour que ce dernier ne puisse plus
+*Question 13* : _Hookez le simulateur pour que ce dernier ne puisse plus
                 être interrompu par le signal SIGINT (Ctrl-C) en
                 réimplémentant la fonction *printf* dans libhook.so. Pour cela,
                 utilisez la fonction *sigaction* pour mettre en place un
                 gestionnaire de signaux (s'inspirer de *gps/src/bin/gps/gps.c*)._
 
-*Question 13* : _Comment faire pour interrompre le processus étant donné
+*Question 14* : _Comment faire pour interrompre le processus étant donné
                 que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes._
 
 Pour les parties suivantes, enlevez le hook du *printf* pour assurer un
@@ -372,7 +391,7 @@ $ sh run.sh
 PTTY: /dev/pts/3
 -----
 
-*Question 14* : _Selon vous, à quoi correspond le champs indiqué par
+*Question 15* : _Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?_
 
 Pour la suite, placez vous dans le répertoire *labs/1_sysprog/src/gps_reader*
@@ -393,35 +412,35 @@ Un binaire *gps_reader* est alors généré.
 Lancez le reader sans paramètre pour avoir l'aide et en déduire son utilisation.
 Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
-*Question 15* : _En regardant le code de reader.c, y a-t-il quelque chose qui
+*Question 16* : _En regardant le code de reader.c, y a-t-il quelque chose qui
                 vous chagrine?_
 
-*Question 16* : _Grâce à des recherches Internet (ou en fouinant dans le code
+*Question 17* : _Grâce à des recherches Internet (ou en fouinant dans le code
                 du simulateur), déterminez dans quelle trame et dans quel champs
                 la date est définie._
 
-*Question 17* : _Quelles fonctions sont utilisées dans reader.c pour
+*Question 18* : _Quelles fonctions sont utilisées dans reader.c pour
                 ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                 Comment s'appelle ce type de programmation?_
 
-*Question 18* : _Modifiez le code de reader.c afin qu'il puisse écouter les
+*Question 19* : _Modifiez le code de reader.c afin qu'il puisse écouter les
                 trames provenant de deux simulateurs GPS différents (ports
                 paramétrables au lancement). Vérifiez le bon fonctionnement en
                 lançant deux instances du simulateur GPS._
 
-*Question 19* : _Utilisez l'appel système *fork* et faites en sorte que le père
+*Question 20* : _Utilisez l'appel système *fork* et faites en sorte que le père
                 s'occupe de la lecture des ports (le fils ne fait rien pour
                 l'instant)._
 
-*Question 20* : _Créez un pipe et faites en sorte que le père envoie la date
+*Question 21* : _Créez un pipe et faites en sorte que le père envoie la date
                  de la trame GLL au fils grâce au pipe. Vous pouvez
                 utiliser les fonctions du fichier util.h pour vous aider._
 
-*Question 21* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
+*Question 22* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
                 utiliser *syslog* pour afficher l'heure dans la console ainsi
                 que le PID du père._
 
-*Question 22* : _La taille des messages échangés entre le père et le fils grâce
+*Question 23* : _La taille des messages échangés entre le père et le fils grâce
                 au pipe étant toujours la même, quel autre mécanisme IPC
                 aurait-on pu utiliser?_
 
@@ -443,14 +462,14 @@ protocole de communication grâce à de la rétro ingénierie. Pour cela, il exi
 des programmes tel que *gtkterm*, *PuTTY*, *picocom* et bien d'autres. Lors de
 ce TP, nous allons utiliser *minicom*.
 
-*Question 14* : _Grâce à l'aide en ligne de commande de *minicom* (option
+*Question 24* : _Grâce à l'aide en ligne de commande de *minicom* (option
                 *-h*), se connecter au port du simulateur GPS et observez les
                 trames passées._
 
-*Question 15* : _Naviguez dans l'aide de minicom (Ctrl-A Z) pour récupérer la
+*Question 25* : _Naviguez dans l'aide de minicom (Ctrl-A Z) pour récupérer la
                 configuration du port de communication. Expliquez brièvement
                 la signification de ces paramètres._
 
-*Question 16* : _Utiliser minicom pour capturer un extrait de la
+*Question 26* : _Utiliser minicom pour capturer un extrait de la
                 communication dans un fichier._
 ////
