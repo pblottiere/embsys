@@ -417,7 +417,7 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
 *Question 17* : _Grâce à des recherches Internet (ou en fouinant dans le code
                 du simulateur), déterminez dans quelle trame et dans quel champs
-                la date est définie._
+                l'heure est définie._
 
 *Question 18* : _Quelles fonctions sont utilisées dans reader.c pour
                 ouvrir/écouter/lire/fermer le port virtuel du simulateur?
@@ -432,8 +432,8 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
                 s'occupe de la lecture des ports (le fils ne fait rien pour
                 l'instant)._
 
-*Question 21* : _Créez un pipe et faites en sorte que le père envoie la date
-                 de la trame GLL au fils grâce au pipe. Vous pouvez
+*Question 21* : _Créez un pipe et faites en sorte que le père envoie l'heure
+                de la trame GLL au fils grâce au pipe. Vous pouvez
                 utiliser les fonctions du fichier util.h pour vous aider._
 
 *Question 22* : _Le fils doit écouter la sortie du pipe (toujours *select*) et
