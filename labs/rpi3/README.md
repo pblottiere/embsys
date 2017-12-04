@@ -9,6 +9,25 @@ root@a11a05dcac96:/# ls # commande sur le conteneur Docker
 
 ## Docker
 
+Si jamais il y a un problème de proxy, on peut configurer docker pour modifier ses accès (https://stackoverflow.com/questions/26550360/docker-ubuntu-behind-proxy).
+Pour les machines de TP, les étapes à suivre sont les suivantes:
+- création du fichier config
+```` shell
+$ mkdir /etc/systemd/system/docker.service.d
+$ cat /etc/systemd/system/docker.service.d/http-proxy.conf
+````
+
+- ajouter les informations suivantes:
+```
+[Service]
+Environment="HTTP_PROXY=http://192.168.1.10:3128/"
+Environment="HTTPS_PROXY=https://192.168.1.10:3128/"
+Environment="SOCKS_PROXY=socks://192.168.1.10:822/"
+Environment="NO_PROXY=localhost,127.0.0.0/8,ensieta.ecole,ensieta.fr,ensta-bretagne.fr"
+```
+
+
+
 Récupération d'une image Debian stable vierge en local:
 
 ```` shell
