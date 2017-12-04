@@ -40,7 +40,7 @@ Acquire::ftp::Proxy "ftp://192.168.1.10:3128";
 Acquire::https::Proxy "https://192.168.1.10:3128";
 Acquire::socks::Proxy "socks://192.168.1.10:822";' > apt.conf
 ```
-- lancer apt update (attention, très long, il faut patientez...)
+- lancer apt update (attention, très long, il faut patienter...)
 ```
 apt update
 apt upgrade
