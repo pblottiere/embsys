@@ -47,6 +47,13 @@ apt upgrade
 ```
 - vous pouvez maintenant faire vos installations
 
+- si vous avez ensuite un problème avec wget, il faut refaire les export pour le bashrc de docker:
+```
+export https_proxy=https://192.168.1.10:3128
+export http_proxy=http://192.168.1.10:3128
+export ftp_proxy=ftp://192.168.1.10:3128
+export socks_proxy=socks://192.168.1.10:822
+```
 
 
 
