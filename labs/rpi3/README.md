@@ -11,7 +11,7 @@ root@a11a05dcac96:/# ls # commande sur le conteneur Docker
 
 Si jamais il y a un problème de proxy, on peut configurer docker pour modifier ses accès (https://stackoverflow.com/questions/26550360/docker-ubuntu-behind-proxy).
 Pour les machines de TP, les étapes à suivre sont les suivantes:
-- création du fichier config
+- création du fichier config (attention, vous aurez peut être besoin de sudo, utilisez n'importe quel éditeur de texte, cat n'est pas obligatoire)
 ```` shell
 $ mkdir /etc/systemd/system/docker.service.d
 $ cat /etc/systemd/system/docker.service.d/http-proxy.conf
@@ -24,6 +24,11 @@ Environment="HTTP_PROXY=http://192.168.1.10:3128/"
 Environment="HTTPS_PROXY=https://192.168.1.10:3128/"
 Environment="SOCKS_PROXY=socks://192.168.1.10:822/"
 Environment="NO_PROXY=localhost,127.0.0.0/8,ensieta.ecole,ensieta.fr,ensta-bretagne.fr"
+```
+- relancer docker
+```
+systemctl daemon-reload
+systemctl restart docker
 ```
 
 
