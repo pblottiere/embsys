@@ -31,6 +31,23 @@ systemctl daemon-reload
 systemctl restart docker
 ```
 
+Ensuite, une fois que vous êtes connecté à docker (instructions dans la suite), ça devrait ne toujours pas fonctionner car il faut configurer les proxy de docker lui même pour apt.
+- création du fichier config pour apt
+```
+cd /etc/apt
+echo 'Acquire::http::Proxy "http://192.168.1.10:3128";
+Acquire::ftp::Proxy "ftp://192.168.1.10:3128";
+Acquire::https::Proxy "https://192.168.1.10:3128";
+Acquire::socks::Proxy "socks://192.168.1.10:822";' > apt.conf
+```
+- lancer apt update (attention, très long, il faut patientez...)
+```
+apt update
+apt upgrade
+```
+- vous pouvez maintenant faire vos installations
+
+
 
 
 Récupération d'une image Debian stable vierge en local:
