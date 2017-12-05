@@ -190,7 +190,7 @@ NAME  FSTYPE LABEL     UUID                                 MOUNTPOINT
 sdX1  vfat   boot      7794-9F86
 └─sdX
 sdX2  ext4   root      7e0c7c79-a446-46bc-b103-aeebc167ca13
-└─sdc
+└─sdX
 ````
 
 Buildroot ne génère pas de tarball de rootfs par défaut. Il faut reconfigurer
@@ -226,6 +226,13 @@ Configurer Buildroot (*make menuconfig*) pour:
 - activer SSH
 - installer ntp/ntpdate
 - installer domoticz
+
+Recompiler et tester vos modifications.
+
+Se connecter à Domoticz et ajouter un matériel de type *Motherboard sensors*.
+Ensuite indiquer le device de température de la carte comme étant utilisé (il
+devrait alors être visible dans l'onglet *Température*). Vous pouvez aussi
+cliquer sur :star: pour faire apparaître le capteur dans le *Dashboard*.
 
 ### Dockerfile
 
@@ -287,3 +294,5 @@ kernel=u-boot.bin
 enable_uart=1
 dtoverlay=pi3-disable-bt
 ````
+
+Tester la configuration.
