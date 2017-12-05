@@ -162,7 +162,7 @@ $ mkdir /media/sd
 $ mount /dev/sdX1 /media/sd
 $ cp bcm2710-rpi-3-b.dtb /media/sd
 $ cp bcm2710-rpi-cm3.dtb /media/sd
-$ cp rpi-firmware/* /media/sd
+$ cp -r rpi-firmware/* /media/sd
 $ cp zImage /media/sd
 $ umount /media/sd
 $
