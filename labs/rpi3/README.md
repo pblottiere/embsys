@@ -133,6 +133,12 @@ phase de compilation)...
 root@a11a05dcac96:/# make
 ````
 
+Si vous avez un problème lors de la compilation pour accéder à github, entrez la commande suivante :
+
+```` shell
+root@a11a05dcac96:/# git config --global http.proxy http://192.168.1.10:3128 
+````
+
 NOTE: ceci peut vous aider un passer un *git clone* particulièrement lourd
 
 ```` shell
