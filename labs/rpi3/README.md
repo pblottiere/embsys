@@ -9,6 +9,54 @@ root@a11a05dcac96:/# ls # commande sur le conteneur Docker
 
 ## Docker
 
+Si jamais il y a un problème de proxy, on peut configurer docker pour modifier ses accès (https://stackoverflow.com/questions/26550360/docker-ubuntu-behind-proxy).
+Pour les machines de TP, les étapes à suivre sont les suivantes:
+- création du fichier config (attention, vous aurez peut être besoin de sudo, utilisez n'importe quel éditeur de texte, cat n'est pas obligatoire)
+```` shell
+$ mkdir /etc/systemd/system/docker.service.d
+$ cat /etc/systemd/system/docker.service.d/http-proxy.conf
+````
+
+- ajouter les informations suivantes:
+```
+[Service]
+Environment="HTTP_PROXY=http://192.168.1.10:3128/"
+Environment="HTTPS_PROXY=https://192.168.1.10:3128/"
+Environment="SOCKS_PROXY=socks://192.168.1.10:822/"
+Environment="NO_PROXY=localhost,127.0.0.0/8,ensieta.ecole,ensieta.fr,ensta-bretagne.fr"
+```
+- relancer docker
+```
+systemctl daemon-reload
+systemctl restart docker
+```
+
+Ensuite, une fois que vous êtes connecté à docker (instructions dans la suite), ça devrait ne toujours pas fonctionner car il faut configurer les proxy de docker lui même pour apt.
+- création du fichier config pour apt
+```
+cd /etc/apt
+echo 'Acquire::http::Proxy "http://192.168.1.10:3128";
+Acquire::ftp::Proxy "ftp://192.168.1.10:3128";
+Acquire::https::Proxy "https://192.168.1.10:3128";
+Acquire::socks::Proxy "socks://192.168.1.10:822";' > apt.conf
+```
+- lancer apt update (attention, très long, il faut patienter...)
+```
+apt update
+apt upgrade
+```
+- vous pouvez maintenant faire vos installations
+
+- si vous avez ensuite un problème avec wget, il faut refaire les export pour le bashrc de docker:
+```
+export https_proxy=https://192.168.1.10:3128
+export http_proxy=http://192.168.1.10:3128
+export ftp_proxy=ftp://192.168.1.10:3128
+export socks_proxy=socks://192.168.1.10:822
+```
+
+
+
 Récupération d'une image Debian stable vierge en local:
 
 ```` shell
