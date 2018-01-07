@@ -1,17 +1,37 @@
-# Buildroot
+# Partie 1: Construction du système d'exploitation avec Buildroot
 
-Notation:
+Dans cette partie, nous allons voir comment recompiler *from scratch*
+un système d'exploitation pour la RPI3.
 
-```` shell
-$ ls # commande sur la machine hôte
-root@a11a05dcac96:/# ls # commande sur le conteneur Docker
-````
+Afin d'avoir une procédure la plus reproductible possible, nous allons
+utiliser une image Docker Debian stable.
 
-Remarque: si vous avez des problèmes de proxy, se référer à la partie
-*Problèmes de proxy*.
+Si vous avez des problèmes de proxy, se référer à la partie [Problèmes de
+proxy](#problèmes-de-proxy)
+
+
+# Table of contents
+
+  * [Docker](#docker)
+  * [Buildroot](#buildroot)
+    * [Compilation](#compilation)
+    * [Flashage](#flashage)
+  * [Domoticz](#domoticz)
+  * [Dockerfile](#dockerfile)
+  * [QEMU et chroot](#qemu-et-chroot)
+  * [U-Boot](#u-boot)
+  * [Problèmes de proxy](#problèmes-de-proxy)
 
 
 ## Docker
+
+Voici les notations utilisées afin de bien différencier si la commande
+doit être exécutée sur la machine hôte ou bien sur le conteneur Docker:
+
+```` shell
+$ ls # commande sur la machine hôte
+root@xxxxxxxxxxxx:/# ls # commande sur le conteneur Docker
+````
 
 Récupération d'une image Debian stable vierge en local:
 
@@ -27,7 +47,7 @@ Démarrage d'un nouveau conteneur en mode shell à partir de l'image Debian:
 
 ```` shell
 $ docker run -it debian:stable /bin/bash
-root@a11a05dcac96:/#
+root@xxxxxxxxxxxx:/#
 ````
 
 Connexion à un conteneur existant à partir de son ID:
@@ -35,34 +55,34 @@ Connexion à un conteneur existant à partir de son ID:
 ```` shell
 $ docker ps
 CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-a11a05dcac96   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
-$ docker exec -it a11a05dcac96 /bin/bash
+xxxxxxxxxxxx   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
+$ docker exec -it xxxxxxxxxxxx /bin/bash
 ````
 
 Arrêt d'un conteneur existant et actif:
 
 ```` shell
-$ docker stop a11a05dcac96
+$ docker stop xxxxxxxxxxxx
 $ docker ps
 CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
 $ docker ps -a
 CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-a11a05dcac96   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
+xxxxxxxxxxxx   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
 ````
 
 Démarrage d'un conteneur existant arrêté:
 
 ```` shell
-$ docker container start a11a05dcac96
+$ docker container start xxxxxxxxxxxx
 $ docker ps
 CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-a11a05dcac96   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
+xxxxxxxxxxxx   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
 ````
 
 Récupération d'un fichier présent sur un conteneur:
 
 ```` shell
-$ docker cp a11a05dcac96:/file/path/within/container /host/path/target
+$ docker cp xxxxxxxxxxxx:/file/path/within/container /host/path/target
 ````
 
 ## Buildroot
@@ -73,26 +93,38 @@ Debian stable.
 ### Compilation
 
 ```` shell
-root@a11a05dcac96:/# cd /root
-root@a11a05dcac96:/# wget https://buildroot.org/downloads/buildroot-2017.08.tar.gz
-root@a11a05dcac96:/# tar zxvf buildroot-2017.08.tar.gz
-root@a11a05dcac96:/# make raspberrypi3_defconfig
-root@a11a05dcac96:/# make menuconfig
+root@xxxxxxxxxxxx:/# cd /root
+root@xxxxxxxxxxxx:/# wget https://buildroot.org/downloads/buildroot-2017.08.tar.gz
+root@xxxxxxxxxxxx:/# tar zxvf buildroot-2017.08.tar.gz
+root@xxxxxxxxxxxx:/# make raspberrypi3_defconfig
+root@xxxxxxxxxxxx:/# make menuconfig
 ````
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/buildroot.png" width="500" title="Github Logo">
+</p>
 
 Dans le menu de configuration, indiquer le nombre de jobs à 4 pour la
-compilation puis sauvegarder la configuration. Ensuite, lancer la compilation
-(vous devrez probablement installer des dépendances pour arriver au bout de la
-phase de compilation)...
+compilation et:
+- modifier le hostname
+- ajouter un mot de passe root
+- ajouter un utilisateur (et un mot de passe associé)
+- activer SSH
+- installer ntp/ntpdate
+- installer domoticz
+
+
+Ensuite, sauvegarder la configuration et lancer la compilation (étant donné que
+nous partons d'une image Docker vierge, vous devrez installer des dépendances
+pour arriver au bout de la phase de compilation)...
 
 ```` shell
-root@a11a05dcac96:/# make
+root@xxxxxxxxxxxx:/# make
 ````
 
 NOTE: ceci peut vous aider un passer un *git clone* particulièrement lourd
 
 ```` shell
-root@a11a05dcac96:/# git config --global http.postBuffer 1048576000
+root@xxxxxxxxxxxx:/# git config --global http.postBuffer 1048576000
 ````
 
 ### Flashage
@@ -103,7 +135,7 @@ En mode automatique sur une carte SD */dev/sdX* (remplacer *X* par le path de
 votre carte. *dmesg* peut vous aider):
 
 ```` shell
-$ docker cp a11a05dcac96:/root/buildroot-2017.08/output/images/sdcard.img /home/user/
+$ docker cp xxxxxxxxxxxx:/root/buildroot-2017.08/output/images/sdcard.img /home/user/
 $ sudo dd if=sdcard.img of=/dev/sdX
 ````
 
@@ -171,28 +203,48 @@ $ tar xf rootfs.tar -C /media/sd
 $ umount /media/sd
 ````
 
-Démarrer la RPI3 et établir une communication série.
+Démarrer la RPI3 et établir une communication série (via des outils comme
+minicom, gtkterm, putty, cu, ...).
 
-### Customisation
 
-Configurer Buildroot (*make menuconfig*) pour:
-- modifier le hostname
-- ajouter un mot de passe root
-- ajouter un utilisateur (et un mot de passe associé)
-- activer SSH
-- installer ntp/ntpdate
-- installer domoticz
+### Domoticz
 
-Recompiler et tester vos modifications.
+Le but de cette partie est simplement de vérifier le bon fonctionnement du
+serveur Domoticz installé sur la carte.
 
-Se connecter à Domoticz et ajouter un matériel de type *Motherboard sensors*.
-Ensuite indiquer le device de température de la carte comme étant utilisé (il
-devrait alors être visible dans l'onglet *Température*). Vous pouvez aussi
-cliquer sur :star: pour faire apparaître le capteur dans le *Dashboard*.
+Toud d'abord, connecter votre RPI3 au réseau via cable ethernet et démarrer
+la carte. Ensuite récupérer l'adresse IP de la RPI3 et se connecter à
+Domoticz via le port 8080 via votre navigateur préféré. Vous devriez
+observer cette page web:
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_startpage.png" width="500" title="Github Logo">
+</p>
+
+Puis, ajouter un matériel de type *Motherboard sensors* et indiquer le
+device de température de la carte comme étant utilisé (il devrait alors être
+visible dans l'onglet *Température*). Vous pouvez aussi cliquer sur :star: pour
+faire apparaître le capteur dans le *Dashboard*.
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_serveur.png" width="500" title="Github Logo">
+</p>
+
+Si le carte reste suffisement longtemps allumée, vous pouvez observer des
+courbes de température, consommation CPU, ...
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_temp.png" width="500" title="Github Logo">
+</p>
 
 ### Dockerfile
 
-Se renseigner sur la notion de Dockerfile et en écrire un (automatisation!).
+Pour information, la construction d'un conteneur Docker peut être automatisé
+via l'écriture de fichiers nommés `Dockerfile`.
+
+Vous pouvez jeter un oeil sur le travail réalisé par les étudiants
+[ici](https://github.com/pblottiere/dominus/docker).
+
 
 ### QEMU et chroot
 
@@ -217,7 +269,7 @@ $ sudo umount /media/sd/proc
 $ sudo umount /media/sd/
 ````
 
-### Uboot
+### U-Boot
 
 Bootloader industriel. Configurer dans Buildroot les options du bootloader:
 - Build System: KCONFIG
@@ -239,7 +291,7 @@ bootz ${kernel_addr_r} - ${fdt_addr_r}
 Et compiler ce fichier avec *mkimage*:
 
 ````
-root@a11a05dcac96:/# ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 -e 0x00000000 -n boot.scr -d boot.source  boot.scr
+root@xxxxxxxxxxxx:/# ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 -e 0x00000000 -n boot.scr -d boot.source  boot.scr
 ````
 
 Ensuite copier le binaire *u-boot.bin*, le *fichier boot.scr* et le fichier
