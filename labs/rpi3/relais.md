@@ -3,7 +3,7 @@
 Numérotation des pins pour la RPi3 Model B v1.2:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/rpi3pins.png" width="550" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/rpi3pins.png" width="550" title="Github Logo">
 </p>
 
 # Contenu
@@ -27,7 +27,7 @@ Réaliser le montage suivant en utilisant la GPIO 17 (n'oubliez pas que la
 broche la plus courte de la LED est le **-**):
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/led_res.jpg" width="350" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/led_res.jpg" width="350" title="Github Logo">
 </p>
 
 Grâce à la documentation du kernel sur
@@ -50,7 +50,7 @@ moyenne grâce à des signaux discrets (de valeur constante fixe). En image,
 cela donne ceci :
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/pwm.png" width="350" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/pwm.png" width="350" title="Github Logo">
 </p>
 
 Deux paramètres permettent donc de gérer la tension moyenne souhaitée :
@@ -114,7 +114,7 @@ Réaliser le montage suivant avec:
 - une LED à la place du réveil
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/relai.png" width="350" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/relai.png" width="350" title="Github Logo">
 </p>
 
 Tester l'allumage de la LED via le contrôle de la GPIO par Sysfs et Python.

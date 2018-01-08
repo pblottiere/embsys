@@ -100,7 +100,7 @@ root@xxxxxxxxxxxx:/# make raspberrypi3_defconfig
 root@xxxxxxxxxxxx:/# make menuconfig
 ````
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/buildroot.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/buildroot.png" width="500" title="Github Logo">
 </p>
 
 Dans le menu de configuration, indiquer le nombre de jobs à 4 pour la
@@ -220,7 +220,7 @@ Domoticz via le port 8080 via votre navigateur préféré. Vous devriez
 observer cette page web:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_startpage.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_startpage.png" width="500" title="Github Logo">
 </p>
 
 Puis, ajouter un matériel de type *Motherboard sensors* et indiquer le
@@ -229,14 +229,14 @@ visible dans l'onglet *Température*). Vous pouvez aussi cliquer sur :star: pour
 faire apparaître le capteur dans le *Dashboard*.
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_serveur.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_serveur.png" width="500" title="Github Logo">
 </p>
 
 Si le carte reste suffisement longtemps allumée, vous pouvez observer des
 courbes de température, consommation CPU, ...
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_temp.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_temp.png" width="500" title="Github Logo">
 </p>
 
 ### Dockerfile

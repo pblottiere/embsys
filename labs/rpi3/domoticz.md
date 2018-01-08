@@ -38,21 +38,21 @@ menu **Hardware**. Créer alors un capteur virtuel en indiquant un nom et
 le type **Dummy**:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_dummy.png" width="600" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_dummy.png" width="600" title="Github Logo">
 </p>
 
 Finalement, cliquer sur **Create Virtual Sensors** et indiquer **Temperature**
 comme type:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_virtual.png" width="600" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_virtual.png" width="600" title="Github Logo">
 </p>
 
 Le nouveau capteur est alors disponible dans l'onglet **Temperature** de
 l'interface:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_temp0.png" width="600" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_temp0.png" width="600" title="Github Logo">
 </p>
 
 ### API JSON
@@ -122,7 +122,7 @@ $ curl "http://192.168.1.30:8080/json.htm?type=command&param=udevice&idx=8&nvalu
 L'interface est alors mise à jour avec la nouvelle température:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_temp0_update.png" width="350" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_temp0_update.png" width="350" title="Github Logo">
 </p>
 
 
@@ -157,21 +157,21 @@ Pour créer un swicth, aller dans l'onglet **Setup** puis dans le menu
 **Hardware**. Créer alors un switch en indiquant un nom et le type **Dummy**:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_switch.png" width="450" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_switch.png" width="450" title="Github Logo">
 </p>
 
 Finalement, cliquer sur **Create Virtual Sensors** et indiquer **Temperature**
 comme type:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_switch_type.png" width="300" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_switch_type.png" width="300" title="Github Logo">
 </p>
 
 Le nouveau capteur est alors disponible dans l'onglet **Switches** de
 l'interface. L'état par défaut est OFF:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_switch_off.png" width="600" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_switch_off.png" width="600" title="Github Logo">
 </p>
 
 
@@ -183,7 +183,7 @@ OFF->ON. Pour cela, cliquer sur **Edit** au niveau du switch et renseigner
 les champs **On Action** et **Off Action** avec un script shell de mise à jour:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_switch_scripts.png" width="450" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_switch_scripts.png" width="450" title="Github Logo">
 </p>
 
 Ensuite, créer ces 2 scripts dans le répertoire **/opt/domoticz/scripts** sur

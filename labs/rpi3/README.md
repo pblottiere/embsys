@@ -5,7 +5,7 @@ l'utilisation de cartes RPI3 et de divers capteurs (température, humidité,
 pression, caméra, ...).
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/rpi3.png" width="300" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/rpi3.png" width="300" title="Github Logo">
 </p>
 
 Une 1ère carte sera chargée d'héberger un serveur de domotique:
@@ -14,7 +14,7 @@ l'utilisateur pour contrôler son système (récupération de la température,
 allumer une lumière, ...).
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/domoticz_sensors.jpg" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_sensors.jpg" width="500" title="Github Logo">
 </p>
 
 Les capteurs seront quand à eux connectés sur une 2ème carte. Des drivers
@@ -23,7 +23,7 @@ type de capteur: GPIO, i2C, 1-Wire, ...). Cette 2ème carte sera chargée
 d'envoyer les données de ces capteurs au serveur Domoticz via le réseau.
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/rpi3tp/labs/rpi3/imgs/arch.png" width="550" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/arch.png" width="550" title="Github Logo">
 </p>
 
 Un projet spécifique a été créé pour héberger le travail réalisé par les
