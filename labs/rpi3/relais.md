@@ -50,7 +50,7 @@ moyenne grâce à des signaux discrets (de valeur constante fixe). En image,
 cela donne ceci :
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/pwm.png" width="350" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/pwm.png" width="500" title="Github Logo">
 </p>
 
 Deux paramètres permettent donc de gérer la tension moyenne souhaitée :
