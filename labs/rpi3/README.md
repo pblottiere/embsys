@@ -35,6 +35,8 @@ fonctionnalités, etc...
 Pour l'instant, voici les étapes à suivre pour construire progressivement ce
 dont nous avons besoin:
 
-[Partie 1: Construction du système d'exploitation avec Buildroot](buildroot.md)
+[Partie 1 : Construction du système d'exploitation avec Buildroot](buildroot.md)
 
-[Partie 2: Communiquer avec Domoticz](domoticz.md)
+[Partie 2 : Communiquer avec Domoticz](domoticz.md)
+
+[Partie 3 : Relais](relais.md)

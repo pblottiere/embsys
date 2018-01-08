@@ -10,7 +10,7 @@ Si vous avez des problèmes de proxy, se référer à la partie [Problèmes de
 proxy](#problèmes-de-proxy)
 
 
-# Table of contents
+# Contenu
 
   * [Docker](#docker)
   * [Buildroot](#buildroot)
@@ -109,6 +109,8 @@ compilation et:
 - ajouter un mot de passe root
 - ajouter un utilisateur (et un mot de passe associé)
 - activer SSH
+- python / python-rpi-gpio
+- libcurl / curl binary
 - installer ntp/ntpdate
 - installer domoticz
 

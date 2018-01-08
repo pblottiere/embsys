@@ -1,4 +1,4 @@
-# Domoticz
+# Partie 2 : Domoticz
 
 Dans le cadre d'un système domotique, 2 types de matériels peuvent être
 différenciés:
@@ -212,4 +212,5 @@ chargé de réaliser l'action correspondante.
 client envoie le message correspondant (ON ou OFF) lorsque l'utilisateur
 clic sur le switch.
 
-Finalement, cross-compiler ces 2 programmes et tester sur la carte.
+Finalement, cross-compiler ces 2 programmes et écrire un script d'init.d
+pour lancer le programme serveur au moment du démarrage de la carte. Tester.
