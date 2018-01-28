@@ -40,3 +40,5 @@ dont nous avons besoin:
 [Partie 2 : Communiquer avec Domoticz](domoticz.md)
 
 [Partie 3 : Relais](relais.md)
+
+[Partie 4 : BME280](bme280.md)
