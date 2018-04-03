@@ -1,0 +1,72 @@
+\documentclass[12pt,t]{beamer}
+
+%------------------------------------------------------------------------------
+% configuration
+%------------------------------------------------------------------------------
+\input{../../tools/conf.tex}
+
+%------------------------------------------------------------------------------
+% title
+%------------------------------------------------------------------------------
+\input{../../tools/intro.tex}
+
+%------------------------------------------------------------------------------
+% Questions de cours
+%------------------------------------------------------------------------------
+\begin{frame}{Cours}
+    \subt{Test de connaissance}
+
+    \vspace{10pt}
+    \bi
+    \itemsep12pt
+    \item 1 test de connaissance à la fin du semestre
+    \item 3 questions par cours
+    \item Questions de vocabulaires, concepts, terminologie, ...
+    \item Bachotage :)
+    \ei
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% TP
+%------------------------------------------------------------------------------
+\begin{frame}{TP}
+    \subt{Comptes rendu}
+
+    \vspace{10pt}
+    \bi
+    \itemsep12pt
+    \item Par groupe de 2 ou 3 max (garder les groupes pour le projet)
+    \item Plusieurs comptes-rendu au cours du semestre
+    \item À rendre d'une séance sur l'autre
+    \item Tarball (.tar.gz)
+    \item Notes en Markdown
+    \item Code source avec Makefile (-Wall)
+    \ei
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% projet
+%------------------------------------------------------------------------------
+\begin{frame}{Projet}
+    \subt{Volume horaire : 2 demi-journées}
+
+    \begin{enumerate}
+        \itemsep3pt
+        \item Fonctionnel
+        \item Workflow git et collaboration (branche, tag, PR, ...)
+        \item Architecture du code et modularité (librairies, ...)
+        \item Outils de build (autotools)
+        \item Utilisation des notions vues en TP (getopt, syslog, signal handler, ...)
+        \item Normes de codage
+        \item Compilation avec -Wall
+        \item Tests unitaires
+        \item Readme global (markdown)
+        \item Documentation sur l'utilisation des outils (docker / buildroot / QEMU)
+        \item Documentation du code (doxygen)
+    \end{enumerate}
+
+\end{frame}
+
+\end{document}
