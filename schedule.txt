@@ -1,0 +1,50 @@
+10 séances
+
+Séance 1:
+    - lecture 0_uv
+    - lecture 1_intro
+    - git
+    - demander aux élèves de revoir leurs cours de C
+
+Séance 2:
+    - lecture 2_processus
+    - lab sysprog part0
+
+Séance 3:
+    - lecture 3_ipc_net
+    - lab sysprog part1
+
+=> compte rendu TP noté sur Séance 2 et 3
+
+Séance 4:
+    - lecture 7_compil_tools
+    - docker
+    - buildroot
+
+Séance 5:
+    - lecture 6_mem_fs
+    - lecture 5_bus
+    - yocto
+
+Séance 6:
+    - flashage OS (à partir image préparée pour ceux qui l'ont pas fait)
+    - uboot
+    - DTB / overlay
+
+=> compte rendu "libre" (sans questions) pour décrire les outils utilisés lors des séances 4/5/6
+
+Séance 7:
+    - autotools
+    - GPIO / 1Wire / Liaison série / ...
+
+Séance 8:
+    - lecture 4_kernel_mod
+    - module kernel
+
+Séance 9:
+    - sensibilisation à la cybersécurité
+    - TP!!???
+
+Séance 10 / 11:
+    - exam QCM
+    - projet
