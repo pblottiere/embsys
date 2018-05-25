@@ -11,8 +11,8 @@ Pour cela:
 
 [Partie 1 : Utilisation d'un simulateur GPS](part1.md)
 
-[Partie 2 : Compilation, debug, signaux et threads](part2.md)
+[Partie 2 : Compilation, debug et gestionnaire de signaux](part2.md)
 
-[Partie 3 : Exclusion mutuelle, IPC et multiplexage](part3.md)
+[Partie 3 : Thread, mutex, IPC et multiplexage](part3.md)
 
 [Partie 4 : Programmation réseau](part4.md)

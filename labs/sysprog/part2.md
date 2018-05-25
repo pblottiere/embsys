@@ -1,4 +1,4 @@
-# Partie 2: Compilation, debug, signaux et threads
+# Partie 2: Compilation, debug et gestionnaire de signaux
 
 
 ## Exercice 1 : GDB et fichier core
@@ -138,46 +138,67 @@ Pour les questions suivantes, allez dans le répertoire de travail
   * Makefile
   * run.sh
 
-**Question 9** : Implémentez dans le fichier hook.c la fonction à l'origine du
+**Question 1** : Implémentez dans le fichier hook.c la fonction à l'origine du
                  problème repéré au sein du simulateur GPS mais cette fois-çi
                  sans erreur.
 
-**Question 10** : Éditez le Makefile pour compiler *hook.c* sous la forme d'une
-                  librairie partagée nommée *libhook.so* (s'inspirer de
-                  *gps/src/lib/ptmx/Makefile*). Testez la compilation.
+**Question 2** : Éditez le Makefile pour compiler *hook.c* sous la forme d'une
+                 librairie partagée nommée *libhook.so* (s'inspirer de
+                 *gps/src/lib/ptmx/Makefile*). Testez la compilation.
 
-**Question 11** : Éditez le fichier *run.sh* pour utiliser LD_PRELOAD au moment
-                  de lancer le simulateur et ainsi hooker le binaire avec la
-                  librairie libhook.so. Exécutez run.sh : le simulateur ne doit
-                  plus partir en segfault.
+**Question 3** : Éditez le fichier *run.sh* pour utiliser LD_PRELOAD au moment
+                 de lancer le simulateur et ainsi hooker le binaire avec la
+                 librairie libhook.so. Exécutez run.sh : le simulateur ne doit
+                 plus partir en segfault.
 
 Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
 simulateur GPS utilise la fonction *printf* dès son lancement.
 
-**Question 12** : Utilisez le *man* pour déterminer le prototype de la fonction
-                  *printf* (expliquez comment vous utilisez *man* dans ce cas et
-                  pourquoi). Comment est appelé ce type de fonction?
+**Question 4** : Utilisez le *man* pour déterminer le prototype de la fonction
+                 *printf* (expliquez comment vous utilisez *man* dans ce cas et
+                 pourquoi). Comment est appelé ce type de fonction?
 
-**Question 13** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
-                  gestionnaires de signaux. Décrivez les fonctions utilisez
-                  ainsi que les signaux gérés.
+**Question 5** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
+                 gestionnaires de signaux. Décrivez les fonctions utilisez
+                 ainsi que les signaux gérés.
 
-**Question 14** : Hookez le simulateur pour que ce dernier ne puisse plus
-                  être interrompu par le signal SIGINT (Ctrl-C) en
-                  réimplémentant la fonction *printf* dans libhook.so. Pour
-                  cela, utilisez la fonction *sigaction* pour mettre en place
-                  un gestionnaire de signaux au sein même de la fonction
-                  *printf*  réimplémentée.
+**Question 6** : Hookez le simulateur pour que ce dernier ne puisse plus
+                 être interrompu par le signal SIGINT (Ctrl-C) en
+                 réimplémentant la fonction *printf* dans libhook.so. Pour
+                 cela, utilisez la fonction *sigaction* pour mettre en place
+                 un gestionnaire de signaux au sein même de la fonction
+                 *printf*  réimplémentée.
 
-**Question 15** : Comment faire pour interrompre le processus étant donné
-                  que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
+**Question 7** : Comment faire pour interrompre le processus étant donné
+                 que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
 
-Pour les parties suivantes, enlevez le hook du *printf* pour assurer un
-fonctionnement valide du simulateur.
+**Question 8** : En regardant le fichier *gps/Makefile*, que pouvez-vous dire
+                 de la règle *ok*? À quoi sert-elle et comment
+                 fonctionne-t-elle?
 
-## À retenir
+### À retenir
 
   * comment utiliser le *man*
   * la mise en place d'un gestionnaire de signaux grâce à *sigaction*
   * l'utilité et le fonctionnement de *LD_PRELOAD*
+
+
+## Exercice 3 : Terminal série (minicom)
+
+Dans le cas d'une communication série avec du matériel, il est toujours
+intéressant d'observer les trames. En effet, on peut par exemple comprendre un
+protocole de communication grâce à de la rétro ingénierie. Pour cela, il existe
+des programmes tel que *gtkterm*, *PuTTY*, *picocom* et bien d'autres. Lors de
+ce TP, nous allons utiliser *minicom*.
+
+**Question 1** : Grâce à l'aide en ligne de commande de *minicom* (option
+                 *-h*), se connecter au port du simulateur GPS et observez les
+                 trames passées.
+
+**Question 2** : Naviguez dans l'aide de minicom (Ctrl-A Z) pour récupérer la
+                 configuration du port de communication. Expliquez brièvement
+                 la signification de ces paramètres.
+
+**Question 3** : Utiliser minicom pour capturer un extrait de la
+                 communication dans un fichier.
