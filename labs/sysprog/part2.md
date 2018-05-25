@@ -3,10 +3,7 @@
 
 ## Exercice 1 : GDB et fichier core
 
-### Les questions
-
-Une fois le simulateur GPS compilé, le lancer grâce au script
-*labs/gps/run.sh* :
+Une fois le simulateur GPS compilé, le lancer grâce au script *gps/run.sh* :
 
 ````
 $ sh run.sh
@@ -83,8 +80,8 @@ $ n
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
 
-Suite au problème repéré, allez dans le répertoire *labs/sysprog/gps/bin* et
-lancez la commande suivante :
+Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
+commande suivante :
 
 ````
 ldd ./gps
@@ -94,7 +91,7 @@ ldd ./gps
                 supplémentaire cela vous apporte-t-il?
 
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
-                 pas à regarder le fichier *labs/sysprog/gps/run.sh*.
+                 pas à regarder le fichier *gps/run.sh*.
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
@@ -108,12 +105,79 @@ et communique avec le serveur grâce au réseau.
 
 **Question 8** : Dans quel contexte ce type d'outils peut être intéressant?
 
-### Ce qu'il faut retenir
-
-Les concepts suivants sont considérés comme acquis:
+### À retenir
 
   * l'utilité de *ulimit* et comment déclencher la génération d'un fichier core
   * à quoi sert *GDB* et comment l'utiliser
   * l'utilité de *ldd*
   * pourquoi, quand et comment utiliser la variable d'environnement
     *LD_LIBRARY_PATH*
+
+## Exercice 2 : LD_PRELOAD et sigaction
+
+Maintenant que le problème est identifié, nous allons le résoudre. Cependant,
+nous partons du principe que le code source du simulateur **NE DOIT PAS ÊTRE
+MODIFIÉ**. Pour corriger le problème, nous allons utiliser la variable
+d'environnement *LD_PRELOAD*. Cette variable permet de *hooker* (comprendre
+*usurper*) certaines fonctions d'une application.
+
+Utilisation :
+
+````
+LD_PRELOAD=libhook.so ./bin/gps
+````
+
+En faisant ainsi, le binaire cherchera en priorité les fonctions dont il
+a besoin dans *libhook.so*! Pour que cela fonctionne, il faut que les fonctions
+définies dans libhook aient exactement le même prototype.
+
+Pour les questions suivantes, allez dans le répertoire de travail
+*ld_preload*. Vous devrez travailler sur trois fichiers:
+
+  * hook.c
+  * Makefile
+  * run.sh
+
+**Question 9** : Implémentez dans le fichier hook.c la fonction à l'origine du
+                 problème repéré au sein du simulateur GPS mais cette fois-çi
+                 sans erreur.
+
+**Question 10** : Éditez le Makefile pour compiler *hook.c* sous la forme d'une
+                  librairie partagée nommée *libhook.so* (s'inspirer de
+                  *gps/src/lib/ptmx/Makefile*). Testez la compilation.
+
+**Question 11** : Éditez le fichier *run.sh* pour utiliser LD_PRELOAD au moment
+                  de lancer le simulateur et ainsi hooker le binaire avec la
+                  librairie libhook.so. Exécutez run.sh : le simulateur ne doit
+                  plus partir en segfault.
+
+Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
+peut réaliser la même opération sur les librairies systèmes. Par exemple, le
+simulateur GPS utilise la fonction *printf* dès son lancement.
+
+**Question 12** : Utilisez le *man* pour déterminer le prototype de la fonction
+                  *printf* (expliquez comment vous utilisez *man* dans ce cas et
+                  pourquoi). Comment est appelé ce type de fonction?
+
+**Question 13** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
+                  gestionnaires de signaux. Décrivez les fonctions utilisez
+                  ainsi que les signaux gérés.
+
+**Question 14** : Hookez le simulateur pour que ce dernier ne puisse plus
+                  être interrompu par le signal SIGINT (Ctrl-C) en
+                  réimplémentant la fonction *printf* dans libhook.so. Pour
+                  cela, utilisez la fonction *sigaction* pour mettre en place
+                  un gestionnaire de signaux au sein même de la fonction
+                  *printf*  réimplémentée.
+
+**Question 15** : Comment faire pour interrompre le processus étant donné
+                  que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
+
+Pour les parties suivantes, enlevez le hook du *printf* pour assurer un
+fonctionnement valide du simulateur.
+
+## À retenir
+
+  * comment utiliser le *man*
+  * la mise en place d'un gestionnaire de signaux grâce à *sigaction*
+  * l'utilité et le fonctionnement de *LD_PRELOAD*

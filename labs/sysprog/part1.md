@@ -78,8 +78,8 @@ elle ne sera pas visible à travers les messages kernel.
 
 ## Compilation du simulateur
 
-Le simulateur GPS se trouve dans le répertoire *labs/sysprog/gps/* qui contient
-lui même :
+Le simulateur GPS se trouve dans le répertoire *gps/* qui contient lui
+même :
 
   * src : répertoire contenant les sources
   * bin : répertoire contenant les binaires (après compilation)
@@ -99,7 +99,7 @@ le binaire *bin/gps*.
 
 ## Questions
 
-En vous inspirant du contenu de *labs/sysprog/gps*, répondre aux questions
+En vous inspirant du contenu du répertoire *gps/*, répondre aux questions
 suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
@@ -108,11 +108,11 @@ suivantes:
 
 **Question 3**: Qu'est ce qu'une librairie partagée?
 
-**Question 4**: Donner un exemple de fichier C et la ligne de commande
+**Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
-**Question 5**: Donner un exemple de fichier C et les lignes de commandes
+**Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
 
 ## À retenir
