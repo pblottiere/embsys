@@ -96,3 +96,21 @@ $ make
 
 Deux librairies sont compilées *lib/libnmea.so* et *lib/libptmx.so* ainsi que
 le binaire *bin/gps*.
+
+## Questions
+
+En vous inspirant du contenu de *labs/sysprog/gps*, répondre aux questions
+suivantes:
+
+**Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
+
+**Question 2**: Quel compilateur est utilisé ici?
+
+**Question 3**: Qu'est ce qu'une librairie partagée?
+
+**Question 4**: Donner un exemple de fichier C et la ligne de commande
+                correspondante pour obtenir un binaire exécutable (un hello
+                world par exemple).
+
+**Question 5**: Donner un exemple de fichier C et les lignes de commandes
+                correspondantes pour obtenir une librairie partagée.
