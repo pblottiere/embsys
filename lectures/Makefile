@@ -1,6 +1,9 @@
-.PHONY: all 1_intro 2_processus 3_ipc_net 4_kernel_mod 5_bus 6_mem_fs 7_compil_tools full
+.PHONY: all 0_uv 1_intro 2_processus 3_ipc_net 4_kernel_mod 5_bus 6_mem_fs 7_compil_tools full
 
-all: 1_intro 2_processus 3_ipc_net 4_kernel_mod 5_bus 6_mem_fs 7_compil_tools full
+all: 0_uv 1_intro 2_processus 3_ipc_net 4_kernel_mod 5_bus 6_mem_fs 7_compil_tools full
+
+0_uv:
+	cd 0_uv && make && make handout
 
 1_intro:
 	cd 1_intro && make && make handout
@@ -26,8 +29,11 @@ all: 1_intro 2_processus 3_ipc_net 4_kernel_mod 5_bus 6_mem_fs 7_compil_tools fu
 full:
 	cd full && make && make handout
 
-clean: 1_intro_clean 2_processus_clean 3_ipc_net_clean 4_kernel_mod_clean \
-	   5_bus_clean 6_mem_fs 7_compil_tools_clean full_clean
+clean: 0_uv_clean 1_intro_clean 2_processus_clean 3_ipc_net_clean  \
+	4_kernel_mod_clean 5_bus_clean 6_mem_fs 7_compil_tools_clean full_clean
+
+0_uv_clean:
+	cd 0_uv && make clean
 
 1_intro_clean:
 	cd 1_intro && make clean
