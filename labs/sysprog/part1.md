@@ -1,35 +1,14 @@
-# Partie 1: Compilation, debug, signaux et threads
+# Partie 1: Utilisation d'un simulateur GPS
 
-Dans cette partie, nous allons se plonger dans le langage C, étudier la
-chaine de compilation et explorer les signaux ainsi que les threads.
-
-
-## Contenu
-
-  * [Simulateur GPS](#simulateur-gps)
-    * [Norme NMEA](#norme-nmea)
-    * [Communication série](#communication-serie)
-    * [Compilation du simulateur](#compilation-du-simulateur)
-    * [Exécution du simulateur](#execution-du-simulateur)
-    * [Terminal série (minicom)](#terminal-serie)
-  * [Exercices](#exercices)
-    * [Compilation et débogage](#compilation-et-debogage)
-    * [Hook et signaux](#hook-et-signaux)
-  * [À retenir](#a-retenir)
-
-## Simulateur GPS
-
-### Norme NMEA
+## Norme NMEA
 
 *La norme NMEA 0183 est une spécification pour la communication entre
 équipements marins, dont les équipements GPS. Elle est définie et contrôlée
 par la National Marine Electronics Association (NMEA), association américaine
 de fabricants d'appareils électroniques maritimes, basée à Severna Park au
-Maryland (États-Unis d'Amérique).
-
-La norme 0183 utilise une simple communication série pour transmettre une
-phrase à un ou plusieurs écoutants. Une trame NMEA utilise tous les
-caractères ASCII. (Wikipedia).*
+Maryland (États-Unis d'Amérique). La norme 0183 utilise une simple communication
+série pour transmettre une phrase à un ou plusieurs écoutants. Une trame NMEA
+utilise tous les caractères ASCII. (Wikipedia).*
 
 Ces trames NMEA 0183 sont de tailles variables et codées en ASCII (caractères
 8 bits) contrairement aux trames NMEA 2000. Elles commencent toutes par le
@@ -37,10 +16,10 @@ caractère *$* (excepté les trames venant de l'AIS commençant par *!*). Les de
 caractères suivants indiquent le type de matériel. Ainsi, on a par exemple pour
 les trois premiers octets :
 
-    * $GP : trame GPS
-    * $HC : trame compas
-    * $RA : trame radar
-    * ...
+  * $GP : trame GPS
+  * $HC : trame compas
+  * $RA : trame radar
+  * ...
 
 Par exemple :
 
@@ -61,35 +40,59 @@ l'envoie de deux types de trames par liaison série virtuelle :
 Ces trames sont envoyées periodiquement par le binaire *gps* que nous verrons
 plus tard.
 
-**NOTE** : Grâce aux équipements marins, une carte en ligne indique en temps réel
+*NOTE* : Grâce aux équipements marins, une carte en ligne indique en temps réel
 la position des navires : http://www.marinetraffic.com/fr/.
 
-### Communication série
+## Communication série
 
-TODO
+Dans la vraie vie, une communication série (ou USB) transmet ces trames NMEA
+et un ordinateur peut alors les récupérer.
 
-### Compilation du simulateur
+Lors de la connexion d'un port USB-Série, une entrée est créée par le kernel
+dans le répertoire */dev/* (généralement par l'utilitaire *udev*). En examinant
+les sorties du kernel, on peut trouver le port exact :
 
-TODO
+````
+$ dmesg
+...
+[15976.212024] usb 2-2: new full-speed USB device number 2 using uhci_hcd
+[15976.375039] usb 2-2: New USB device found, idVendor=067b, idProduct=2303
+[15976.375044] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[15976.375047] usb 2-2: Product: USB-Serial Controller
+[15976.375049] usb 2-2: Manufacturer: Prolific Technology Inc.
+[15978.090200] usbcore: registered new interface driver usbserial
+[15978.090219] usbcore: registered new interface driver usbserial_generic
+[15978.090234] usbserial: USB Serial support registered for generic
+[15978.174057] usbcore: registered new interface driver pl2303
+[15978.174078] usbserial: USB Serial support registered for pl2303
+[15978.174101] pl2303 2-2:1.0: pl2303 converter detected
+[15978.186178] usb 2-2: pl2303 converter now attached to ttyUSB0
+````
 
-### Exécution du simulateur
+Ici, on s'attend à avoir un port */dev/ttyUSB0*.
 
-TODO
+Dans le cadre du TP, le simulateur va lui aussi créer une entrée dans
+le */dev/*. Cependant, cette entrée étant virtuelle et créée par programmation,
+elle ne sera pas visible à travers les messages kernel.
 
-### Terminal série (minicom)
 
-TODO
+## Compilation du simulateur
 
-## Exercice 1: compilation et débogage
+Le simulateur GPS se trouve dans le répertoire *labs/sysprog/gps/* qui contient
+lui même :
 
-TODO
+  * src : répertoire contenant les sources
+  * bin : répertoire contenant les binaires (après compilation)
+  * lib : répertoire contenant les librairies (après compilation)
+  * include : répertoire contenant les headers (après compilation)
+  * Makefile : fichier définissant les règles de compilation
+  * run.sh : fichier lançant le simulateur GPS
 
-## Exercice 2: Hook et signaux
+Lancez la compilation :
 
-TODO
+````
+$ make
+````
 
-## À retenir
-
-Suite à ce TP, les concepts suivants sont considérés acquis:
-
-TODO
+Deux librairies sont compilées *lib/libnmea.so* et *lib/libptmx.so* ainsi que
+le binaire *bin/gps*.
