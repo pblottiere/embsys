@@ -14,7 +14,7 @@ On branch master
 nothing to commit, working tree clean
 ````
 
-Branche, add, commit et merge:
+Checkout, branche, add et commit:
 
 ````
 $ git checkout -b mybranch
