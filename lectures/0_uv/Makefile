@@ -1,8 +1,8 @@
 pdf:
-	xelatex note.tex
+	xelatex uv.tex
 
 handout: pdf
-	python ../../tools/handout.py note.tex
+	python ../../tools/handout.py uv.tex
 
 all: pdf
 
