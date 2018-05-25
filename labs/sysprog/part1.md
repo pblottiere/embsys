@@ -114,3 +114,9 @@ suivantes:
 
 **Question 5**: Donner un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
+## À retenir
+
+  * make et Makefile
+  * compilation d'un binaire exécutable
+  * compilation d'une librairie partagée
