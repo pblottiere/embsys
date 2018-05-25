@@ -1,6 +1,6 @@
 GCC = gcc
 BIN = gps
-TOP = ../../..
+TOP = ../..
 
 all:
 	$(GCC) $(BIN).c -g -o $(BIN) -I $(TOP)/include -L $(TOP)/lib/ -lptmx -lnmea

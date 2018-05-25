@@ -4,7 +4,7 @@ init:
 	mkdir -p bin lib include
 
 gps:
-	cd src/bin/gps && make
+	cd src/app && make
 
 libptmx: init
 	cd src/lib/ptmx && make
