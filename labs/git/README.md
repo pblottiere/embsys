@@ -2,9 +2,11 @@
 
 ## git
 
-Init et status:
+Logiciel de gestion de version décentralisé (créé par Linus Torvalds).
 
-````
+#### init et status
+
+```` bash
 $ mkdir myrpoject
 $ cd myrpoject
 $ git init
@@ -14,9 +16,9 @@ On branch master
 nothing to commit, working tree clean
 ````
 
-Checkout, branche, add et commit:
+#### checkout, branche, add et commit
 
-````
+```` bash
 $ git checkout -b mybranch
 Switched to a new branch 'mybranch'
 $ git status
@@ -43,9 +45,9 @@ $ git commit -m 'My first message'
  create mode 100644 myfile.txt
 ````
 
-Log et reset:
+#### log et reset
 
-````
+```` bash
 $ touch myfile2.txt
 $ git add myfile2.txt
 $ git status
@@ -101,9 +103,9 @@ $ git commit -m 'My second message'
  create mode 100644 myfile2.txt
 ````
 
-Rebase et squash:
+#### rebase et squash
 
-````
+```` bash
 $ git rebase -i HEAD~2
  pick 6f44af5 My first message
  s b7d6240 My second message
@@ -133,18 +135,18 @@ $ git commit -m 'My message'
  create mode 100644 myfile2.txt
 ````
 
-Rebase and merge:
+#### rebase et merge
 
-````
+```` bash
 $ git rebase master # conflist possible
 Current branch mybranch is up to date.
 $ git checkout master
 $ git merge mybranch
 ````
 
-Stash:
+#### stash
 
-````
+```` bash
 $ echo 'temp modification' > myfile.txt
 $ git status
 On branch master
@@ -176,3 +178,84 @@ Dropped refs/stash@{0} (caceef3a30784d91998ccd57e93b83e92d6406d4)
 ````
 
 ## github
+
+Service web d'hébergement de projets avec git.
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/git_accueil.png" width="500" title="Github Logo">
+</p>
+
+#### remote, fork et clone
+
+```` bash
+$ git clone https://github.com/pblottiere/embsys
+$ cd embsys
+$ git remote -v
+origin	https://github.com/pblottiere/embsys (fetch)
+origin	https://github.com/pblottiere/embsys (push)
+````
+
+Pour forker:
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/fork.png" width="500" title="Github Logo">
+</p>
+
+Ensuite on clone le fork:
+
+```` bash
+$ git clone https://github.com/myname/embsys
+$ cd embsys
+$ git remote -v
+origin	https://github.com/myname/embsys (fetch)
+origin	https://github.com/myname/embsys (push)
+````
+
+#### clone et push
+
+Dans le fork:
+
+```` bash
+$ git checkout -b mybranch
+$ echo 'My new fix' >> README.md
+$ git add README.md
+$ git commit -m 'My message about the fix'
+$ git push origin mybranch
+````
+
+#### rebase
+
+Ajouter un remote:
+
+```` bash
+$ git remote -v
+origin	https://github.com/myname/embsys (fetch)
+origin	https://github.com/myname/embsys (push)
+$ git remote add upstream https://github.com/pblottiere/embsys
+$ git remote -v
+origin	https://github.com/myname/embsys (fetch)
+origin	https://github.com/myname/embsys (push)
+upstream	https://github.com/pblottiere/embsys (fetch)
+upstream	https://github.com/pblottiere/embsys (push)
+````
+
+Rebase avec le master de upstream:
+
+```` bash
+$ git checkout master
+$ git fetch upstream master
+$ git merge upstream/master
+$ git checkout mybranch
+$ git rebase master # conflits possible
+$ git push -f origin mybranch
+````
+
+#### Pull request
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/git_pr.png" width="500" title="Github Logo">
+</p>
+
+## Ressources
+
+https://www.atlassian.com/git/tutorials
