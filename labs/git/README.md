@@ -182,7 +182,7 @@ Dropped refs/stash@{0} (caceef3a30784d91998ccd57e93b83e92d6406d4)
 Service web d'hébergement de projets avec git.
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/git_accueil.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/git_accueil.png" width="650" title="Github Logo">
 </p>
 
 #### remote, fork et clone
@@ -198,7 +198,7 @@ origin	https://github.com/pblottiere/embsys (push)
 Pour forker:
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/fork.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/fork.png" width="650" title="Github Logo">
 </p>
 
 Ensuite on clone le fork:
@@ -253,7 +253,7 @@ $ git push -f origin mybranch
 #### Pull request
 
 <p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/git_pr.png" width="500" title="Github Logo">
+  <img src="https://github.com/pblottiere/embsys/blob/update_tps/labs/git/imgs/git_pr.png" width="650" title="Github Logo">
 </p>
 
 ## Ressources
