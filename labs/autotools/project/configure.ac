@@ -21,7 +21,8 @@ AC_CHECK_HEADER(sys/socket.h, [],
 # output files
 AC_CONFIG_FILES([Makefile
                  src/Makefile
-                 src/hello/Makefile])
+                 src/miniserver/Makefile
+                 src/client/Makefile])
 
 AC_OUTPUT
 

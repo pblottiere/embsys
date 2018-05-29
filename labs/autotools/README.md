@@ -84,7 +84,7 @@ dur).
 
 **Question 6** : Grâce à l'aide des binaires *client* et *miniserver* (lancez
                  les binaires sans options), testez leur bon fonctionnement en
-                 local (voir schéma ci-dessous).
+                 local.
 
 Lors de la phase de compilation, le compilateur natif est utilisé. Dans le cadre
 d'une cross-compilation, on peut utiliser l'option *--host* lors de la
