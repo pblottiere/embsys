@@ -177,6 +177,15 @@ no changes added to commit (use "git add" and/or "git commit -a")
 Dropped refs/stash@{0} (caceef3a30784d91998ccd57e93b83e92d6406d4)
 ````
 
+#### gitignore
+
+Pour ignorer certains fichiers, certaines extensions, etc...:
+
+```` bash
+$ touch .gitignore
+$ echo '*.o' > .gitignore
+````
+
 ## github
 
 Service web d'hébergement de projets avec git.
