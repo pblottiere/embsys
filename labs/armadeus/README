@@ -628,7 +628,7 @@ avoir besoin d'indiquer un chemin absolu.
                          fonctionnement._
 
 Placez vous dans le répertoire *labs/4_armadeus/src/autotools* et lancez la
-commande *make clean-maintainer*.
+commande *make maintainer-clean*.
 
 *Question 32 (2 min)* : _En observant l'effet, déterminez à quoi sert cette
                         dernière commande._
