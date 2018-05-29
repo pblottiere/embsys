@@ -37,8 +37,14 @@ dont nous avons besoin:
 
 [Partie 1 : Construction du système d'exploitation avec Buildroot](buildroot.md)
 
-[Partie 2 : Communiquer avec Domoticz](domoticz.md)
+[Partie 2 : Émulation de la RPI3 avec le RFS sous QEMU](qemu.md)
 
-[Partie 3 : Relais](relais.md)
+TODO: [Partie 3 : Flashage et U-Boot](flash_uboot.md)
 
-[Partie 4 : BME280](bme280.md)
+[Partie 4 : GPIO et relais](relais.md)
+
+TODO: [Partie 5 : I2C et BME280](bme280.md)
+
+TODO: [Partie 6 : Communication en RS232](bme280.md)
+
+[Partie 7 : Communiquer avec Domoticz](domoticz.md)

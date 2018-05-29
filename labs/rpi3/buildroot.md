@@ -1,315 +1,168 @@
-# Partie 1: Construction du système d'exploitation avec Buildroot
+# Partie 1: Construction du système d'exploitation avec Buildroot et tests avec QEMU
 
 Dans cette partie, nous allons voir comment recompiler *from scratch*
 un système d'exploitation pour la RPI3.
 
-Afin d'avoir une procédure la plus reproductible possible, nous allons
-utiliser une image Docker Debian stable.
+### Préliminaires
 
-Si vous avez des problèmes de proxy, se référer à la partie [Problèmes de
-proxy](#problèmes-de-proxy)
-
-
-# Contenu
-
-  * [Docker](#docker)
-  * [Buildroot](#buildroot)
-    * [Compilation](#compilation)
-    * [Flashage](#flashage)
-  * [Domoticz](#domoticz)
-  * [Dockerfile](#dockerfile)
-  * [QEMU et chroot](#qemu-et-chroot)
-  * [U-Boot](#u-boot)
-  * [Problèmes de proxy](#problèmes-de-proxy)
-
-
-## Docker
-
-Voici les notations utilisées afin de bien différencier si la commande
-doit être exécutée sur la machine hôte ou bien sur le conteneur Docker:
+Plus tard dans le TP, nous aurons besoin d'une image Docker spécifique. Le
+téléchargement étant un peu long, ouvrez un terminal, lancez la commande
+suivante et passez à la suite du TP:
 
 ```` shell
-$ ls # commande sur la machine hôte
-root@xxxxxxxxxxxx:/# ls # commande sur le conteneur Docker
+$ docker pull pblottiere/dominus:bulidroot-rpi3
 ````
 
-Récupération d'une image Debian stable vierge en local:
+### Découverte de Buildroot
+
+Dans un premier temps, téléchargez et décompressez la tarball de buildroot:
 
 ```` shell
-$ docker pull debian:stable
-$ docker images
-REPOSITORY                  TAG             IMAGE ID        CREATED         SIZE
-debian                      stable          49e46d4f55fe    4 weeks ago     100M
-$ docker run -it debian:stable /bin/bash
+$ wget https://buildroot.org/downloads/buildroot-2017.08.tar.gz
+$ tar zxvf buildroot-2017.08.tar.gz
 ````
 
-Démarrage d'un nouveau conteneur en mode shell à partir de l'image Debian:
+Par défaut, le projet Bulidroot fournit des configurations pour certaines
+cartes (le terme générique sous-jacent est BSP, soit Board Support Package)
+dans le répertoire *configs*.
+
+**Question 1**: En considérant que la cible est une carte RaspberryPi3 avec un
+                 OS 32 bits, quel fichier de configuration doit-on utiliser?
+
+**Question 2**: Que contient le répertoire *package*?
+
+**Question 3**: Décrivez l'utilité des différents ficiers du répertoire
+                *package/openssh*.
+
+**Question 4**: À quoi servent les fichiers du répertoire
+                *boards/raspberrypi3*?
+
+Pour sélectionner un paquet à cross-compiler (et donc retrouver les outils
+fournit par le paquet en question sur notre RFS), il suffit de se rendre dans
+le menu *Target packages*, de chercher le paquet désiré dans les sous-menu (à
+l'aide de la commande *\*, comme dans VIM), puis de le sélectionner.
+
+**Question 5**: Dans l'interface de configuration, sélectionnez le paquet
+                *openssh* (au passage, à quoi sert ce paquet?). Ensuite,
+                sauvegardez la configuration et éditez le fichier *.config*.
+                Qu'observez vous lorsque vous recherchez la chaîne de
+                caractère *OPENSSH*? Que cela signifie t-il?
+
+Désormais, lancez la commande suivante:
 
 ```` shell
-$ docker run -it debian:stable /bin/bash
-root@xxxxxxxxxxxx:/#
+$ make raspberrypi3_defconfig
 ````
 
-Connexion à un conteneur existant à partir de son ID:
+**Question 5**: À quoi sert la commande précédente?
+
+Ensuite, lancez la commande suivante pour afficher le menu de configuration:
 
 ```` shell
-$ docker ps
-CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-xxxxxxxxxxxx   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
-$ docker exec -it xxxxxxxxxxxx /bin/bash
+$ make menuconfig
 ````
 
-Arrêt d'un conteneur existant et actif:
+**Question 6**: En naviguant dans le menu, repérez:
+- l'architecture matérielle cible
+- le CPU ciblé
+- l'ABI (en rappellant la signification de celle choisie)
+- la librairie C utilisée
+- la version du cross-compilateur
+- la version du kernel
+
+**Question 7**: Qu'est ce que busybox? À quoi sert la commande
+                *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
+                nous faire?
+
+Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
+constater en allant dans le menu *Bootloaders* de l'interface de
+configuration qu'aucun bootloader n'est actuellement sélectionné. Nous
+verrons dans la partie suivante comment utiliser u-boot à la place.
+
+### Système d'exploitation compilé
+
+Une fois correctement configuré, il suffit de lancer la compilation avec la
+commande *make*. Le résultat de la compilation est alors une image du kernel
+ainsi que le bootloader et un RFS (notamment).
+
+Cependant, l'étape de configuration précise et de compilation peut être longue
+(plusieurs heures). Dans le cadre de ce TP, nous allons donc partir d'une image
+Docker contenant un environnement Buildroot préparé avec un résultat précompilé
+(au lieu de lancer la compilation complète).
+
+Pour cela, nous allons utiliser l'image Docker téléchargée en début de TP:
 
 ```` shell
-$ docker stop xxxxxxxxxxxx
-$ docker ps
-CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-$ docker ps -a
-CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-xxxxxxxxxxxx   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
-````
-
-Démarrage d'un conteneur existant arrêté:
-
-```` shell
-$ docker container start xxxxxxxxxxxx
-$ docker ps
-CONTAINER ID   IMAGE           COMMAND       CREATED            STATUS        PORTS   NAMES
-xxxxxxxxxxxx   debian:stable   "/bin/bash"   About 1 hour ago   Up 2 seconds          dazzling_colden
-````
-
-Récupération d'un fichier présent sur un conteneur:
-
-```` shell
-$ docker cp xxxxxxxxxxxx:/file/path/within/container /host/path/target
-````
-
-## Buildroot
-
-Compilation des images pour RPI3 dans un conteneur Docker à partir d'une image
-Debian stable.
-
-### Compilation
-
-```` shell
+$ docker run -it pblottiere/dominus:buildroot-rpi3 /bin/bash
 root@xxxxxxxxxxxx:/# cd /root
-root@xxxxxxxxxxxx:/# wget https://buildroot.org/downloads/buildroot-2017.08.tar.gz
-root@xxxxxxxxxxxx:/# tar zxvf buildroot-2017.08.tar.gz
-root@xxxxxxxxxxxx:/# make raspberrypi3_defconfig
-root@xxxxxxxxxxxx:/# make menuconfig
+root@xxxxxxxxxxxx:/# tar zxvf buildroot-2017.08-compiled.tar.gz
 ````
-<p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/buildroot.png" width="500" title="Github Logo">
-</p>
 
-Dans le menu de configuration, indiquer le nombre de jobs à 4 pour la
-compilation et:
-- modifier le hostname
-- ajouter un mot de passe root
-- ajouter un utilisateur (et un mot de passe associé)
-- activer SSH
-- python / python-rpi-gpio
-- libcurl / curl binary
-- installer ntp/ntpdate
-- installer domoticz
+**Question 7**: Que contient le répertoire *output/host*? À quoi correspond
+                le binaire *output/host/usr/bin/arm-linux-gcc*?
 
-
-Ensuite, sauvegarder la configuration et lancer la compilation (étant donné que
-nous partons d'une image Docker vierge, vous devrez installer des dépendances
-pour arriver au bout de la phase de compilation)...
+Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
 ```` shell
+#include <stdio.h>
+
+int main()
+{
+  printf("Hello World!\n");
+}
+````
+
+Ensuite, nous pouvons compiler et utiliser la commande *file* pour observer
+l'architecture cible du binaire généré:
+
+```` shell
+$ gcc helloworld.c -o hw
+$ file helloworld
+hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
+````
+
+**Question 8**: Lancez la commande *./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw*
+                puis utilisez la commande *file* sur le binaire résultant.
+                Quelle différences constatez vous par rapport au cas précédent
+                (binaire généré avec gcc)? Que se passe t-il si vous essayez de
+                l'exécuter?
+
+**Question 9**: Que contient de répertoire *output/images*? Décrivez notamment
+                l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
+
+TODO: rajouter fichier uboot
+
+**Question 10**: Que vous dis les résultats de la commande *file* lorsque vous
+                 l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+
+Ensuite, lancez les commandes suivantes:
+
+```` shell
+root@xxxxxxxxxxxx:/# mkdir /tmp/rootfs
+root@xxxxxxxxxxxx:/# tar -xf output/images/rootfs.tar -C /tmp/rootfs
+````
+
+**Question 11**: Que contient le répertoire */tmp/rootfs*?
+
+Maintenant que nous avons le système d'exploitation de compilé avec Buildroot,
+nous allons rapidement voir comment émuler une RPI3 avec le RFS construis ici.
+
+### Compilation : À ne pas faire pendant le TP (trop long)
+
+Si vous souhaitez compiler vous même les images, vous pouvez repartir de
+l'image Docker précédente et lancer la commande *make*:
+
+```` shell
+$ docker run -it pblottiere/dominus:buildroot-rpi3
+root@xxxxxxxxxxxx:/# cd /root
+root@xxxxxxxxxxxx:/# tar zxvf buildroot-2017.08-compiled.tar.gz
+root@xxxxxxxxxxxx:/# cd buildroot-2017.08-compiled
 root@xxxxxxxxxxxx:/# make
 ````
 
-NOTE: ceci peut vous aider un passer un *git clone* particulièrement lourd
+Si vous avez des problèmes de proxy pendant la compilation:
 
-```` shell
-root@xxxxxxxxxxxx:/# git config --global http.postBuffer 1048576000
-````
-
-### Flashage
-
-#### Automatique
-
-En mode automatique sur une carte SD */dev/sdX* (remplacer *X* par le path de
-votre carte. *dmesg* peut vous aider):
-
-```` shell
-$ docker cp xxxxxxxxxxxx:/root/buildroot-2017.08/output/images/sdcard.img /home/user/
-$ sudo dd if=sdcard.img of=/dev/sdX
-````
-
-Insérer la carte SD dans la RPI3 et brancher les adaptateurs USB-TTL
-correctement (cf datasheet de la carte). Utiliser un terminal série (minicom ou
-autre) pour établir une communication avec la carte.
-
-#### Manuel
-
-Paritionner manuellement la carte SD avec *fdisk* tel que:
-- 1ère partition de 128M ( *+128M* ) avec flag de boot (commande *a*) et type W95 FAT32 (LBA) (commande *t* puis code *c*)
-- 2ème partition avec le reste et la config par défaut
-
-Formatter les partitions:
-
-```` shell
-$ sudo mkfs.vfat /dev/sdX1
-$ sudo mkfs.ext4 /dev/sdX2
-````
-
-Le résultat des étapes précédentes:
-
-```` shell
-$ fdisk /dev/sdX
-Command (m for help): p
-Disk /dev/sdX: 14.9 GiB, 15931539456 bytes, 31116288 sectors
-Units: sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disklabel type: dos
-Disk identifier: 0x00000000
-
-Device     Boot Start    End Sectors Size Id Type
-/dev/sdX1  *        1  65536   65536  32M  c W95 FAT32 (LBA)
-/dev/sdX2       65537 188416  122880  60M 83 Linux
-
-Command (m for help):
-$ lsblk -fs
-NAME  FSTYPE LABEL     UUID                                 MOUNTPOINT
-sdX1  vfat   boot      7794-9F86
-└─sdX
-sdX2  ext4   root      7e0c7c79-a446-46bc-b103-aeebc167ca13
-└─sdX
-````
-
-Buildroot ne génère pas de tarball de rootfs par défaut. Il faut reconfigurer
-le build (*make menuconfig*) et activer la construction d'un tar. Ensuite
-recompiler avec *make* et récupérer la tarball *rootfs.tar* sur la machine
-hôte.
-
-Préparer manuellement la carte SD (vous aurez besoin de récupérer en local
-quelques fichiers générés par buildroot):
-
-```` shell
-$ mkdir /media/sd
-$ mount /dev/sdX1 /media/sd
-$ cp bcm2710-rpi-3-b.dtb /media/sd
-$ cp bcm2710-rpi-cm3.dtb /media/sd
-$ cp -r rpi-firmware/* /media/sd
-$ cp zImage /media/sd
-$ umount /media/sd
-$
-$ mount /dev/sdX2 /media/sd
-$ tar xf rootfs.tar -C /media/sd
-$ umount /media/sd
-````
-
-Démarrer la RPI3 et établir une communication série (via des outils comme
-minicom, gtkterm, putty, cu, ...).
-
-
-### Domoticz
-
-Le but de cette partie est simplement de vérifier le bon fonctionnement du
-serveur Domoticz installé sur la carte.
-
-Toud d'abord, connecter votre RPI3 au réseau via cable ethernet et démarrer
-la carte. Ensuite récupérer l'adresse IP de la RPI3 et se connecter à
-Domoticz via le port 8080 via votre navigateur préféré. Vous devriez
-observer cette page web:
-
-<p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_startpage.png" width="500" title="Github Logo">
-</p>
-
-Puis, ajouter un matériel de type *Motherboard sensors* et indiquer le
-device de température de la carte comme étant utilisé (il devrait alors être
-visible dans l'onglet *Température*). Vous pouvez aussi cliquer sur :star: pour
-faire apparaître le capteur dans le *Dashboard*.
-
-<p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_serveur.png" width="500" title="Github Logo">
-</p>
-
-Si le carte reste suffisement longtemps allumée, vous pouvez observer des
-courbes de température, consommation CPU, ...
-
-<p align="center">
-  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/domoticz_temp.png" width="500" title="Github Logo">
-</p>
-
-### Dockerfile
-
-Pour information, la construction d'un conteneur Docker peut être automatisé
-via l'écriture de fichiers nommés `Dockerfile`.
-
-Vous pouvez jeter un oeil sur le travail réalisé par les étudiants
-[ici](https://github.com/pblottiere/dominus/docker).
-
-
-### QEMU et chroot
-
-Émulation de carte arm avec QEMU:
-
-````
-$ sudo apt-get install binfmt-support qemu-user-static
-$ sudo mount /dev/sdX2 /media/sd
-$ cd /media/sd
-$ mount --bind /dev dev/
-$ mount --bind /proc proc/
-$ sudo cp /usr/bin/qemu-arm-static usr/bin/
-$ sudo chroot . bin/busybox ash
-root@hostname:  $
-````
-
-Pour démonter:
-
-````
-$ sudo umount /media/sd/dev
-$ sudo umount /media/sd/proc
-$ sudo umount /media/sd/
-````
-
-### U-Boot
-
-Bootloader industriel. Configurer dans Buildroot les options du bootloader:
-- Build System: KCONFIG
-- Board defconfig: rpi_3_32b (regarder dans le répertoire configs du code uboot ds build)
-- cocher *U-Boot needs dtc*
-- mkimage pour host
-
-Recompiler le tout avec *make*.
-
-Ensuite créer un nouveau fichier *boot.source* contenant:
-
-````
-fatload mmc 0:1 ${kernel_addr_r} zImage
-fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
-setenv bootargs earlyprintk dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=noop noinitrd rw rootwait
-bootz ${kernel_addr_r} - ${fdt_addr_r}
-````
-
-Et compiler ce fichier avec *mkimage*:
-
-````
-root@xxxxxxxxxxxx:/# ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 -e 0x00000000 -n boot.scr -d boot.source  boot.scr
-````
-
-Ensuite copier le binaire *u-boot.bin*, le *fichier boot.scr* et le fichier
-*config.txt* suivant dans la 1ère partition de la carte SD:
-
-````
-kernel=u-boot.bin
-enable_uart=1
-dtoverlay=pi3-disable-bt
-````
-
-Tester la configuration.
-
-## Problèmes de proxy
-
-### Sur la machine hôte
+#### Sur la machine hôte
 
 Si jamais il y a un problème de proxy sur la machine hôte, on peut configurer
 docker pour modifier ses accès
@@ -352,7 +205,7 @@ Dans ce dernier cas, la configuration du navigateur de la machine hôte doit
 être modifié pour prendre en compte le proxy.
 
 
-### Sur le conteneur
+#### Sur le conteneur
 
 Si une fois connecté dans un conteneur vous avez des problèmes de connexion
 avec apt, il faut aussi penser à configurer le proxy.
