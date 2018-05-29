@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     while (1)
     {
         connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
-        int bytes = read(connfd, recv_buff, sizeof(recv_buff)-1);
+        int bytes = read(connfd, recv_buff, strlen(recv_buff)-1);
 
         if (bytes > 0)
         close(connfd);
