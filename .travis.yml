@@ -1,0 +1,7 @@
+before_install:
+    - sudo apt-get update
+    - sudo apt-get install texlive-lang-cyrillic texlive-xetex texlive-latex-recommended
+    - sudo apt-get install texlive-fonts-recommended texlive-latex-extra
+
+script:
+    - cd lectures && make
