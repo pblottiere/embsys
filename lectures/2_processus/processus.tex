@@ -756,6 +756,89 @@ core
 % pthread1
 %------------------------------------------------------------------------------
 \begin{frame}{Les pthreads (1)}
+    \subt{Processeur, coeur et cache}
+
+    \vspace{10pt}
+    Instructions simultanées:
+    \bi
+    \itemsep8pt
+    \item CPU single-core: 1 seule instruction
+    \item CPU multi-core: 1 instruction par core
+    \ei
+
+    \onslide<2->{
+        \vspace{10pt}
+        Mémoire cache d'un CPU:
+        \bi
+        \itemsep6pt
+        \item L1: + rapide / - gros
+        \item L2: - rapide / + gros
+        \item L3: -- rapide / ++ gros
+        \ei
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% pthread1
+%------------------------------------------------------------------------------
+\begin{frame}{Les pthreads (1)}
+    \subt{Processeur, coeur et cache}
+
+    \vspace{10pt}
+    Architectures dépendantes en fonction des processeurs.
+
+    \onslide<2->{
+        \vspace{10pt}
+        Par exemple:
+        \begin{figure}
+            \centering
+            \includegraphics[scale=0.25]{core.png}
+        \end{figure}
+    }
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% pthread1
+%------------------------------------------------------------------------------
+\begin{frame}{Les pthreads (1)}
+    \subt{Multi Processing, Multi Threading, Hyper Threading}
+
+    \vspace{8pt}
+    Multi Processing:
+    \bi
+    \itemsep4pt
+    \item Concept logiciel: espace mémoire dédié, ...
+    \item Un process peut tourner sur 1 core
+    \ei
+
+    \onslide<2->{
+        \vspace{8pt}
+        Multi Threading:
+        \bi
+        \itemsep4pt
+        \item Concept logiciel: espace mémoire partagé, ...
+        \item Un process peut contenir plusieurs threads, donc 1 core peut gérer plusieurs threads
+        \ei
+    }
+
+    \onslide<3->{
+        \vspace{8pt}
+        Hyper Threading:
+        \bi
+        \itemsep4pt
+        \item Concept matériel: technologie créée par Intel
+        \item Gestion plus efficace de plusieurs threads par 1 seul core
+        \item Notion de core logique (1 core -> 2 core logiques)
+        \ei
+    }
+\end{frame}
+
+%------------------------------------------------------------------------------
+% pthread1
+%------------------------------------------------------------------------------
+\begin{frame}{Les pthreads (1)}
     \subt{Présentation}
 
     \vspace{15pt}
