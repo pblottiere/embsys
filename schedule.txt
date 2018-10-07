@@ -1,50 +1,53 @@
-10 séances
-
-Séance 1:
+Séance 1 (6/11/2018 PM):
     - lecture 0_uv
     - lecture 1_intro
     - git
     - demander aux élèves de revoir leurs cours de C
+    - préparer part1 sysprog pr prochaine fois
 
-Séance 2:
+Séance 2 (19/11/2018 PM):
     - lecture 2_processus
-    - lab sysprog part0
+    - lab sysprog part0 / part2
 
-Séance 3:
+Séance 3 (20/11/2018 AM):
     - lecture 3_ipc_net
-    - lab sysprog part1
+    - lab sysprog part1 / part3
 
-=> compte rendu TP noté sur Séance 2 et 3
+=> compte rendu TP noté sur Séance 2 et 3: à rendre prochaine séance
+=> points bonus sur part4
 
-Séance 4:
+Séance 4 (3/12/2018 PM):
     - lecture 7_compil_tools
     - docker
-    - buildroot
+    - buildroot: découverte + compil
 
-Séance 5:
+Séance 5 (4/12/2018 AM):
     - lecture 6_mem_fs
     - lecture 5_bus
-    - yocto
+    - yocto: découverte + compil
 
-Séance 6:
+Séance 6 (18/12/2018 AM):
     - flashage OS (à partir image préparée pour ceux qui l'ont pas fait)
     - uboot
     - DTB / overlay
 
 => compte rendu "libre" (sans questions) pour décrire les outils utilisés lors des séances 4/5/6
 
-Séance 7:
+Séance 7 (18/12/2018 PM):
     - autotools
     - GPIO / 1Wire / Liaison série / ...
 
-Séance 8:
+Séance 8 (8/01/2019 PM):
     - lecture 4_kernel_mod
     - module kernel
 
-Séance 9:
+Séance 9 (8/01/2019 AM):
     - sensibilisation à la cybersécurité
-    - TP!!???
+    - TP CS!!???
 
-Séance 10 / 11:
+Séance 10 (29/01/2019 PM):
+    - TP CS!!???
     - exam QCM
+
+Séance 11 (29/01/2019 AM):
     - projet
