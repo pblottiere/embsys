@@ -7,43 +7,44 @@ Séance 1 (6/11/2018 PM):
 
 Séance 2 (19/11/2018 PM):
     - lecture 2_processus
-    - lab sysprog part0 / part2
+    - lab sysprog part2
 
 Séance 3 (20/11/2018 AM):
     - lecture 3_ipc_net
-    - lab sysprog part1 / part3
+    - docker
+    - lab sysprog part3
 
 => compte rendu TP noté sur Séance 2 et 3: à rendre prochaine séance
 => points bonus sur part4
+=> tester docker à la maison
 
 Séance 4 (3/12/2018 PM):
     - lecture 7_compil_tools
-    - docker
     - buildroot: découverte + compil
 
 Séance 5 (4/12/2018 AM):
     - lecture 6_mem_fs
-    - lecture 5_bus
     - yocto: découverte + compil
 
 Séance 6 (18/12/2018 AM):
-    - flashage OS (à partir image préparée pour ceux qui l'ont pas fait)
+    - flashage OS (à partir image préparée pour être sûr qu'on perde pas de temps)
     - uboot
     - DTB / overlay
 
 => compte rendu "libre" (sans questions) pour décrire les outils utilisés lors des séances 4/5/6
+=> préparer autotools à la maison
 
 Séance 7 (18/12/2018 PM):
-    - autotools
+    - lecture 5_bus
     - GPIO / 1Wire / Liaison série / ...
 
 Séance 8 (8/01/2019 PM):
     - lecture 4_kernel_mod
-    - module kernel
+    - suite GPIO / Liaison série / ...
 
 Séance 9 (8/01/2019 AM):
+    - module kernel
     - sensibilisation à la cybersécurité
-    - TP CS!!???
 
 Séance 10 (29/01/2019 PM):
     - TP CS!!???
