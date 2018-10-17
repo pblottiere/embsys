@@ -10,10 +10,10 @@ configuration, ...:
 
 ````
 $ cd buildroot
-$ rm buildroot-2017.08.tar.gz
+$ rm buildroot-precompiled-2017.08.tar.gz
 $ docker build -f Dockerfile.tarball -t embsys:rpi3-buildroot-tarball .
 $ docker run -d --name embsys-rpi3-buildroot-tarball embsys:rpi3-buildroot-tarball
-$ docker cp embsys-rpi3-buildroot-tarball:/root/buildroot-2017.08.tar.gz .
+$ docker cp embsys-rpi3-buildroot-tarball:/root/buildroot-precompiled-2017.08.tar.gz .
 $ docker stop embsys-rpi3-buildroot-tarball
 $ docker rm embsys-rpi3-buildroot-tarball
 $ docker rmi embsys:rpi3-buildroot-tarball

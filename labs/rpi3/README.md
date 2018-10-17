@@ -26,20 +26,14 @@ d'envoyer les données de ces capteurs au serveur Domoticz via le réseau.
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/arch.png" width="550" title="Github Logo">
 </p>
 
-Un projet spécifique a été créé pour héberger le travail réalisé par les
-étudiants dans le but d'obtenir un système domotique opérationnel:
-[Dominus](https://github.com/pblottiere/dominus). La finalité est donc aussi
-de participer à ce projet afin d'ajouter progressivement des capteurs,
-fonctionnalités, etc...
-
 Pour l'instant, voici les étapes à suivre pour construire progressivement ce
 dont nous avons besoin:
 
 [Partie 1 : Construction du système d'exploitation avec Buildroot](buildroot.md)
 
-[Partie 2 : Émulation de la RPI3 avec le RFS sous QEMU](qemu.md)
+[Partie 2 : Émulation de la RPI3 avec QEMU](qemu.md)
 
-TODO: [Partie 3 : Flashage et U-Boot](flash_uboot.md)
+[Partie 3 : Flashage et U-Boot](flash_uboot.md)
 
 [Partie 4 : GPIO et relais](relais.md)
 

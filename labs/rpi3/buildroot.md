@@ -15,12 +15,10 @@ $ docker pull embsys:rpi3-buildroot
 Ensuite, créez un conteneur à partir de cette image et listez les fichiers
 contenus dans */root/*:
 
-TODO: mount shared directory pour compil avec bon -u!!!!!
-
 ````
 $ docker run -it embsys:rpi3-buildroot /bin/bash
 # ls /root/
-buildroot-2017.tar.gz
+buildroot-2017.08.tar.gz
 ````
 
 ### Découverte de Buildroot
