@@ -1,65 +1,82 @@
-# Partie 1: Construction du système d'exploitation avec Buildroot et tests avec QEMU
+# Partie 1: Construction d'OS avec Buildroot et chaine de cross-compilation
 
 Dans cette partie, nous allons voir comment recompiler *from scratch*
-un système d'exploitation pour la RPI3.
+un système d'exploitation pour la RPI3 dans un conteneur Docker.
 
 ### Préliminaires
 
-Plus tard dans le TP, nous aurons besoin d'une image Docker spécifique. Le
-téléchargement étant un peu long, ouvrez un terminal, lancez la commande
-suivante et passez à la suite du TP:
+Tout d'abord, téléchargez l'image Docker suivante:
 
-```` shell
-$ docker pull pblottiere/dominus:bulidroot-rpi3
+````
+$ docker rmi embsys:rpi3-buildroot
+$ docker pull embsys:rpi3-buildroot
+````
+
+Ensuite, créez un conteneur à partir de cette image et listez les fichiers
+contenus dans */root/*:
+
+TODO: mount shared directory pour compil avec bon -u!!!!!
+
+````
+$ docker run -it embsys:rpi3-buildroot /bin/bash
+# ls /root/
+buildroot-2017.tar.gz
 ````
 
 ### Découverte de Buildroot
 
-Dans un premier temps, téléchargez et décompressez la tarball de buildroot:
+La tarball `buildroot-2017.08.tar.gz` est une version modifiée de la
+version officielle de Buildroot disponible ici:
+https://buildroot.org/downloads/buildroot-2017.08.tar.gz.
 
-```` shell
-$ wget https://buildroot.org/downloads/buildroot-2017.08.tar.gz
-$ tar zxvf buildroot-2017.08.tar.gz
+Vous pouvez considérer cette tarball comme un BSP (Board Support Package)
+construit spécifiquement pour répondre aux besoins du TP.
+
+Par rapport à la version officielle, il y a notamment en plus:
+- un fichier de configuration `embsys_defconfig` pour Buildroot
+- un fichier de configuration pour busybox `busybox.config`
+- un fichier décrivant les utilisateurs cibles `users.table`
+
+De plus, toutes les dépendances de compilation sont déjà installées dans
+l'image Docker et le système d'exploitation est précompilé (pour gagner du
+temps).
+
+Décompressez la tarball pour étudier son contenu et retrouver les fichiers
+cités précédement:
+
+````
+# tar zxvf buildroot-2017.08.tar.gz
+# cd buildroot-2017.08
 ````
 
-Par défaut, le projet Bulidroot fournit des configurations pour certaines
-cartes (le terme générique sous-jacent est BSP, soit Board Support Package)
-dans le répertoire *configs*.
+Par défaut, le projet Buildroot fournit des configurations pour certaines
+cartes dans le répertoire *configs*.
 
 **Question 1**: En considérant que la cible est une carte RaspberryPi3 avec un
-                 OS 32 bits, quel fichier de configuration doit-on utiliser?
-
-**Question 2**: Que contient le répertoire *package*?
-
-**Question 3**: Décrivez l'utilité des différents ficiers du répertoire
-                *package/openssh*.
-
-**Question 4**: À quoi servent les fichiers du répertoire
-                *boards/raspberrypi3*?
-
-Pour sélectionner un paquet à cross-compiler (et donc retrouver les outils
-fournit par le paquet en question sur notre RFS), il suffit de se rendre dans
-le menu *Target packages*, de chercher le paquet désiré dans les sous-menu (à
-l'aide de la commande *\*, comme dans VIM), puis de le sélectionner.
-
-**Question 5**: Dans l'interface de configuration, sélectionnez le paquet
-                *openssh* (au passage, à quoi sert ce paquet?). Ensuite,
-                sauvegardez la configuration et éditez le fichier *.config*.
-                Qu'observez vous lorsque vous recherchez la chaîne de
-                caractère *OPENSSH*? Que cela signifie t-il?
+                OS 32 bits, quel est le fichier de configuration par défaut à
+                utiliser? Expliquez les différences avec le fichier
+                `buildroot-2017.08/embsys_defconfig`.
 
 Désormais, lancez la commande suivante:
 
-```` shell
-$ make raspberrypi3_defconfig
+```
+# make embsys_defconfig
+```
+
+**Question 2**: À quoi sert la commande précédente?
+
+**Question 3**: Que contient le répertoire *package*?
+
+**Question 4**: Décrivez l'utilité des différents fichiers du répertoire
+                *package/openssh*.
+
+**Question 5**: À quoi servent les fichiers du répertoire
+                *boards/raspberrypi3*?
+
+Maintenant, lancez la commande suivante pour afficher le menu de configuration:
+
 ````
-
-**Question 5**: À quoi sert la commande précédente?
-
-Ensuite, lancez la commande suivante pour afficher le menu de configuration:
-
-```` shell
-$ make menuconfig
+# make menuconfig
 ````
 
 **Question 6**: En naviguant dans le menu, repérez:
@@ -70,40 +87,39 @@ $ make menuconfig
 - la version du cross-compilateur
 - la version du kernel
 
-**Question 7**: Qu'est ce que busybox? À quoi sert la commande
+Il est possible de rechercher une chaine de caractère avec la commande */*
+(comme dans VIM).
+
+**Question 7**: En recherchant dans l'interface de Buildroot, déterminez si le
+                paquet *openssh* sera compilé et disponible dans l'OS cible. De
+                même, retrouver cette information en analysant le fichier de
+                configuration *embsys_defconfig*.
+
+**Question 8**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
 configuration qu'aucun bootloader n'est actuellement sélectionné. Nous
-verrons dans la partie suivante comment utiliser u-boot à la place.
+verrons dans la partie suivante comment utiliser U-Boot à la place.
 
-### Système d'exploitation compilé
+### Chaîne de cross-compilation
 
 Une fois correctement configuré, il suffit de lancer la compilation avec la
 commande *make*. Le résultat de la compilation est alors une image du kernel
 ainsi que le bootloader et un RFS (notamment).
 
 Cependant, l'étape de configuration précise et de compilation peut être longue
-(plusieurs heures). Dans le cadre de ce TP, nous allons donc partir d'une image
-Docker contenant un environnement Buildroot préparé avec un résultat précompilé
-(au lieu de lancer la compilation complète).
+(plusieurs heures). C'est pour cette raison que l'OS est précompilé dans l'image
+Docker que nous utilisons.
 
-Pour cela, nous allons utiliser l'image Docker téléchargée en début de TP:
-
-```` shell
-$ docker run -it pblottiere/dominus:buildroot-rpi3 /bin/bash
-root@xxxxxxxxxxxx:/# cd /root
-root@xxxxxxxxxxxx:/# tar zxvf buildroot-2017.08-compiled.tar.gz
-````
-
-**Question 7**: Que contient le répertoire *output/host*? À quoi correspond
+**Question 9**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
-```` shell
+```` c
 #include <stdio.h>
 
 int main()
@@ -116,36 +132,41 @@ Ensuite, nous pouvons compiler et utiliser la commande *file* pour observer
 l'architecture cible du binaire généré:
 
 ```` shell
-$ gcc helloworld.c -o hw
-$ file helloworld
+# gcc helloworld.c -o hw
+# file hw
 hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
 ````
 
-**Question 8**: Lancez la commande *./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw*
-                puis utilisez la commande *file* sur le binaire résultant.
-                Quelle différences constatez vous par rapport au cas précédent
-                (binaire généré avec gcc)? Que se passe t-il si vous essayez de
-                l'exécuter?
+**Question 10**: Décrire le résultat de la commande.
 
-**Question 9**: Que contient de répertoire *output/images*? Décrivez notamment
+Cette fois, lancez la commande suivante à partir du répertoire contenant
+Buildroot:
+
+````
+# ./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw
+````
+
+**Question 11**: Utilisez la commande *file* sur le binaire résultant.
+                 Quelle différences constatez vous par rapport au cas précédent
+                 (binaire généré avec gcc)? Que se passe t-il si vous essayez de
+                 l'exécuter?
+
+### Images
+
+**Question 12**: Que contient le répertoire *output/images*? Décrivez notamment
                 l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
 
-TODO: rajouter fichier uboot
-
-**Question 10**: Que vous dis les résultats de la commande *file* lorsque vous
+**Question 13**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
 
 Ensuite, lancez les commandes suivantes:
 
-```` shell
-root@xxxxxxxxxxxx:/# mkdir /tmp/rootfs
-root@xxxxxxxxxxxx:/# tar -xf output/images/rootfs.tar -C /tmp/rootfs
+````
+# mkdir /tmp/rootfs
+# tar -xf output/images/rootfs.tar -C /tmp/rootfs
 ````
 
-**Question 11**: Que contient le répertoire */tmp/rootfs*?
-
-Maintenant que nous avons le système d'exploitation de compilé avec Buildroot,
-nous allons rapidement voir comment émuler une RPI3 avec le RFS construis ici.
+**Question 14**: Que contient le répertoire */tmp/rootfs*?
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 
@@ -154,10 +175,11 @@ l'image Docker précédente et lancer la commande *make*:
 
 ```` shell
 $ docker run -it pblottiere/dominus:buildroot-rpi3
-root@xxxxxxxxxxxx:/# cd /root
-root@xxxxxxxxxxxx:/# tar zxvf buildroot-2017.08-compiled.tar.gz
-root@xxxxxxxxxxxx:/# cd buildroot-2017.08-compiled
-root@xxxxxxxxxxxx:/# make
+# cd /root
+# tar zxvf buildroot-2017.08-precompiled.tar.gz
+# cd buildroot-2017.08-precompiled
+# make embsys_defconfig
+# make
 ````
 
 Si vous avez des problèmes de proxy pendant la compilation:
