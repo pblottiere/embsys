@@ -472,7 +472,7 @@
     \itemsep8pt
     \item duplique le processus appelant (PID différent)
     \item les processus fils ne partagent pas le même espace mémoire que le père
-    \item a un coût très faible en ressources (mécanisme COW)
+    \item a un coût très faible en ressources (mécanisme COW [1])
     \ei
 
     \onslide<2->{
@@ -1157,6 +1157,7 @@ int pthread_create(pthread_t * thread,
     \item Linux Embarqué - Pierre Ficheux
     \item Développement système sous Linux - Christophe Blaess
     \item Modern Operating Systems - Andrew Tanenbaum
+    \item [1] http://www.eastrivervillage.com/The-Linux-COW/
     \ei
 \end{frame}
 %<//lecture_content>
