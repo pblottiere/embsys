@@ -18,7 +18,6 @@ RUN apt-get update && apt-get install -y \
 	autotools-dev \
 	automake \
 	libtool \
-	qemu-user-static \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY buildroot-precompiled-2017.08.tar.gz /root/

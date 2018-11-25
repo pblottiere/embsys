@@ -138,7 +138,8 @@ l'architecture cible du binaire généré:
 hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
 ````
 
-**Question 11**: Décrire le résultat de la commande *file*.
+**Question 11**: Décrire le résultat de la commande *file*. Que se passe t-il
+                 si vous exécutez la commande *./hw*?
 
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
@@ -150,7 +151,7 @@ Buildroot:
 **Question 12**: Utilisez la commande *file* sur le binaire résultant.
                  Quelle différences constatez vous par rapport au cas précédent
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
-                 de l'exécuter? Expliquez pourquoi.
+                 d'exécuter la commande *./hw*? Expliquez pourquoi.
 
 ### Images
 
