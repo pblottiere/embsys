@@ -7,15 +7,15 @@ Séance 1 (6/11/2018 PM):
 
 Séance 2 (19/11/2018 PM):
     - lecture 2_processus
-    - lab sysprog part2
+    - lab sysprog part2 (exercice 1 + exercice 2)
 
 Séance 3 (20/11/2018 AM):
     - lecture 3_ipc_net
     - docker
-    - lab sysprog part3
+    - lab sysprog part3 (exercice 1 + exercice 2)
 
 => compte rendu TP noté sur Séance 2 et 3: à rendre prochaine séance
-=> points bonus sur part4
+=> part4 à ne pas faire (programmation réseau déjà fait pdt leur cursus)
 => tester docker à la maison
 
 Séance 4 (3/12/2018 PM):
