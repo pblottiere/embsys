@@ -50,11 +50,11 @@ Puis, pour émuler le RFS d'une carte ARM avec QEMU:
 root@hostname:  $
 ````
 
-*Question 2*: À quoi sert la commande *chroot*?
+**Question 2**: À quoi sert la commande *chroot*?
 
 Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
 
-*Question 3*: Que se passe-t-il? Pourquoi?
+**Question 3**: Que se passe-t-il? Pourquoi?
 
 Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
 volumes:
