@@ -29,7 +29,7 @@ le conteneur Docker:
 ````
 
 Ensuite créez un simple fichier C et compilez le avec le cross-compilateur
-fourni par Buildroot (cd [Partie 1](buildroot.md)):
+fourni par Buildroot (cf [Partie 1](buildroot.md)):
 
 ````
 # printf '#include <stdio.h>\nint main(){ printf("Hello Worlds!"); }\n' > hw.c
