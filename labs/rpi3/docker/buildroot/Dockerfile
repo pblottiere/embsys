@@ -21,4 +21,5 @@ RUN apt-get update && apt-get install -y \
 	qemu-user-static \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY buildroot-2017.08.tar.gz /root/
+COPY buildroot-precompiled-2017.08.tar.gz /root/
+WORKDIR /root/

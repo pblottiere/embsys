@@ -23,7 +23,7 @@ Build the Docker image `embsys:rpi3-buildroot` ready to be used:
 
 ````
 $ cd buildroot
-$ docker build -f Dockerfile -t embsys:rpi3-buildroot .
+$ docker build -f Dockerfile -t pblottiere/embsys-rpi3-buildroot .
 ````
 
 ## Yocto
