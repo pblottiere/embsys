@@ -56,8 +56,8 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 **Question 6** : Utilisez *syslog* pour afficher l'heure dans la console ainsi
                  que le PID du père.
 
-**Question 7** : TODO!!!! Modifier la conf du démon syslog pour logger dans un
-                 un fichier spécifique!
+**Question 7** : Modifier la conf du démon syslog pour logger dans un
+                 un fichier spécifique.
 
 
 ### À retenir
@@ -80,7 +80,7 @@ les informations *latitude*, *longitude* et *time*.
 Pour compiler le binaire *shm_writer* :
 
 ````
-$ cd labs/2_sysprog_part2/src/shm_writer
+$ cd shm_writer
 $ make
 ````
 
