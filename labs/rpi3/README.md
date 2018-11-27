@@ -31,14 +31,16 @@ dont nous avons besoin:
 
 [Partie 1 : Construction du système d'exploitation avec Buildroot](buildroot.md)
 
-[Partie 2 : Émulation de la RPI3 avec QEMU](qemu.md)
+[Partie 2 : Émulation de la RPI3 avec QEMU et chroot](qemu.md)
 
-[Partie 3 : Flashage et U-Boot](flash_uboot.md)
+[Partie 3 : Construction du système d'exploitation avec Yocto](yocto.md)
 
-[Partie 4 : GPIO et relais](relais.md)
+[Partie 4 : Flashage, U-Boot et DTB](flash_uboot.md)
 
-TODO: [Partie 5 : I2C et BME280](bme280.md)
+[Partie 5 : GPIO et relais](relais.md)
 
-TODO: [Partie 6 : Communication en RS232](bme280.md)
+TODO: [Partie 6 : I2C et BME280](bme280.md)
 
-[Partie 7 : Communiquer avec Domoticz](domoticz.md)
+TODO: [Partie 7 : Communication en RS232](bme280.md)
+
+[Partie 8 : Communiquer avec Domoticz](domoticz.md)

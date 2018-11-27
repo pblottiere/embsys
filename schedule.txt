@@ -31,20 +31,20 @@ Séance 6 (18/12/2018 AM):
     - uboot
     - DTB / overlay
 
-=> compte rendu "libre" (sans questions) pour décrire les outils utilisés lors des séances 4/5/6
+=> compte rendu pour décrire les outils utilisés lors des séances 4/5/6
 => préparer autotools à la maison
 
 Séance 7 (18/12/2018 PM):
     - lecture 5_bus
-    - GPIO / 1Wire / Liaison série / ...
+    - GPIO et relai / 1Wire
 
 Séance 8 (8/01/2019 PM):
     - lecture 4_kernel_mod
-    - suite GPIO / Liaison série / ...
+    - RS232
 
 Séance 9 (8/01/2019 AM):
-    - module kernel
-    - sensibilisation à la cybersécurité
+    - lecture sensibilisation à la cybersécurité
+    - lab module kernel
 
 Séance 10 (29/01/2019 PM):
     - TP CS!!???

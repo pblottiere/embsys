@@ -1,7 +1,8 @@
 # Partie 1: Construction d'OS avec Buildroot et chaine de cross-compilation
 
 Dans cette partie, nous allons voir comment recompiler *from scratch*
-un système d'exploitation pour la RPI3 dans un conteneur Docker.
+un système d'exploitation pour la RPI3 dans un conteneur Docker avec
+le projet Buildroot.
 
 ### Préliminaires
 
