@@ -25,3 +25,19 @@ ARM options for gcc: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
 
 Demystifying ARM Floating Point Compiler Options: https://embeddedartistry.com/blog/2017/10/9/r1q7pksku2q3gww9rpqef0dnskphtc
 ( the two ARM ABIs (hard-float and soft-float) are not link-compatible. Your entire program must be compiled using the same ABIs. If a pre-compiled library is not supplied with your target floating-point ABI, you will need to recompile it for your own purposes.)
+
+Clean:
+rm -r tmp/sysroot-components/
+rm -r tmp/work/
+rm -r tmp/work-shared
+rm -r downloads/
+rm -r sstate-cache/
+rm -r tmp/sysroots-uninative/
+rm -r tmp/log
+rm -r tmp/pkgdata
+rm -r tmp/stamps/
+rm -r tmp/buildstats
+rm -r tmp/cache
+rm -r tmp/deploy/rpm/
+
+=> 460M
