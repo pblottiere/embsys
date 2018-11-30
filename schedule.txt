@@ -12,7 +12,7 @@ Séance 2 (19/11/2018 PM):
 Séance 3 (20/11/2018 AM):
     - lecture 3_ipc_net
     - docker (voir labs/docker)
-    - lab sysprog part3 (exercice 1 + exercice 2)
+    - lab sysprog part3 (exercice 1 + exercice 2 à faire chez soi)
 
 => compte rendu TP noté sur Séance 2 et 3: à rendre prochaine séance
 => part4 à ne pas faire (programmation réseau déjà fait pdt leur cursus)
@@ -43,12 +43,11 @@ Séance 8 (8/01/2019 PM):
     - RS232
 
 Séance 9 (8/01/2019 AM):
-    - lecture sensibilisation à la cybersécurité
+    - suite TP
     - lab module kernel
 
 Séance 10 (29/01/2019 PM):
-    - TP CS!!???
-    - exam QCM
+    - projet
 
 Séance 11 (29/01/2019 AM):
     - projet

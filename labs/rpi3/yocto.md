@@ -1,45 +1,27 @@
-# Partie 1: Construction d'OS avec Yocto et chaine de cross-compilation
-
-Dans cette partie, nous allons voir comment recompiler *from scratch*
-un système d'exploitation pour la RPI3 dans un conteneur Docker avec
-le projet Yocto.
+a
 
 
-Links:
-- https://www.yoctoproject.org/docs/1.7/yocto-project-qs/yocto-project-qs.html
-- http://www.linuxembedded.fr/2015/12/yocto-comprendre-bitbake/
-- https://www.smile.eu/sites/default/files/2018-02/MiniBook_Yocto_VF.pdf
+sh deploy/sdk/poky-glibc-x86_64-meta-toolchain-cortexa7t2hf-neon-vfpv4-toolchain-2.6.sh
 
-« Build Appliance BA 1.7 » (Dizzy) : VM de build cross-plateforme
+. /opt/poky/2.6/environment-setup-cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi
 
-GUI: Hob / Toaster
+arm-poky-linux-gnueabi-gcc
+  --sysroot=/opt/poky/2.6/sysroots/cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi/
+  -mfpu=neon -mfloat-abi=hard \
+  coucou.c -o coucou
 
-Large support matériel: x86, x86-64, ARM, MIPS, and PPC-based, ...
+""""
+/opt/poky/2.6/sysroots/x86_64-pokysdk-linux/usr/libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/8.2.0/real-ld: error: plouf uses VFP register arguments, /tmp/ccoPBAQX.o does not
+/opt/poky/2.6/sysroots/x86_64-pokysdk-linux/usr/libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/8.2.0/real-ld: failed to merge target specific data of file /tmp/ccoPBAQX.o
+""""
 
-UI Yocto de ref pour système embarqué: Sato (Gnome Mobile-Based UI)
+=> The error you are observing happens because some parts of the code are built with the “hard float” ABI and others with “soft float”.
 
-Image résultante facile à tester dans Quick EMUlator (QEMU)
+""""
+cc1: error: -mfloat-abi=hard: selected processor lacks an FPU
+""""
 
-Yocto:
-- layers
-- recette
-- distro
+ARM options for gcc: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
 
-BitBake + certains composant d'OE => Poky
-
-BitBake:
-- Outil de build d'image Linux provenant de Open Embedded intialement
-- Brique fondamentale de Yocto
-
-http://git.yoctoproject.org/cgit/cgit.cgi/meta-raspberrypi
-
-http://framboisepi.fr/construction-dune-image-raspberry-pi-avec-le-bsp-yocto-v2/
-
-## BUILD
-
-https://medium.com/smileinnovation/introduction-%C3%A0-yocto-db56a550ae51
-
-prendre branches thud (https://wiki.yoctoproject.org/wiki/Stable_branch_maintenance)
-
-The variable ${TOPDIR} represents the build directory by default.
-debug-tweaks will enable root account without password. ssh-server-openssh will install an ssh server using openssh. And the ssh server will be started automatically during boot-up.
+Demystifying ARM Floating Point Compiler Options: https://embeddedartistry.com/blog/2017/10/9/r1q7pksku2q3gww9rpqef0dnskphtc
+( the two ARM ABIs (hard-float and soft-float) are not link-compatible. Your entire program must be compiled using the same ABIs. If a pre-compiled library is not supplied with your target floating-point ABI, you will need to recompile it for your own purposes.)

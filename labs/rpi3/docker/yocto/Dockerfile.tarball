@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Buildroot deps
 RUN apt-get update && apt-get install -y \
 	git \
+	python \
 	python3 \
 	gcc \
 	g++ \
@@ -26,35 +27,11 @@ RUN adduser user  # for running bitbake
 USER user
 
 WORKDIR /home/user/
-
-WORKDIR /home/user/
 RUN git clone -b thud git://git.yoctoproject.org/poky.git poky-thud
 
 WORKDIR /home/user/poky-thud
-#RUN git clone -b thud git://git.openembedded.org/meta-openembedded
-#RUN git clone -b thud https://github.com/meta-qt5/meta-qt5
 RUN git clone -b thud git://git.yoctoproject.org/meta-raspberrypi
-RUN /bin/bash -c "source oe-init-build-env rpi3-build" && \
-	bitbake-layers add-layer ../meta-raspberrypi && \
-	echo "MACHINE = \"raspberrypi3\"" >> conf/local.conf && \
-	bitbake core-image-minimal
-
-# WORKDIR /home/user/
-# RUN mkdir -p rpi3
-#
-# WORKDIR /home/user/rpi3
-# RUN git clone -b thud git://github.com/jumpnow/meta-rpi
-# RUN mkdir -p build/conf
-# RUN /bin/bash -c "source ~/poky-thud/oe-init-build-env ~/rpi3/build"
-# RUN cp meta-rpi/conf/local.conf.sample build/conf/local.conf
-# RUN cp meta-rpi/conf/bblayers.conf.sample build/conf/bblayers.conf
-
-#WORKDIR /home/user/rpi3/build
-#RUN bitbake qt5-image
-
-# COPY local.conf /tmp/build/rpi3/conf/local.conf
-# RUN mkdir -p /tmp/build/
-# RUN /bin/bash -c "source yocto/poky/oe-init-build-env build/rpi3/"
-# && bitbake core-image-base
+COPY build.sh build.sh
+RUN sh build.sh
 
 USER root
