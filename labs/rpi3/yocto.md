@@ -1,9 +1,91 @@
-a
+# Partie 3 : Construction du système d'exploitation avec Yocto
 
+Dans cette partie, nous allons voir comment recompiler *from scratch*
+un système d'exploitation pour la RPI3 dans un conteneur Docker avec
+le projet Yocto.
 
-sh deploy/sdk/poky-glibc-x86_64-meta-toolchain-cortexa7t2hf-neon-vfpv4-toolchain-2.6.sh
+### Préliminaires
 
-. /opt/poky/2.6/environment-setup-cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi
+Tout d'abord, téléchargez l'image Docker suivante:
+
+````
+$ docker rmi pblottiere/embsys-rpi3-yocto
+$ docker pull pblottiere/embsys-rpi3-yocto
+````
+
+Ensuite, créez un conteneur à partir de cette image et listez les fichiers
+contenus dans */root/*:
+
+````
+$ docker run -it pblottiere/embsys-rpi3-yocto /bin/bash
+# ls /root/
+poky-thud-precompiled.tar.gz
+````
+
+### Découverte de Yocto
+
+La tarball `poky-thud-precompiled.tar.gz` est la version précompilée de la
+version `thud` de la distribution de référence de Yocto: `Poky`? Vous pouvez
+voir la roadmap des releases ici: https://wiki.yoctoproject.org/wiki/Releases.
+
+Décompresser la tarball:
+
+```
+# tar zxvf poky-thud-precompiled.tar.gz
+# cd poky-thud-precompiled
+```
+
+**Question 1**: En étudiant le contenu du fichier *build/conf/bblayers.conf*,
+                déterminez quelle layer ajoute le support pour la RasperryPi.
+
+**Question 2**: Où pouvons-nous retrouver le répertoire associée à cette layer?
+
+**Question 3**: En étudiant le contenu du fichier *build/conf/local.conf*,
+                indiquez à travers quelle variable on définit le type de carte
+                pour laquelle la distribution Poky doit être compilée.
+
+Ici, la compilation a déjà été réalisée pour gagner du temps pendant le TP, et
+ce grâce aux commandes suivantes:
+
+````
+# bitbake core-image-minimal
+# bitbake meta-toolchain
+````
+
+**Question 4**: En cherchant dans la documentation de Yocto, indiquez à quoi
+                servent ces 2 commandes.
+
+### Chaîne de cross-compilation
+
+Le résultat de la compilation se trouve dans le répertoire *tmp* (il a été
+en partis nettoyé pour diminuer la taille de l'image Docker).
+
+Contrairement à Buildroot, la chaîne de cross-compilation n'est pas disponible
+à travers le répertoire résultant de la compilation, mais doit être installée
+manuellement dans un répertoire spécifique. Pour cela, réaliser l'opération
+suivante afin d'installer le chaine de cross-compilation dans le répertoire
+*/opt*:
+
+````
+# sh deploy/sdk/poky-glibc-x86_64-meta-toolchain-cortexa7t2hf-neon-vfpv4-toolchain-2.6.sh
+````
+
+Ensuite, il faut faire un `source` d'un script particulier pour avoir accès
+aux divers outils de la toolchain (en réalité, les variables d'envrionnement
+du système sont modifiées, comme par exemple $PATH):
+
+````
+# source /opt/poky/2.6/environment-setup-cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi
+````
+
+Une fois cette étape réalisée, vous avez notamment accès au cross-compilateur:
+
+````
+# arm-poky-linux-gnueabi-gcc --version
+TODO
+````
+
+### Image
 
 arm-poky-linux-gnueabi-gcc
   --sysroot=/opt/poky/2.6/sysroots/cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi/
