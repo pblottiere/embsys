@@ -118,12 +118,3 @@ Réaliser le montage suivant avec:
 </p>
 
 Tester l'allumage de la LED via le contrôle de la GPIO par Sysfs et Python.
-
-### Code C
-
-Écrire du code C dans l'espace utilisateur (via sysfs donc) en mode
-client/serveur (socket) pour gérer l'état du relai.
-
-Ensuite, cross-compiler, uploader vos binaire sur la RPi3 et configurer Domoticz
-pour pouvoir changer l'état du  relai en cliquant dans l'interface grâce à vos
-programmes client/serveur.
