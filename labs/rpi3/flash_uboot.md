@@ -52,7 +52,7 @@ Insérer la carte SD dans la RPI3 et brancher les adaptateurs USB-TTL
 correctement (cf datasheet de la carte). Utiliser un terminal série (minicom ou
 autre) pour établir une communication avec la carte.
 
-#### Manuel
+#### Manuel (juste pour information, à ne pas faire)
 
 Pour flasher la carte manuellement, les étapes suivantes sont à réaliser dans
 l'ordre à partir de la machine hôte:
