@@ -23,23 +23,26 @@ Séance 4 (3/12/2018 PM):
     - buildroot
 
 Séance 5 (4/12/2018 AM):
-    - lecture 4_kernel_mod (sans module kernel)
-    - lecture 5_bus
     - fin buildroot + qemu
+    - lecture 4_kernel_mod (sans module kernel => 45min max)
 
 Séance 6 (18/12/2018 AM):
     - lecture 6_mem_fs
-    - flashage OS
-    - uboot
+    - Flashage OS
+    - Uboot
 
 => compte rendu pour décrire les outils utilisés lors des séances 4/5/6
 => préparer autotools à la maison
 
 Séance 7 (18/12/2018 PM):
-    - GPIO / I2C
+    - lecture_5_bus
+    - GPIO
+    - I2C
 
 Séance 8 (8/01/2019 PM):
-    - Liaison série / 1Wire
+    - Fin I2C
+    - Liaison série
+    - 1Wire (pas grâve si on a pas le temps)
 
 Séance 9 (8/01/2019 AM):
     - lecture 4_kernel_mod partie dev module kernel
