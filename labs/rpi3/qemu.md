@@ -9,7 +9,7 @@ Ce TP est à réaliser à partir de la même image Docker que la
 [Partie 1](buildroot.md):
 
 ````
-$ docker run -it --cap-add=SYS_ADMIN pblottiere/embsys-rpi3-buildroot /bin/bash
+$ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 # cd /root/
 # tar zxvf buildroot-precompiled-2017.08.tar.gz
 # cd buildroot-precompiled-2017.08
