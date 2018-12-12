@@ -27,11 +27,27 @@ RUN adduser user  # for running bitbake
 USER user
 
 WORKDIR /home/user/
-RUN git clone -b thud git://git.yoctoproject.org/poky.git poky-thud
+RUN git clone -b thud git://git.yoctoproject.org/poky.git poky-thud-precompiled
 
-WORKDIR /home/user/poky-thud
+WORKDIR /home/user/poky-thud-precompiled
 RUN git clone -b thud git://git.yoctoproject.org/meta-raspberrypi
 COPY build.sh build.sh
 RUN sh build.sh
+
+RUN rm -r build/tmp/sysroots-components/
+RUN rm -r build/tmp/work/
+RUN rm -r build/tmp/work-shared/
+RUN rm -r build/downloads/
+RUN rm -r build/sstate-cache/
+RUN rm -r build/tmp/sysroots-uninative/
+RUN rm -r build/tmp/log/
+RUN rm -r build/tmp/pkgdata/
+RUN rm -r build/tmp/stamps/
+RUN rm -r build/tmp/buildstats/
+RUN rm -r build/tmp/cache/
+RUN rm -r build/tmp/deploy/rpm/
+
+WORKDIR /home/user
+RUN tar zcvf poky-thud-precompiled.tar.gz poky-thud-precompiled
 
 USER root
