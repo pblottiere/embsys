@@ -64,10 +64,12 @@ Contrairement à Buildroot, la chaîne de cross-compilation n'est pas disponible
 à travers le répertoire résultant de la compilation, mais doit être installée
 manuellement dans un répertoire spécifique. Pour cela, réaliser l'opération
 suivante afin d'installer le chaine de cross-compilation dans le répertoire
-*/opt*:
+*/opt/poky/2.6*:
 
 ````
-# sh deploy/sdk/poky-glibc-x86_64-meta-toolchain-cortexa7t2hf-neon-vfpv4-toolchain-2.6.sh
+# apt-get update
+# apt-get install gcc xz-utils python
+# sh build/tmp/deploy/sdk/poky-glibc-x86_64-meta-toolchain-cortexa7t2hf-neon-vfpv4-toolchain-2.6.sh
 ````
 
 Ensuite, il faut faire un `source` d'un script particulier pour avoir accès
@@ -76,50 +78,62 @@ du système sont modifiées, comme par exemple $PATH):
 
 ````
 # source /opt/poky/2.6/environment-setup-cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi
+# echo $PATH
 ````
 
 Une fois cette étape réalisée, vous avez notamment accès au cross-compilateur:
 
 ````
 # arm-poky-linux-gnueabi-gcc --version
-TODO
+arm-poky-linux-gnueabi-gcc (GCC) 8.2.0
 ````
+
+Sur le conteneur Docker, créez un fichier *helloworld.c*:
+
+```` c
+#include <stdio.h>
+
+int main()
+{
+  printf("Hello World!\n");
+}
+````
+
+Ensuite, lancez la commande ci-dessous pour compiler le fichier C précédent:
+
+````
+# arm-poky-linux-gnueabi-gcc \
+  --sysroot=/opt/poky/2.6/sysroots/cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi/
+  -mfpu=neon \
+  helloworld.c -o helloworld
+````
+
+Vous devriez obtenir l'erreur suivante:
+
+````
+/opt/poky/2.6/sysroots/x86_64-pokysdk-linux/usr/libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/8.2.0/real-ld: error: helloworld uses VFP register arguments, /tmp/ccoPBAQX.o does not
+/opt/poky/2.6/sysroots/x86_64-pokysdk-linux/usr/libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/8.2.0/real-ld: failed to merge target specific data of file /tmp/ccoPBAQX.o
+````
+
+Cette erreur signifie que la toolchain est compilée avec une ABI différente
+de celle qu'utilise *arm-poky-linux-gnueabi-gcc* par défaut.
+
+**Question 5**: Cherchez dans la
+                [documentation](https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html)
+                des options de compilations pour ARM les valeurs possibles
+                du paramètre `-mfloat-abi`. Tester les paramètres et indiquer
+                laquelle permet de compiler correctement.
+
+Un bon article: https://embeddedartistry.com/blog/2017/10/9/r1q7pksku2q3gww9rpqef0dnskphtc
 
 ### Image
 
-arm-poky-linux-gnueabi-gcc
-  --sysroot=/opt/poky/2.6/sysroots/cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi/
-  -mfpu=neon -mfloat-abi=hard \
-  coucou.c -o coucou
+Les images résultantes de la compilation sont dans le répertoire
+*build/tmp/deploy/images/raspberrypi3*.
 
-""""
-/opt/poky/2.6/sysroots/x86_64-pokysdk-linux/usr/libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/8.2.0/real-ld: error: plouf uses VFP register arguments, /tmp/ccoPBAQX.o does not
-/opt/poky/2.6/sysroots/x86_64-pokysdk-linux/usr/libexec/arm-poky-linux-gnueabi/gcc/arm-poky-linux-gnueabi/8.2.0/real-ld: failed to merge target specific data of file /tmp/ccoPBAQX.o
-""""
+Pour flasher le système complet sur une carte sd, une seule commande suffit:
 
-=> The error you are observing happens because some parts of the code are built with the “hard float” ABI and others with “soft float”.
-
-""""
-cc1: error: -mfloat-abi=hard: selected processor lacks an FPU
-""""
-
-ARM options for gcc: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
-
-Demystifying ARM Floating Point Compiler Options: https://embeddedartistry.com/blog/2017/10/9/r1q7pksku2q3gww9rpqef0dnskphtc
-( the two ARM ABIs (hard-float and soft-float) are not link-compatible. Your entire program must be compiled using the same ABIs. If a pre-compiled library is not supplied with your target floating-point ABI, you will need to recompile it for your own purposes.)
-
-Clean:
-rm -r tmp/sysroot-components/
-rm -r tmp/work/
-rm -r tmp/work-shared
-rm -r downloads/
-rm -r sstate-cache/
-rm -r tmp/sysroots-uninative/
-rm -r tmp/log
-rm -r tmp/pkgdata
-rm -r tmp/stamps/
-rm -r tmp/buildstats
-rm -r tmp/cache
-rm -r tmp/deploy/rpm/
-
-=> 460M
+````
+$ dd if=core-image-minimal-raspberrypi3.rpi-sdimg \
+  of=/dev/sdX
+````
