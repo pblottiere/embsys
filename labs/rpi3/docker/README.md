@@ -12,20 +12,38 @@ configuration, ...:
 $ cd buildroot
 $ rm buildroot-precompiled-2017.08.tar.gz
 $ docker build -f Dockerfile.tarball -t embsys:rpi3-buildroot-tarball .
-$ docker run -d --name embsys-rpi3-buildroot-tarball embsys:rpi3-buildroot-tarball
+$ docker run -itd --rm --name embsys-rpi3-buildroot-tarball embsys:rpi3-buildroot-tarball
 $ docker cp embsys-rpi3-buildroot-tarball:/root/buildroot-precompiled-2017.08.tar.gz .
 $ docker stop embsys-rpi3-buildroot-tarball
 $ docker rm embsys-rpi3-buildroot-tarball
 $ docker rmi embsys:rpi3-buildroot-tarball
 ````
 
-Build the Docker image `embsys:rpi3-buildroot` ready to be used:
+Build the Docker image `embsys-rpi3-buildroot` ready to be used:
 
 ````
 $ cd buildroot
-$ docker build -f Dockerfile -t embsys:rpi3-buildroot .
+$ docker build -f Dockerfile -t pblottiere/embsys-rpi3-buildroot .
 ````
 
 ## Yocto
 
-TODO
+Build the Yocto tarball with toolchain, ...:
+
+````
+$ cd yocto
+$ rm poky-thud-precompiled.tar.gz
+$ docker build -f Dockerfile.tarball -t embsys:rpi3-yocto-tarball .
+$ docker run -itd --rm --name embsys-rpi3-yocto-tarball embsys:rpi3-yocto-tarball
+$ docker cp embsys-rpi3-yocto-tarball:/home/user/poky-thud-precompiled.tar.gz .
+$ docker stop embsys-rpi3-yocto-tarball
+$ docker rm embsys-rpi3-yocto-tarball
+$ docker rmi embsys:rpi3-yocto-tarball
+````
+
+Build the Docker image `embsys-rpi3-yocto` ready to be used:
+
+````
+$ cd yocto
+$ docker build -f Dockerfile -t pblottiere/embsys-rpi3-yocto .
+````

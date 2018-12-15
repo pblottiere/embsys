@@ -10,10 +10,11 @@ Ce TP est à réaliser à partir de la même image Docker que la
 
 
 ````
-$ docker run -it embsys:rpi3-buildroot /bin/bash
-# cd /root/
-# tar zxvf buildroot-2017.08.tar.gz
-# cd buildroot-2017.08
+$ docker rmi pblottiere/embsys-rpi3-buildroot
+$ docker pull pblottiere/embsys-rpi3-buildroot
+$ docker run -it pblottiere/embsys-rpi3-buildroot /bin/bash
+# cd /root
+# tar zxvf buildroot-precompiled-2017.08.tar.gz
 ````
 
 ### Flashage
@@ -30,15 +31,13 @@ bootloader, spécifique), il est indispensable de comprendre le mode manuel.
 De plus, le mode automatique n'est possible que grâce à l'écriture de scripts
 reprenant les étapes du flashage manuel.
 
-Nous allons donc étudier les 2 modes durant ce TP.
-
 #### Automatique
 
-Tout d'abord récupérer l'image complet de la carte SD à partir du conteneur
-Docker sur votre machine hôte:
+Tout d'abord récupérer l'image complet de la carte SD du conteneur Docker sur
+votre machine hôte:
 
 ```` shell
-$ docker cp xxxxxxxxxxxx:/root/buildroot-2017.08/output/images/sdcard.img .
+$ docker cp <container_id>:/root/buildroot-precompiled-2017.08/output/images/sdcard.img .
 ````
 
 Ensuite, sur une carte SD disponible à travers */dev/sdX* (remplacer *X* par le
@@ -48,11 +47,27 @@ path de votre carte. *dmesg* peut vous aider):
 $ sudo dd if=sdcard.img of=/dev/sdX
 ````
 
-Insérer la carte SD dans la RPI3 et brancher les adaptateurs USB-TTL
-correctement (cf datasheet de la carte). Utiliser un terminal série (minicom ou
-autre) pour établir une communication avec la carte.
+**Question 1**: Lire la
+                [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
+                de la RPI3. Quels sont les ports TX/RX?
 
-#### Manuel
+Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
+terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
+avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
+
+**Quesion 2**: Quelle est la configuration du port série permettant une
+               communication avec la RPI3 (baud, etc)?
+
+Puis, connectez vous en tant que *user* sur la RPI3 (lire le fichier
+*users.tables* pour déterminer le mot de passe).
+
+**Question 3**: Déterminez l'adresse IP de votre RPI3. Quelle commande
+                avez-vous utilisé?
+
+**Question 4**: Testez la connection ssh en tant que *user* et *root*. Quelle
+                différence observez-vous? Pourquoi? Où est-ce configuré?
+
+#### Manuel (juste pour information, à ne pas faire)
 
 Pour flasher la carte manuellement, les étapes suivantes sont à réaliser dans
 l'ordre à partir de la machine hôte:
@@ -137,13 +152,33 @@ minicom, gtkterm, putty, cu, ...).
 
 ### U-Boot
 
-Bootloader industriel. Configurer dans Buildroot les options du bootloader:
-- Build System: KCONFIG
-- Board defconfig: rpi_3_32b (regarder dans le répertoire configs du code uboot ds build)
-- cocher *U-Boot needs dtc*
-- mkimage pour host
+Comme nous l'avons vu précédemment, la RPI3 boot et est parfaitement
+fonctionnelle. Par contre, dans le monde industriel, il est très souvent
+nécessaire d'avoir un bootloader permettant par exemple de charger des images
+depuis le réseau ou bien apportant le support du Device Tree (on verra cette
+notion plus tard).
 
-Recompiler le tout avec *make*.
+L'objectif de cette partie est donc de voir comment compiler, installer et
+utiliser [U-Boot](https://www.denx.de/wiki/DULG/Manual).
+
+Tout d'aboord, afin de compiler U-Boot pour notre carte, il faut modifier
+les options suivantes dans la configuration de Buildroot:
+- Build System: KCONFIG
+- Board defconfig: rpi_3_32b (regarder dans le répertoire configs du code uboot ds build pour trouver le bon nom à utiliser)
+- Cocher *U-Boot needs dtc*
+- *mkimage* pour *host*
+
+Ensuite, il suffit de recompiler le tout avec *make*, mais nous n'allons pas
+le faire durant ce TP, car c'est trop long. Nous allons partir d'un Buildroot
+spécifique précompilé:
+
+````
+$ docker rmi pblottiere/embsys-rpi3-buildroot-uboot
+$ docker pull pblottiere/embsys-rpi3-buildroot-uboot
+$ docker run -it pblottiere/embsys-rpi3-buildroot-uboot /bin/bash
+# cd /root
+# tar zxvf buildroot-precompiled-2017.08.tar.gz
+````
 
 Ensuite créer un nouveau fichier *boot.source* contenant:
 

@@ -1,4 +1,4 @@
-# Relais
+# Partie 5 : GPIO, DTB et relais
 
 Numérotation des pins pour la RPi3 Model B v1.2:
 
@@ -11,9 +11,10 @@ Numérotation des pins pour la RPi3 Model B v1.2:
   * [GPIO et LED](#gpio-et-led)
     * [Sysfs](#sysfs)
     * [Python](#python)
+    * [DTB](#dtb)
     * [PWM](#pwm)
   * [Relais](#relais)
-    * [Code C](#c)
+    * [Python](#python)
 
 ## GPIO et LED
 
@@ -42,6 +43,10 @@ buildroot, est nommé **python-rpi-gpio**. La documentation est
 
 Utiliser cette API Python pour allumer/éteindre la LED connectée à la GPIO 17
 (faire attention au mode BCM ou BOARD).
+
+### DTB
+
+TODO!!!!
 
 ### PWM
 
@@ -117,13 +122,6 @@ Réaliser le montage suivant avec:
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/relai.png" width="350" title="Github Logo">
 </p>
 
+### Python
+
 Tester l'allumage de la LED via le contrôle de la GPIO par Sysfs et Python.
-
-### Code C
-
-Écrire du code C dans l'espace utilisateur (via sysfs donc) en mode
-client/serveur (socket) pour gérer l'état du relai.
-
-Ensuite, cross-compiler, uploader vos binaire sur la RPi3 et configurer Domoticz
-pour pouvoir changer l'état du  relai en cliquant dans l'interface grâce à vos
-programmes client/serveur.

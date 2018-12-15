@@ -1,54 +1,56 @@
 Séance 1 (6/11/2018 PM):
     - lecture 0_uv
     - lecture 1_intro
-    - git
+    - git (voir labs/git)
     - demander aux élèves de revoir leurs cours de C
     - préparer part1 sysprog pr prochaine fois
 
 Séance 2 (19/11/2018 PM):
     - lecture 2_processus
-    - lab sysprog part2
+    - lab sysprog part2 (exercice 1 + exercice 2)
 
 Séance 3 (20/11/2018 AM):
     - lecture 3_ipc_net
-    - docker
-    - lab sysprog part3
+    - docker (voir labs/docker)
+    - lab sysprog part3 (exercice 1 + exercice 2 à faire chez soi)
 
 => compte rendu TP noté sur Séance 2 et 3: à rendre prochaine séance
-=> points bonus sur part4
+=> part4 à ne pas faire (programmation réseau déjà fait pdt leur cursus)
 => tester docker à la maison
 
 Séance 4 (3/12/2018 PM):
     - lecture 7_compil_tools
-    - buildroot: découverte + compil
+    - buildroot
 
 Séance 5 (4/12/2018 AM):
-    - lecture 6_mem_fs
-    - yocto: découverte + compil
+    - fin buildroot + qemu
+    - lecture 4_kernel_mod (sans module kernel => 45min max)
 
 Séance 6 (18/12/2018 AM):
-    - flashage OS (à partir image préparée pour être sûr qu'on perde pas de temps)
-    - uboot
-    - DTB / overlay
+    - lecture 6_mem_fs
+    - Flashage OS
+    - Uboot
 
-=> compte rendu "libre" (sans questions) pour décrire les outils utilisés lors des séances 4/5/6
+=> compte rendu pour décrire les outils utilisés lors des séances 4/5/6
 => préparer autotools à la maison
 
 Séance 7 (18/12/2018 PM):
-    - lecture 5_bus
-    - GPIO / 1Wire / Liaison série / ...
+    - lecture_5_bus
+    - GPIO
+    - I2C
 
 Séance 8 (8/01/2019 PM):
-    - lecture 4_kernel_mod
-    - suite GPIO / Liaison série / ...
+    - Fin I2C
+    - Liaison série
+    - 1Wire (pas grâve si on a pas le temps)
 
 Séance 9 (8/01/2019 AM):
+    - lecture 4_kernel_mod partie dev module kernel
     - module kernel
-    - sensibilisation à la cybersécurité
 
 Séance 10 (29/01/2019 PM):
-    - TP CS!!???
     - exam QCM
+    - projet
 
 Séance 11 (29/01/2019 AM):
     - projet

@@ -8,39 +8,58 @@ naviguer dans le RFS compilé par Buildroot pour la RPI3.
 Ce TP est à réaliser à partir de la même image Docker que la
 [Partie 1](buildroot.md):
 
-
 ````
-$ docker run -it embsys:rpi3-buildroot /bin/bash
+$ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 # cd /root/
-# tar zxvf buildroot-2017.08.tar.gz
-# cd buildroot-2017.08
+# tar zxvf buildroot-precompiled-2017.08.tar.gz
+# cd buildroot-precompiled-2017.08
 ````
+
+**Question 1**: À quoi sert l'option *--cap-add* lors du lancement d'un
+                nouveau coneneur Docker?
 
 ### QEMU et chroot
 
-Tout d'abord, il faut installer les paquets nécessaires pour utiliser QMEU dans
+Tout d'abord, il faut installer les paquets nécessaires pour utiliser QEMU dans
 le conteneur Docker:
 
 ````
+# apt-get update
 # apt-get install binfmt-support qemu-user-static
 ````
 
-Émulation de carte arm avec QEMU:
+Ensuite créez un simple fichier C et compilez le avec le cross-compilateur
+fourni par Buildroot (cf [Partie 1](buildroot.md)):
 
 ````
-$ sudo mount /dev/sdX2 /media/sd
-$ cd /media/sd
-$ mount --bind /dev dev/
-$ mount --bind /proc proc/
-$ sudo cp /usr/bin/qemu-arm-static usr/bin/
-$ sudo chroot . bin/busybox ash
+# printf '#include <stdio.h>\nint main(){ printf("Hello Worlds!"); }\n' > hw.c
+# ./output/host/usr/bin/arm-linux-gcc hw.c -o hw
+````
+
+Puis, pour émuler le RFS d'une carte ARM avec QEMU:
+
+````
+# mkdir -p /tmp/rootfs
+# tar -xf output/images/rootfs.tar -C /tmp/rootfs
+# cp hw /tmp/rootfs/
+# cd /tmp/rootfs
+# mount --bind /dev dev/
+# mount --bind /proc proc/
+# cp /usr/bin/qemu-arm-static usr/bin/
+# chroot . bin/busybox ash
 root@hostname:  $
 ````
 
-Pour démonter:
+**Question 2**: À quoi sert la commande *chroot*?
+
+Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
+
+**Question 3**: Que se passe-t-il? Pourquoi?
+
+Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
+volumes:
 
 ````
-$ sudo umount /media/sd/dev
-$ sudo umount /media/sd/proc
-$ sudo umount /media/sd/
+$ umount /tmp/rootfs/dev
+$ umount /tmp/rootfs/proc
 ````

@@ -1154,16 +1154,175 @@ total 820
     \subt{Yocto Project}
 
     \vspace{20pt}
-    Système de build long à prendre en main mais offrant davantage de
-    fonctionnalités que Buildroot.
+    Système de build Open Source plus long à prendre en main mais offrant
+    davantage de fonctionnalités que Buildroot.
 
     \vspace{20pt}
-    À la mode!
+    Open Embedded: à l'origine de Yocto.
 
     \vspace{20pt}
     \begin{figure}
         \includegraphics[scale=1]{yocto.png}
     \end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto5
+%------------------------------------------------------------------------------
+\begin{frame}{Automatisation (5)}
+    \subt{Yocto Project}
+
+    \vspace{20pt}
+    Architecture moins statique que Buildroot.
+
+    \vspace{20pt}
+    Très utilisé dans l'industrie.
+
+    \vspace{20pt}
+    Les éléments de base:
+    \bi
+    \itemsep10pt
+    \item {\textbf{Poky}}: Platform Builder
+    \item {\textbf{BitBake}}: Moteur de Build
+    \item {\textbf{OpenEmbedded Core}}: Recipes, Layers et Class de base
+    \ei
+
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto6
+%------------------------------------------------------------------------------
+\begin{frame}{Automatisation (6)}
+    \subt{Yocto Project}
+
+    \begin{figure}
+      \includegraphics[width=325pt]{yocto_arch.png}
+    \end{figure}
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto7
+%------------------------------------------------------------------------------
+\defverbatim{\lstpoky}
+{
+    \begin{lstlisting}
+> git clone -b thud \
+    git://git.yoctoproject.org/poky.git poky-thud
+> ls poky-thud
+bitbake        LICENSE  meta-poky    meta-skeleton
+oe-init-build-env README.LSB   README.qemu
+documentation  meta     meta-selftest
+meta-yocto-bsp README.hardware    README.poky
+scripts
+    \end{lstlisting}
+}
+
+\begin{frame}{Automatisation (7)}
+    \subt{Yocto Project}
+
+    \vspace{40pt}
+    \lstpoky
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto8
+%------------------------------------------------------------------------------
+\begin{frame}{Automatisation (8)}
+    \subt{Yocto Project}
+
+    \vspace{25pt}
+    Layer:
+    \bi
+    \itemsep10pt
+    \item {\textbf{meta-poky}}, {\textbf{meta-yocto-bsp}}, ...
+    \item Contient des recettes {\textbf{recipes}}
+    \item Séparation logique de fonctionnalités
+    \item Peut écrire des Layer custom
+    \ei
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto9
+%------------------------------------------------------------------------------
+\defverbatim{\lstbblayers}
+{
+  \begin{lstlisting}
+    BBLAYERS ?= " \
+      /home/user/poky/meta \
+      /home/user/poky/meta-yocto \
+      /home/user/poky/meta-yocto-bsp \
+      /home/user/poky/meta-raspberrypi \
+  \end{lstlisting}
+}
+
+\begin{frame}{Automatisation (9)}
+    \subt{Yocto Project}
+
+    \vspace{20pt}
+    Recipes
+    \bi
+    \itemsep10pt
+    \item 1 ou plusieurs Recettes par Layer
+    \item Organisées en sous-répertoire: {\textbf{meta-/}}
+    \item Contient des fichier BitBake {\textbf{.bb}}
+    \ei
+
+    \vspace{10pt}
+    \lstbblayers
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto10
+%------------------------------------------------------------------------------
+\begin{frame}{Automatisation (10)}
+    \subt{Yocto Project}
+
+    \vspace{15pt}
+    Configurer le build en modifiant le fichier {\textbf{conf/local.conf}}:
+    \bi
+    \itemsep8pt
+    \item {\textbf{MACHINE}}: la cible
+    \item {\textbf{IMAGE\_INSTALL}}: ajouter la recette d'une layer
+    \item {\textbf{PACKAGE\_CLASSES}}: RPM, DEB ou IPK
+    \item {\textbf{DL\_DIR}}: répertoire de téléchargement
+    \item ...
+    \ei
+
+    \vspace{15pt}
+    Modifier les Layers à utiliser:
+    \bi
+    \itemsep8pt
+    \item Modifier {\textbf{BBLAYERS}} dans {\textbf{conf/bblayers.conf}}
+    \item Utiliser {\textbf{bitbake-layers add-layer}}
+    \ei
+
+\end{frame}
+
+%------------------------------------------------------------------------------
+% auto11
+%------------------------------------------------------------------------------
+\defverbatim{\lstyoctobuild}
+{
+  \begin{lstlisting}
+    $ . ./oe-init-build-env build
+    $ bitbake core-image-minimal
+    $ bitbake meta-toolchain
+    $ ls build/tmp/deploy/images
+    ...
+  \end{lstlisting}
+}
+
+\begin{frame}{Automatisation (11)}
+    \subt{Yocto Project}
+
+    \vspace{50pt}
+    \lstyoctobuild
 
 \end{frame}
 
