@@ -47,11 +47,25 @@ path de votre carte. *dmesg* peut vous aider):
 $ sudo dd if=sdcard.img of=/dev/sdX
 ````
 
-Insérer la carte SD dans la RPI3 et brancher les adaptateurs USB-TTL
-sur les portd TX/RX
-(cf [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet) de la carte).
-Utiliser un terminal série (minicom, gtkterm ou autre) pour établir une
-communication avec la carte.
+**Question 1**: Lire la
+                [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
+                de la RPI3. Quels sont les ports TX/RX?
+
+Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
+terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
+avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
+
+**Quesion 2**: Quelle est la configuration du port série permettant une
+               communication avec la RPI3 (baud, etc)?
+
+Puis, connectez vous en tant que *user* sur la RPI3 (lire le fichier
+*users.tables* pour déterminer le mot de passe).
+
+**Question 3**: Déterminez l'adresse IP de votre RPI3. Quelle commande
+                avez-vous utilisé?
+
+**Question 4**: Testez la connection ssh en tant que *user* et *root*. Quelle
+                différence observez-vous? Pourquoi? Où est-ce configuré?
 
 #### Manuel (juste pour information, à ne pas faire)
 
