@@ -11,7 +11,6 @@ Numérotation des pins pour la RPi3 Model B v1.2:
   * [GPIO et LED](#gpio-et-led)
     * [Sysfs](#sysfs)
     * [Python](#python)
-    * [DTB](#dtb)
     * [PWM](#pwm)
   * [Relais](#relais)
     * [Python](#python)
