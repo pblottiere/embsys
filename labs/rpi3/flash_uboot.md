@@ -232,11 +232,10 @@ interrompre la phase de boot et ainsi ouvrir le prompt U-Boot:
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/uboot_prompt.png" width="550" title="Github Logo">
 </p>
 
-Dans ce prompt, nous la commande *help* permet de lister les commandes
-disponibles.
+Dans ce prompt, la commande *help* permet de lister les commandes disponibles.
 
 **Question 7**: À quoi sert la commande *version*? Que retourne t-elle comme
-                information?
+                informations?
 
 Pour reprendre la phase normale de boot et démarrez le kernel, lancez la
 commande *boot*.
@@ -248,7 +247,9 @@ partir de la carte SD comme dans la partie précédente, mais grâce à un serve
 TFTP.
 
 **Question 8**: Trouvez une documentation en ligne afin de configurer un serveur
-                TFTP sur votre machine hôte.
+                TFTP sur votre machine hôte. Note: il faut que la machine hôte
+                et la RPI3 soit dans le même sous-réseau (autrement dit, il faut
+                qu'elles puissent se pinger).
 
 Pour tester le bon fonctionnement du serveur, lancez la commande suivante à
 partir de la RPI3 pour récupérer le fichier *zImage*:
@@ -272,8 +273,10 @@ setenv bootargs 8250.nr_uarts=1 root=/dev/mmcblk0p2 rootwait console=ttyS0,11520
 bootz ${kernel_addr_r} - 0x2000000
 ```
 
-Puis recompilez le avec *mkimage* comme précédemment. Pensez ensuite à copier
-le fichier *boot.scr* résulant sur la 1ère partition de la RPI3.
+**Question 8**: À quoi servent les comandes *dhcp* et *tftp*?
+
+Puis recompilez ce fichier avec *mkimage* comme précédemment. Pensez ensuite à
+copier le fichier *boot.scr* résulant sur la 1ère partition de la RPI3.
 
 Finalement, redémarrez la RPI3 et intérrompez la phase de boot pour arriver
 dans le prompt de U-Boot. Sauvegardez l'addresse IP de votre serveur TFTP:
@@ -283,7 +286,7 @@ U-Boot> setenv serverip_tftp <tftp_server_ip>
 U-Boot> saveenv
 ```
 
-**Question 8**: À quoi servent les commandes précédente?
+**Question 9**: Décrivez les commandes précédente?
 
 Finalement, redémarrez une dernière fois la RPI3 et observez le chargement du
 kernel:
