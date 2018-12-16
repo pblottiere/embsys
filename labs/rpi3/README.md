@@ -39,7 +39,7 @@ dont nous avons besoin:
 
 [Partie 5 : GPIO et relais](relais.md)
 
-TODO: [Partie 6 : I2C et BME280](bme280.md)
+[Partie 6 : I2C et BME280](bme280.md)
 
 TODO: [Partie 7 : Communication en RS232](bme280.md)
 

@@ -183,7 +183,7 @@ $ docker run -it pblottiere/embsys-rpi3-buildroot-uboot /bin/bash
 # tar zxvf buildroot-precompiled-2017.08.tar.gz
 ````
 
-Cette fois, U-Boot a été est compilé et le binaire *u-boot.bin* résultant se
+Cette fois, U-Boot est compilé et le binaire *u-boot.bin* résultant se
 trouve dans *outout/build/images*. La première étape est donc de copier ce
 binaire sur la 1ère partition de la carte SD.
 
@@ -200,7 +200,7 @@ bootz ${kernel_addr_r} - ${fdt_addr_r}
 **Question 6**: En cherchant sur le net, trouvez l'utilité des commandes U-Boot
                 *fatload*, *setenv* et *bootz*.
 
-Et compiler ce fichier avec *mkimage*:
+Puis compiler ce fichier avec *mkimage*:
 
 ````
 # ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 \
