@@ -1,4 +1,4 @@
-# Partie 5 : GPIO, DTB et relais
+# Partie 5 : GPIO et relais
 
 Numérotation des pins pour la RPi3 Model B v1.2:
 
@@ -31,9 +31,9 @@ broche la plus courte de la LED est le **-**):
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/led_res.jpg" width="350" title="Github Logo">
 </p>
 
-Grâce à la documentation du kernel sur
-[sysfs](https://www.kernel.org/doc/Documentation/gpio/sysfs.txt), allumer et
-éteindre la LED connectée à la GPIO 17.
+**Question 1**: Grâce à la documentation du kernel sur
+                [sysfs](https://www.kernel.org/doc/Documentation/gpio/sysfs.txt),
+                allumez et éteignez la LED connectée à la GPIO 17.
 
 ### Python
 
@@ -41,12 +41,9 @@ Il existe aussi un paquet python pour la RPi. Ce paquet, installé via
 buildroot, est nommé **python-rpi-gpio**. La documentation est
 [ici](https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/).
 
-Utiliser cette API Python pour allumer/éteindre la LED connectée à la GPIO 17
-(faire attention au mode BCM ou BOARD).
+**Question 2**: Utilisez cette API Python pour allumer/éteindre la LED
+                connectée à la GPIO 17 (faire attention au mode BCM ou BOARD).
 
-### DTB
-
-TODO!!!!
 
 ### PWM
 
