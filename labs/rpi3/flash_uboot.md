@@ -191,10 +191,11 @@ Ensuite, il faut créer un fichier *boot.source* sur le conteneur Docker
 contenant la configuration du bootloader:
 
 ````
+mmc dev 0
 fatload mmc 0:1 ${kernel_addr_r} zImage
-fatload mmc 0:1 ${fdt_addr_r} bcm2710-rpi-3-b.dtb
-setenv bootargs earlyprintk dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=noop noinitrd rw rootwait
-bootz ${kernel_addr_r} - ${fdt_addr_r}
+fatload mmc 0:1 0x2000000 bcm2710-rpi-3-b.dtb
+setenv bootargs 8250.nr_uarts=1 root=/dev/mmcblk0p2 rootwait console=ttyS0,115200
+bootz ${kernel_addr_r} - 0x2000000
 ````
 
 **Question 6**: En cherchant sur le net, trouvez l'utilité des commandes U-Boot
@@ -204,7 +205,7 @@ Puis compiler ce fichier avec *mkimage*:
 
 ````
 # ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 \
-    -e 0x00000000 -n boot.scr -d boot.source  boot.scr
+    -e 0x00000000 -n boot.scr -d boot.source boot.scr
 ````
 
 Ensuite copiez le *fichier boot.scr* dans la 1ère partition de la carte SD au
@@ -222,3 +223,71 @@ dtoverlay=pi3-disable-bt
 
 C'est ensuite U-Boot qui se chargera de charger le kernel comme indiqué dans
 le fichier *boot.source* (cf étape précédente).
+
+Désormais, connectez vous avec un terminal série et démarrez la RPI3. Appuyez
+sur n'importe quelle touche de votre clavier dans le terminal série pour
+interrompre la phase de boot et ainsi ouvrir le prompt U-Boot:
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/uboot_prompt.png" width="550" title="Github Logo">
+</p>
+
+Dans ce prompt, nous la commande *help* permet de lister les commandes
+disponibles.
+
+**Question 7**: À quoi sert la commande *version*? Que retourne t-elle comme
+                information?
+
+Pour reprendre la phase normale de boot et démarrez le kernel, lancez la
+commande *boot*.
+
+### U-Boot et server TFTP
+
+L'objectif de cette partie est de charger l'image du kernel *zImage* non pas à
+partir de la carte SD comme dans la partie précédente, mais grâce à un serveur
+TFTP.
+
+**Question 8**: Trouvez une documentation en ligne afin de configurer un serveur
+                TFTP sur votre machine hôte.
+
+Pour tester le bon fonctionnement du serveur, lancez la commande suivante à
+partir de la RPI3 pour récupérer le fichier *zImage*:
+
+```
+# tftp <tftp_server_ip> -r zImage -g
+```
+
+Si le fichier *zImage* est bien récupéré, cela signifie que le serveur TFTP est
+correctement configuré.
+
+Ensuite, modifiez le fichier *boot.source* pour obtenir:
+
+```
+mmc dev 0
+fatload mmc 0:1 0x2000000 bcm2710-rpi-3-b.dtb
+setenv autoload no
+dhcp
+tftp ${kernel_addr_r} ${serverip_tftp}:zImage
+setenv bootargs 8250.nr_uarts=1 root=/dev/mmcblk0p2 rootwait console=ttyS0,115200
+bootz ${kernel_addr_r} - 0x2000000
+```
+
+Puis recompilez le avec *mkimage* comme précédemment. Pensez ensuite à copier
+le fichier *boot.scr* résulant sur la 1ère partition de la RPI3.
+
+Finalement, redémarrez la RPI3 et intérrompez la phase de boot pour arriver
+dans le prompt de U-Boot. Sauvegardez l'addresse IP de votre serveur TFTP:
+
+```
+U-Boot> setenv serverip_tftp <tftp_server_ip>
+U-Boot> saveenv
+```
+
+**Question 8**: À quoi servent les commandes précédente?
+
+Finalement, redémarrez une dernière fois la RPI3 et observez le chargement du
+kernel:
+
+<p align="center">
+  <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/uboot_tftp_kernel.png" width="550" title="Github Logo">
+</p>
