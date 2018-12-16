@@ -208,8 +208,8 @@ Puis compiler ce fichier avec *mkimage*:
     -e 0x00000000 -n boot.scr -d boot.source boot.scr
 ````
 
-Ensuite copiez le *fichier boot.scr* dans la 1ère partition de la carte SD au
-côté du binaire de U-Boot.
+Ensuite copiez le fichier *boot.scr* sur la 1ère partition de la carte SD aux
+côtés du binaire de U-Boot.
 
 La dernière étape consiste à modifier le fichier
 [config.txt](https://www.raspberrypi.org/documentation/configuration/config-txt/)
@@ -286,7 +286,7 @@ U-Boot> setenv serverip_tftp <tftp_server_ip>
 U-Boot> saveenv
 ```
 
-**Question 9**: Décrivez les commandes précédente?
+**Question 9**: Décrivez les commandes précédente.
 
 Finalement, redémarrez une dernière fois la RPI3 et observez le chargement du
 kernel:
