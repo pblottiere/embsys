@@ -37,7 +37,7 @@ dont nous avons besoin:
 
 [Partie 4 : Flashage, U-Boot](flash_uboot.md)
 
-[Partie 5 : GPIO, DTB et relais](relais.md)
+[Partie 5 : GPIO et relais](relais.md)
 
 TODO: [Partie 6 : I2C et BME280](bme280.md)
 

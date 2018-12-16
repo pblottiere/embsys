@@ -47,7 +47,10 @@ path de votre carte. *dmesg* peut vous aider):
 $ sudo dd if=sdcard.img of=/dev/sdX
 ````
 
-**Question 1**: Lire la
+**Question 1**: Une fois le flashage terminé, combien y-a t-il de partition
+                sur la carte SD? Que contiennent-elles?
+
+**Question 2**: Lire la
                 [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
                 de la RPI3. Quels sont les ports TX/RX?
 
@@ -55,16 +58,16 @@ Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
 terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
 avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
 
-**Quesion 2**: Quelle est la configuration du port série permettant une
+**Quesion 3**: Quelle est la configuration du port série permettant une
                communication avec la RPI3 (baud, etc)?
 
 Puis, connectez vous en tant que *user* sur la RPI3 (lire le fichier
 *users.tables* pour déterminer le mot de passe).
 
-**Question 3**: Déterminez l'adresse IP de votre RPI3. Quelle commande
+**Question 4**: Déterminez l'adresse IP de votre RPI3. Quelle commande
                 avez-vous utilisé?
 
-**Question 4**: Testez la connection ssh en tant que *user* et *root*. Quelle
+**Question 5**: Testez la connection ssh en tant que *user* et *root*. Quelle
                 différence observez-vous? Pourquoi? Où est-ce configuré?
 
 #### Manuel (juste pour information, à ne pas faire)
@@ -180,7 +183,12 @@ $ docker run -it pblottiere/embsys-rpi3-buildroot-uboot /bin/bash
 # tar zxvf buildroot-precompiled-2017.08.tar.gz
 ````
 
-Ensuite créer un nouveau fichier *boot.source* contenant:
+Cette fois, U-Boot a été est compilé et le binaire *u-boot.bin* résultant se
+trouve dans *outout/build/images*. La première étape est donc de copier ce
+binaire sur la 1ère partition de la carte SD.
+
+Ensuite, il faut créer un fichier *boot.source* sur le conteneur Docker
+contenant la configuration du bootloader:
 
 ````
 fatload mmc 0:1 ${kernel_addr_r} zImage
@@ -189,14 +197,22 @@ setenv bootargs earlyprintk dwc_otg.lpm_enable=0 console=ttyAMA0,115200 console=
 bootz ${kernel_addr_r} - ${fdt_addr_r}
 ````
 
+**Question 6**: En cherchant sur le net, trouvez l'utilité des commandes U-Boot
+                *fatload*, *setenv* et *bootz*.
+
 Et compiler ce fichier avec *mkimage*:
 
 ````
-root@xxxxxxxxxxxx:/# ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 -e 0x00000000 -n boot.scr -d boot.source  boot.scr
+# ./output/host/bin/mkimage -A arm -O linux -T script -C none -a 0x00000000 \
+    -e 0x00000000 -n boot.scr -d boot.source  boot.scr
 ````
 
-Ensuite copier le binaire *u-boot.bin*, le *fichier boot.scr* et le fichier
-*config.txt* suivant dans la 1ère partition de la carte SD:
+Ensuite copiez le *fichier boot.scr* dans la 1ère partition de la carte SD au
+côté du binaire de U-Boot.
+
+La dernière étape consiste à modifier le fichier
+[config.txt](https://www.raspberrypi.org/documentation/configuration/config-txt/)
+pour indiquer au firmware de la RPI3 de charger U-Boot au lieu du kernel:
 
 ````
 kernel=u-boot.bin
@@ -204,4 +220,5 @@ enable_uart=1
 dtoverlay=pi3-disable-bt
 ````
 
-Tester la configuration.
+C'est ensuite U-Boot qui se chargera de charger le kernel comme indiqué dans
+le fichier *boot.source* (cf étape précédente).
