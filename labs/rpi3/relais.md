@@ -6,14 +6,6 @@ Numérotation des pins pour la RPi3 Model B v1.2:
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/rpi3pins.png" width="550" title="Github Logo">
 </p>
 
-# Contenu
-
-  * [GPIO et LED](#gpio-et-led)
-    * [Sysfs](#sysfs)
-    * [Python](#python)
-    * [PWM](#pwm)
-  * [Relais](#relais)
-    * [Python](#python)
 
 ## GPIO et LED
 
@@ -102,8 +94,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> p.stop()
 ````
 
-Modifier la fréquence et le duty_cycle pour faire varier la luminosité de votre
-LED.
+**Question 3**: Modifiez la fréquence et le duty_cycle pour faire varier la
+                luminosité de votre LED.
 
 ## Relais
 
@@ -118,6 +110,5 @@ Réaliser le montage suivant avec:
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/relai.png" width="350" title="Github Logo">
 </p>
 
-### Python
-
-Tester l'allumage de la LED via le contrôle de la GPIO par Sysfs et Python.
+**Question 4**: Testez l'allumage de la LED via le contrôle de la GPIO par Sysfs
+                et Python.
