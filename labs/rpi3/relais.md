@@ -1,4 +1,4 @@
-# Partie 5 : GPIO, DTB et relais
+# Partie 5 : GPIO et relais
 
 Numérotation des pins pour la RPi3 Model B v1.2:
 
@@ -6,15 +6,6 @@ Numérotation des pins pour la RPi3 Model B v1.2:
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/rpi3pins.png" width="550" title="Github Logo">
 </p>
 
-# Contenu
-
-  * [GPIO et LED](#gpio-et-led)
-    * [Sysfs](#sysfs)
-    * [Python](#python)
-    * [DTB](#dtb)
-    * [PWM](#pwm)
-  * [Relais](#relais)
-    * [Python](#python)
 
 ## GPIO et LED
 
@@ -31,9 +22,9 @@ broche la plus courte de la LED est le **-**):
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/led_res.jpg" width="350" title="Github Logo">
 </p>
 
-Grâce à la documentation du kernel sur
-[sysfs](https://www.kernel.org/doc/Documentation/gpio/sysfs.txt), allumer et
-éteindre la LED connectée à la GPIO 17.
+**Question 1**: Grâce à la documentation du kernel sur
+                [sysfs](https://www.kernel.org/doc/Documentation/gpio/sysfs.txt),
+                allumez et éteignez la LED connectée à la GPIO 17.
 
 ### Python
 
@@ -41,12 +32,9 @@ Il existe aussi un paquet python pour la RPi. Ce paquet, installé via
 buildroot, est nommé **python-rpi-gpio**. La documentation est
 [ici](https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/).
 
-Utiliser cette API Python pour allumer/éteindre la LED connectée à la GPIO 17
-(faire attention au mode BCM ou BOARD).
+**Question 2**: Utilisez cette API Python pour allumer/éteindre la LED
+                connectée à la GPIO 17 (faire attention au mode BCM ou BOARD).
 
-### DTB
-
-TODO!!!!
 
 ### PWM
 
@@ -106,8 +94,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> p.stop()
 ````
 
-Modifier la fréquence et le duty_cycle pour faire varier la luminosité de votre
-LED.
+**Question 3**: Modifiez la fréquence et le duty_cycle pour faire varier la
+                luminosité de votre LED.
 
 ## Relais
 
@@ -122,6 +110,5 @@ Réaliser le montage suivant avec:
   <img src="https://github.com/pblottiere/embsys/blob/master/labs/rpi3/imgs/relai.png" width="350" title="Github Logo">
 </p>
 
-### Python
-
-Tester l'allumage de la LED via le contrôle de la GPIO par Sysfs et Python.
+**Question 4**: Testez l'allumage de la LED via le contrôle de la GPIO par Sysfs
+                et Python.
