@@ -35,7 +35,7 @@ dont nous avons besoin:
 
 [Partie 3 : Construction du système d'exploitation avec Yocto](yocto.md)
 
-[Partie 4 : Flashage, U-Boot](flash_uboot.md)
+[Partie 4 : Flashage et U-Boot](flash_uboot.md)
 
 [Partie 5 : GPIO et relais](relais.md)
 
@@ -47,4 +47,4 @@ TODO: [Partie 8 : TMP36 et Convertisseur Analogique Numérique](can.md)
 
 TODO: [Partie 9 : Communication en RS232](rs232.md)
 
-[Partie 8 : Communiquer avec Domoticz](domoticz.md)
+[Partie 10 : Communiquer avec Domoticz](domoticz.md)
