@@ -15,7 +15,7 @@ $ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 # cd buildroot-precompiled-2017.08
 ````
 
-**Question 1**: À quoi sert l'option *--cap-add* lors du lancement d'un
+**Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
 
 ### QEMU et chroot
