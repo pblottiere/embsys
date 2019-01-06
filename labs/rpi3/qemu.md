@@ -5,7 +5,13 @@ naviguer dans le RFS compilé par Buildroot pour la RPI3.
 
 ### Préliminaires
 
-Ce TP est à réaliser à partir de la même image Docker que la
+Tout d'abord, la machine hôte doit posséder le paquet suivant:
+
+````
+$ apt-get install binfmt-support
+````
+
+Sinon, ce TP est à réaliser à partir de la même image Docker que la
 [Partie 1](buildroot.md):
 
 ````
@@ -46,6 +52,7 @@ Puis, pour émuler le RFS d'une carte ARM avec QEMU:
 # mount --bind /dev dev/
 # mount --bind /proc proc/
 # cp /usr/bin/qemu-arm-static usr/bin/
+# update-binfmts --enable qemu-arm
 # chroot . bin/busybox ash
 root@hostname:  $
 ````
