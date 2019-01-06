@@ -41,6 +41,10 @@ dont nous avons besoin:
 
 [Partie 6 : I2C et BME280](bme280.md)
 
-TODO: [Partie 7 : Communication en RS232](bme280.md)
+TODO: [Partie 7 : 1 Wire et DS18B20](ds18b20.md)
+
+TODO: [Partie 8 : TMP36 et Convertisseur Analogique Numérique](can.md)
+
+TODO: [Partie 9 : Communication en RS232](rs232.md)
 
 [Partie 8 : Communiquer avec Domoticz](domoticz.md)
