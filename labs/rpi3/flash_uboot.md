@@ -1,4 +1,4 @@
-# Partie 3: Flashage de la carte et Bootloader
+# Partie 3: Flashage et UBoot
 
 Dans cette partie, nous allons voir comment flasher l'OS sur la carte ainsi
 qu'étudier le bootloader U-Boot.
