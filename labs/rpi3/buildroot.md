@@ -1,7 +1,8 @@
 # Partie 1: Construction d'OS avec Buildroot et chaine de cross-compilation
 
 Dans cette partie, nous allons voir comment recompiler *from scratch*
-un système d'exploitation pour la RPI3 dans un conteneur Docker.
+un système d'exploitation pour la RPI3 dans un conteneur Docker avec
+le projet Buildroot.
 
 ### Préliminaires
 
@@ -58,13 +59,8 @@ cartes dans le répertoire *configs*.
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
 
-**Question 3**: Que contient le répertoire *package*?
-
-**Question 4**: Décrivez l'utilité des différents fichiers du répertoire
-                *package/openssh*.
-
-**Question 5**: À quoi servent les fichiers du répertoire
-                *boards/raspberrypi3*?
+**Question 3**: Que contient le répertoire *package* et à quoi servent les
+                sous-répertoires et fichiers associés?
 
 Désormais, lancez la commande suivante:
 
@@ -72,7 +68,7 @@ Désormais, lancez la commande suivante:
 # make embsys_defconfig
 ```
 
-**Question 6**: À quoi sert la commande précédente?
+**Question 4**: À quoi sert la commande précédente?
 
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
@@ -80,7 +76,7 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 # make menuconfig
 ````
 
-**Question 7**: En naviguant dans le menu, repérez:
+**Question 5**: En naviguant dans le menu, repérez:
 - l'architecture matérielle cible
 - le CPU ciblé
 - l'ABI (en rappellant la signification de celle choisie)
@@ -91,12 +87,12 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
 
-**Question 8**: En recherchant dans l'interface de Buildroot, déterminez si le
+**Question 6**: En recherchant dans l'interface de Buildroot, déterminez si le
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
 
-**Question 9**: Qu'est ce que busybox? À quoi sert la commande
+**Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
 
@@ -115,8 +111,8 @@ Cependant, l'étape de configuration précise et de compilation peut être longu
 (plusieurs heures). C'est pour cette raison que l'OS est précompilé dans
 l'image Docker que nous utilisons.
 
-**Question 10**: Que contient le répertoire *output/host*? À quoi correspond
-                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+**Question 8**: Que contient le répertoire *output/host*? À quoi correspond
+                le binaire *output/host/usr/bin/arm-linux-gcc*?
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -138,8 +134,8 @@ l'architecture cible du binaire généré:
 hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
 ````
 
-**Question 11**: Décrire le résultat de la commande *file*. Que se passe t-il
-                 si vous exécutez la commande *./hw*?
+**Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
+                si vous exécutez la commande *./hw*?
 
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
@@ -148,17 +144,17 @@ Buildroot:
 # ./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw
 ````
 
-**Question 12**: Utilisez la commande *file* sur le binaire résultant.
+**Question 10**: Utilisez la commande *file* sur le binaire résultant.
                  Quelle différences constatez vous par rapport au cas précédent
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
 
 ### Images
 
-**Question 13**: Que contient le répertoire *output/images*? Décrivez notamment
+**Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
 
-**Question 14**: Que vous dis les résultats de la commande *file* lorsque vous
+**Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
 
 Ensuite, lancez les commandes suivantes:
@@ -168,7 +164,7 @@ Ensuite, lancez les commandes suivantes:
 # tar -xf output/images/rootfs.tar -C /tmp/rootfs
 ````
 
-**Question 15**: Que contient le répertoire */tmp/rootfs*?
+**Question 13**: Que contient le répertoire */tmp/rootfs*?
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 

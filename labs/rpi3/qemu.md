@@ -5,17 +5,23 @@ naviguer dans le RFS compilé par Buildroot pour la RPI3.
 
 ### Préliminaires
 
-Ce TP est à réaliser à partir de la même image Docker que la
+Tout d'abord, la machine hôte doit posséder le paquet suivant:
+
+````
+$ apt-get install binfmt-support
+````
+
+Sinon, ce TP est à réaliser à partir de la même image Docker que la
 [Partie 1](buildroot.md):
 
 ````
-$ docker run -it --cap-add=SYS_ADMIN pblottiere/embsys-rpi3-buildroot /bin/bash
+$ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 # cd /root/
 # tar zxvf buildroot-precompiled-2017.08.tar.gz
 # cd buildroot-precompiled-2017.08
 ````
 
-**Question 1**: À quoi sert l'option *--cap-add* lors du lancement d'un
+**Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
 
 ### QEMU et chroot
@@ -46,6 +52,7 @@ Puis, pour émuler le RFS d'une carte ARM avec QEMU:
 # mount --bind /dev dev/
 # mount --bind /proc proc/
 # cp /usr/bin/qemu-arm-static usr/bin/
+# update-binfmts --enable qemu-arm
 # chroot . bin/busybox ash
 root@hostname:  $
 ````
