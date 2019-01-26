@@ -68,8 +68,8 @@ $ docker rmi embsys:rpi3-buildroot-video-tarball
 Build the Docker image `embsys-rpi3-buildroot-uboot` ready to be used:
 
 ````
-$ cd buildroot-uboot
-$ docker build -f Dockerfile -t pblottiere/embsys-rpi3-buildroot-uboot .
+$ cd buildroot-video
+$ docker build -f Dockerfile -t pblottiere/embsys-rpi3-buildroot-video .
 ````
 
 ## Yocto
