@@ -49,6 +49,29 @@ $ cd buildroot-uboot
 $ docker build -f Dockerfile -t pblottiere/embsys-rpi3-buildroot-uboot .
 ````
 
+## Buildroot avec support vidéo
+
+Build the buildroot tarball with packages, kernel configuration, busybox
+configuration, ...:
+
+````
+$ cd buildroot-video
+$ rm buildroot-precompiled-2017.08.tar.gz
+$ docker build -f Dockerfile.tarball -t embsys:rpi3-buildroot-video-tarball .
+$ docker run -itd --name embsys-rpi3-buildroot-video-tarball embsys:rpi3-buildroot-video-tarball
+$ docker cp embsys-rpi3-buildroot-video-tarball:/root/buildroot-precompiled-2017.08.tar.gz .
+$ docker stop embsys-rpi3-buildroot-video-tarball
+$ docker rm embsys-rpi3-buildroot-video-tarball
+$ docker rmi embsys:rpi3-buildroot-video-tarball
+````
+
+Build the Docker image `embsys-rpi3-buildroot-uboot` ready to be used:
+
+````
+$ cd buildroot-video
+$ docker build -f Dockerfile -t pblottiere/embsys-rpi3-buildroot-video .
+````
+
 ## Yocto
 
 Build the Yocto tarball with toolchain, ...:
