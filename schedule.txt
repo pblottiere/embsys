@@ -1,15 +1,15 @@
-Séance 1 (6/11/2018 PM):
+Séance 1:
     - lecture 0_uv
     - lecture 1_intro
     - git (voir labs/git)
-    - demander aux élèves de revoir leurs cours de C
-    - préparer part1 sysprog pr prochaine fois
+    - revoir cours de C
+    - préparer part1 sysprog pour la prochaine fois
 
-Séance 2 (19/11/2018 PM):
+Séance 2:
     - lecture 2_processus
     - lab sysprog part2 (exercice 1 + exercice 2)
 
-Séance 3 (20/11/2018 AM):
+Séance 3:
     - lecture 3_ipc_net
     - docker (voir labs/docker)
     - lab sysprog part3 (exercice 1 + exercice 2 à faire chez soi)
@@ -18,15 +18,15 @@ Séance 3 (20/11/2018 AM):
 => part4 à ne pas faire (programmation réseau déjà fait pdt leur cursus)
 => tester docker à la maison
 
-Séance 4 (3/12/2018 PM):
+Séance 4:
     - lecture 7_compil_tools
     - buildroot
 
-Séance 5 (4/12/2018 AM):
+Séance 5:
     - fin buildroot + qemu
     - lecture 4_kernel_mod (sans module kernel => 45min max)
 
-Séance 6 (18/12/2018 AM):
+Séance 6:
     - lecture 6_mem_fs
     - Flashage OS
     - Uboot
@@ -34,23 +34,23 @@ Séance 6 (18/12/2018 AM):
 => compte rendu pour décrire les outils utilisés lors des séances 4/5/6
 => préparer autotools à la maison
 
-Séance 7 (18/12/2018 PM):
+Séance 7:
     - lecture_5_bus
     - GPIO
     - I2C
 
-Séance 8 (8/01/2019 PM):
+Séance 8:
     - Fin I2C
     - Liaison série
     - 1Wire (pas grâve si on a pas le temps)
 
-Séance 9 (8/01/2019 AM):
+Séance 9:
     - lecture 4_kernel_mod partie dev module kernel
     - module kernel
 
-Séance 10 (29/01/2019 PM):
+Séance 10:
     - exam QCM
     - projet
 
-Séance 11 (29/01/2019 AM):
+Séance 11:
     - projet
