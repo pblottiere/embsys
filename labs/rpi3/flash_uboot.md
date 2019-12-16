@@ -81,12 +81,13 @@ l'ordre à partir de la machine hôte:
 4- Copie du bootloader et de l'image kernel (entre autre) sur la 1ère partition
 5- Extraction du RFS sur la 2ème partition
 
-Tout d'abord, sur une carte SD disponible à travers */dev/sdX* (remplacer *X*
+_ATTENTION COMMANDE DANGEREUSE, ATTENTION A NE PAS SELECTIONNER LE DISQUE DE VOTRE PC_  
+Tout d'abord, sur une carte SD disponible à travers */dev/mmcblkX* (remplacer *X*
 par le path de votre carte. *dmesg* peut vous aider), il faut nettoyer la
 carte SD:
 
 ```` shell
-$ dd if=/dev/zero of=/dev/sdX
+$ dd if=/dev/zero of=/dev/mmcblkX
 ````
 
 Ensuite, informez vous sur l'utilisation de la commande *fdisk* afin de
@@ -97,8 +98,8 @@ partitionner la carte SD tel que:
 Puis, formattez les partitions:
 
 ```` shell
-$ sudo mkfs.vfat /dev/sdX1
-$ sudo mkfs.ext4 /dev/sdX2
+$ sudo mkfs.vfat /dev/mmcblkX1
+$ sudo mkfs.ext4 /dev/mmcblkX2
 ````
 
 En utilisant la commande *fdisk* et la commande *p* de son interpreteur pour
@@ -106,7 +107,7 @@ afficher la configuration de la carte, vous devriez alors obtenir ceci si vous
 avez réalisé les étapes précédentes correctement:
 
 ```` shell
-$ fdisk /dev/sdX
+$ fdisk /dev/mmcblkX
 Command (m for help): p
 Disk /dev/sdX: 14.9 GiB, 15931539456 bytes, 31116288 sectors
 Units: sectors of 1 * 512 = 512 bytes
@@ -116,16 +117,16 @@ Disklabel type: dos
 Disk identifier: 0x00000000
 
 Device     Boot Start    End Sectors Size Id Type
-/dev/sdX1  *        1  65536   65536  32M  c W95 FAT32 (LBA)
-/dev/sdX2       65537 188416  122880  60M 83 Linux
+/dev/mmcblkX1  *        1  65536   65536  32M  c W95 FAT32 (LBA)
+/dev/mmcblkX2       65537 188416  122880  60M 83 Linux
 
 Command (m for help):
 $ lsblk -fs
 NAME  FSTYPE LABEL     UUID                                 MOUNTPOINT
 sdX1  vfat   boot      7794-9F86
-└─sdX
+└─mmcblkX
 sdX2  ext4   root      7e0c7c79-a446-46bc-b103-aeebc167ca13
-└─sdX
+└─mmcblkX
 ````
 
 Intéressons-nous maintenant au RFS. Pour information, Buildroot ne génère
@@ -137,17 +138,17 @@ Préparer manuellement la carte SD (vous aurez besoin de récupérer en local
 quelques fichiers générés par buildroot):
 
 ```` shell
-$ mkdir /media/sd
-$ mount /dev/sdX1 /media/sd
-$ cp bcm2710-rpi-3-b.dtb /media/sd
-$ cp bcm2710-rpi-cm3.dtb /media/sd
-$ cp -r rpi-firmware/* /media/sd
-$ cp zImage /media/sd
-$ umount /media/sd
+$ mkdir /media/mmcblk
+$ mount /dev/mmcblkX1 /media/mmcblk
+$ cp bcm2710-rpi-3-b.dtb /media/mmcblk
+$ cp bcm2710-rpi-cm3.dtb /media/mmcblk
+$ cp -r rpi-firmware/* /media/mmcblk
+$ cp zImage /media/mmcblk
+$ umount /media/mmcblk
 $
-$ mount /dev/sdX2 /media/sd
-$ tar xf rootfs.tar -C /media/sd
-$ umount /media/sd
+$ mount /dev/mmcblkX2 /media/mmcblk
+$ tar xf rootfs.tar -C /media/mmcblk
+$ umount /media/mmcblk
 ````
 
 Démarrer la RPI3 et établir une communication série (via des outils comme
