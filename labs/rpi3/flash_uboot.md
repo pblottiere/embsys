@@ -184,7 +184,7 @@ $ docker run -it pblottiere/embsys-rpi3-buildroot-uboot /bin/bash
 ````
 
 Cette fois, U-Boot est compilé et le binaire *u-boot.bin* résultant se
-trouve dans *outout/build/images*. La première étape est donc de copier ce
+trouve dans *output/images*. La première étape est donc de copier ce
 binaire sur la 1ère partition de la carte SD.
 
 Ensuite, il faut créer un fichier *boot.source* sur le conteneur Docker
