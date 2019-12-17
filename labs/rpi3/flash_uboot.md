@@ -81,7 +81,7 @@ l'ordre à partir de la machine hôte:
 4- Copie du bootloader et de l'image kernel (entre autre) sur la 1ère partition
 5- Extraction du RFS sur la 2ème partition
 
-_ATTENTION COMMANDE DANGEREUSE, ATTENTION A NE PAS SELECTIONNER LE DISQUE DE VOTRE PC_  
+_COMMANDE DANGEREUSE, ATTENTION À NE PAS SÉLECTIONNER LE DISQUE DE VOTRE PC_  
 Tout d'abord, sur une carte SD disponible à travers */dev/mmcblkX* (remplacer *X*
 par le path de votre carte. *dmesg* peut vous aider), il faut nettoyer la
 carte SD:
