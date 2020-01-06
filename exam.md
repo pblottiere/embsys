@@ -1,12 +1,11 @@
 # CAMERA IP
 
-L'objectif est ici de mettre en place une caméra IP sur servomoteur à l'aide
-d'une RPI3.
+L'objectif est ici de mettre en place une caméra IP à l'aide d'une RPI3.
 
 L'utilisateur doit donc pouvoir:
 
 1. prendre 1 photo et la visualiser
-2. contrôler la position de la caméra grâce au servomoteur
+2. connaître l'état de disponibilité de la caméra IP via 1/des LEDs
 
 Pour cela, l'utilisateur possède simplement l'addresse IP de la RPI3.
 
@@ -14,10 +13,8 @@ Pour cela, l'utilisateur possède simplement l'addresse IP de la RPI3.
 
 Côté architecture, il est conseillé de développer:
 
-- un client pour l'utilisateur permettant de capturer une image et de gérer
-  la position du servomoteur (via l'IP de la RPI3)
-- un serveur côté RPI3 recevant les commandes venant de l'utilisateur
-  pour gérer le servomoteur
+- un client pour l'utilisateur permettant de capturer une image (via l'IP de
+  la RPI3)
 - un serveur côté RPI3 recevant les commandes venant de l'utilisateur
   pour gérer la caméra
 
@@ -30,14 +27,6 @@ ordre de grandeur).
 Pour le client, vous êtes libre d'utiliser le language que vous voulez. Vous
 pouvez aussi proposer soit un outil en ligne de commande, soit une interface
 graphique.
-
-### Serveur servomoteur
-
-Pour contrôler un servomoteur via une RPI3, il faut utiliser une pin GPIO en
-mode PWM. Il faut donc ici utiliser le module Python `RPi` comme lors des TPs.
-
-Le serveur permettant de contrôler le servomoteur doit donc être développé en
-Python.
 
 ### Serveur caméra
 
