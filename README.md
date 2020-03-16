@@ -23,3 +23,4 @@ Several exercises are available :
   * Usefool Tools (autotools, docker, git, ...)
 
 modification
+modification 2
