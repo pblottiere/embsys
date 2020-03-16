@@ -23,3 +23,4 @@ Several exercises are available :
   * Usefool Tools (autotools, docker, git, ...)
 
 edited for labs 1
+edition #2
