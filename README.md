@@ -22,3 +22,5 @@ Several exercises are available :
   * Embedded system with RPI3
   * Usefool Tools (autotools, docker, git, ...)
 My new fix
+My new fix
+salut/n
