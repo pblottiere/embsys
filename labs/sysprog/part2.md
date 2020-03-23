@@ -12,9 +12,15 @@ PTTY: /dev/pts/X
 
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
+PTTY: /dev/pts/2
+Segmentation fault (core dumped)
+une application a tenté d'accéder à un emplacement mémoire qui ne lui était pas alloué.
+( le code plante)
 
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+il a reçu le signal : 139 qui fait référence au signal SIGSEGV 
+par la commande: echo $?
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -52,6 +58,7 @@ de savoir comment votre programme en est arrivé là (image de la pile).
 **Question 3** : Grâce à GDB et au fichier *core* généré, analysez la source du
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
+à la ligne 62 : le fichier ou dossier spécidié n'existe pas.
 
 GDB peut être aussi lancé de manière interactive :
 
@@ -79,6 +86,7 @@ $ n
 
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
+error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
 
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
@@ -89,10 +97,12 @@ ldd ./gps
 
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
+elle informe sur le nom des bibliothèques manquante
+et où sont celles qui posent problème.
 
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
-
+Il ajouté le path de la librairie qu'on veut utiliser avant.
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans
