@@ -210,7 +210,7 @@ Pour les questions suivantes, allez dans le répertoire de travail
                  librairie libhook.so. Exécutez run.sh : le simulateur ne doit
                  plus partir en segfault.
 
-Ca march :sunglasses:
+Ca marche :sunglasses:
 
 Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
@@ -220,9 +220,32 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
                  *printf* (expliquez comment vous utilisez *man* dans ce cas et
                  pourquoi). Comment est appelé ce type de fonction?
 
+```bash
+man 3 printf
+```
+Pour lire la troisième page du manuel. On y trouve alors l'entête de la fonction printf et on remarque qu'elle acceptent un nombre d'arguments pouvant varier (en fonction du nombre defomratage de texte à effectuer). C'est donc une fonction variadique.
+
+```c
+#include <stdio.h>
+int printf(const char *format, ...);
+```
+
 **Question 5** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
-                 gestionnaires de signaux. Décrivez les fonctions utilisez
+                 gestionnaires de signaux. Décrivez les fonctions utilisées
                  ainsi que les signaux gérés.
+
+Le fichier *gps.c* utilise les fonctions d'entête suivantes :
+
+```c
+void signals_handler(int signal_number);
+    /* Permet de traiter les signaux entrants */
+int write_vtg(int fd);
+    /* Permet d'écrire la trame vtg sur le port série virtuel */
+int write_gll(int fd);
+    /* Permet d'écrire la trame gll sur le port série virtuel */
+```
+
+Le signal qui est repéré par le programme est le signal SIGINT, signal d'interruption de programme. Il peut être déclanché par un Ctrl+C de l'utilisateur par exemple.
 
 **Question 6** : Hookez le simulateur pour que ce dernier ne puisse plus
                  être interrompu par le signal SIGINT (Ctrl-C) en
@@ -231,12 +254,44 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
                  un gestionnaire de signaux au sein même de la fonction
                  *printf*  réimplémentée.
 
+
+
 **Question 7** : Comment faire pour interrompre le processus étant donné
                  que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
+
+On peut tuer le processus en connaissant son PID et avec la commande *kill*, ou alors en utilisant un autre signal comme SIGQUIT (Ctrl-Alt gr-\ )
 
 **Question 8** : En regardant le fichier *gps/Makefile*, que pouvez-vous dire
                  de la règle *ok*? À quoi sert-elle et comment
                  fonctionne-t-elle?
+
+La règle ok va lancer les règles suivantes :
+
+```bash
+ok: init libptmx libnmea_ok gps
+```
+
+La différence avec la règle *all*, c'est que la librairie libnmea sera build en version *ok* elle aussi. Lorsque l'on va dans le makefile de cette libraire, on a cela pour la règle *ok* :
+
+```bash
+ok:
+  $(GCC) -D GPS_OK=1 -c -fPIC nmea.c -o nmea.o
+  $(GCC) -shared -Wl,-soname,$(SONAME) -o $(SONAME) nmea.o -lm
+  cp nmea.h ../../../include
+  mv $(SONAME) ../../../lib
+```
+
+On voit que la librairie nmea va être construite avec le paramètre GPS_OK=1. Donc la partie de code suivante ne sera plus compilée et exécutée car la variable GPS_OK sera déjà définie :
+
+```c
+#ifndef GPS_OK
+    iteration++;
+    if (iteration == 2)
+    {
+        puts(NULL);
+    }
+#endif
+```
 
 ### À retenir
 

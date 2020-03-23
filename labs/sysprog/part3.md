@@ -20,6 +20,8 @@ PTTY: /dev/pts/3
 **Question 1** : Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?
 
+C'est le port virtuel crée par le programme gps pour "communiquer" les trames gnss.
+
 Pour la suite, placez vous dans le répertoire *gps_reader* contenant :
 
   * reader.c : le code du reader que nous allons modifier
@@ -40,18 +42,53 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 **Question 2** : En regardant le code de *reader.c*, y a-t-il quelque chose qui
                  vous chagrine?
 
+Le programme va rester bloqué dans la boucle :
+
+```c
+while(1) {
+    ...
+}
+```
+Du coup la suite du code ne sera pas exécutée, notamment la fermuture du fd et le return :
+
+```c
+// close serial port
+close(fd);
+exit(EXIT_SUCCESS);
+```
+
 **Question 3** : Grâce à des recherches Internet (ou en fouinant dans le code
                  du simulateur), déterminez dans quelle trame et dans quel champs
                  l'heure est définie.
+
+Dans le trames :
+```bash
+$GPGLL,4836.96,N,00741.36,E,145243,A
+$GPVTG,054.8,T,034.5,M,005.6,010.3,K
+```
+
+L'heure est définie par l'avant dernière valeur de la trame GPGLL : 145243 = 14h52m43s.
 
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                  Comment s'appelle ce type de programmation?
 
+Le reader.c utilise les fonctions suivantes pour ouvrir/écouter/lire/fermer le port virtuel du simulateur :
+```c
+int fd = open(port, O_RDWR | O_NOCTTY);
+FD_ZERO(&fdset);
+FD_SET(fd, &fdset);
+FD_ISSET(fd, &fdset);
+read (fd, buff, sizeof(buff));
+close(fd);
+```
+
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les
                  trames provenant de deux simulateurs GPS différents (ports
                  paramétrables au lancement). Vérifiez le bon fonctionnement en
                  lançant deux instances du simulateur GPS.
+
+C'est fait !
 
 **Question 6** : Utilisez *syslog* pour afficher l'heure dans la console ainsi
                  que le PID du père.
