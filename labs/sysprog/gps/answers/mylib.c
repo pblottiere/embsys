@@ -6,7 +6,6 @@
 int add(int a, int b)
 {
 	return a+b;
-
 }
 
 void bjr(int n)
