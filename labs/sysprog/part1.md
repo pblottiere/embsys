@@ -104,9 +104,15 @@ suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
 
+Un fichier qui indique les règles pour compiler le projet, l'outil make permet d'exécuter ces commandes. Ce n'est pas de la compilation mais plus généralement de l'automatisation de taches.
+
 **Question 2**: Quel compilateur est utilisé ici?
 
+gcc
+
 **Question 3**: Qu'est ce qu'une librairie partagée?
+
+Elles portent l'extension .so et sont utilisables par d'autres projets.
 
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
