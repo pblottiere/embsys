@@ -82,7 +82,9 @@ $ (gdb) >bt
 
 ````
 Le probleme est localize dans main > write_vtg > nmea_vtg > knot_to_kmh_str > _IO_Puts.
-Le "_IO_puts" est un string de taille 0. La trame semble vide.
+A la ligne 178 de nmea.c :  knot_to_kmh_str(vtg->speed_knot, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);
+Le "_IO_puts" est un string de taille 0 ?
+
 
 GDB peut être aussi lancé de manière interactive :
 
@@ -110,6 +112,13 @@ $ n
 
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
+````
+$ gdb ./bin/gps
+$ r
+Starting program: /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/bin/gps 
+/home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+[Inferior 1 (process 22558) exited with code 0177]
+````
 
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
