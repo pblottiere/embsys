@@ -13,8 +13,14 @@ PTTY: /dev/pts/X
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
 
+Le programme run.sh rencontre une erreur, l'execution du programme est arrêtée
+Segmentation fault (core dumped)
+Il s'agit ici d'un problème d'accès à la mémoire
+
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+
+Le signal est SIGSEGV
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -53,6 +59,17 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+#0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:62
+#1  0x00007f0e54a349d2 in _IO_puts (str=0x0) at ioputs.c:35
+#2  0x00007f0e54da5aab in knot_to_kmh_str (not=5.51000023, size=6, 
+    format=0x7f0e54da5f6f "%05.1f", kmh_str=0x7fffe878afb2 "010.2")
+    at nmea.c:23
+#3  0x00007f0e54da5ef6 in nmea_vtg (vtg=0x7fffe878aff0) at nmea.c:178
+#4  0x000055860b8cdc5c in write_vtg (fd=3) at gps.c:40
+#5  0x000055860b8cdee1 in main () at gps.c:109
+
+Le problème est provoqué par "_IO_puts" qui est un "string" de taille 0. La trame est vide.
+
 GDB peut être aussi lancé de manière interactive :
 
 ````
@@ -80,6 +97,12 @@ $ n
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
 
+Starting program: /home/jules/embsys/labs/sysprog/gps/bin/gps 
+/home/jules/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+[Inferior 1 (process 11227) exited with code 0177]
+
+Leystème ne parvient pas à trouver les librairies partagées.
+
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
 
@@ -90,8 +113,26 @@ ldd ./gps
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
 
+Cette commande donne la liste des librairies utilisées ainsi que leur chemin d'accès.
+Les deux librairies libnmea.so et libptmx.so n'ont pas de chemin d'accès enregistré.
+
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
+
+Dans gps/ j'ai executé :
+
+$ export LD_LIBRARY_PATH=$(pwd)/lib
+$ ldd ./bin/gps
+
+On obtient donc :
+	linux-vdso.so.1 (0x00007ffc63934000)
+	libptmx.so => /home/jules/embsys/labs/sysprog/gps/lib/libptmx.so (0x00007fb5d2460000)
+	libnmea.so => /home/jules/embsys/labs/sysprog/gps/lib/libnmea.so (0x00007fb5d225d000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb5d1e6c000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fb5d1ace000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fb5d2865000)
+
+Toutes les librairies ont un chemin d'accès et peuvent donc être utilisées.
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
