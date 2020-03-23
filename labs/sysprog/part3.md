@@ -53,9 +53,13 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
                  du simulateur), déterminez dans quelle trame et dans quel champs
                  l'heure est définie.
 
+> Dans la trame Gll, l'avant-dernière valeur en hh:mm:ss UTC.
+
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                  Comment s'appelle ce type de programmation?
+
+> open / read / close => appels systeme ?
 
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les
                  trames provenant de deux simulateurs GPS différents (ports
