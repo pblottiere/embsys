@@ -1,0 +1,14 @@
+Partie 3
+
+Question 1)
+TTY désigne un terminal, comme par exemple un port USB, tandis que PTTY désigne des terminaux simulés
+
+Question 2)
+Le port fd n'est pas fermé, le laissant ouvert en attente même après un Ctrl+C
+
+Question 3)
+L'heure est indiquée dans les trames $GPGLL
+
+Question 4)
+Ce sont FD_ZERO/FD_SET/FD_CLR/FD_ISSET, ce type de programmation est du multiplexage
+
