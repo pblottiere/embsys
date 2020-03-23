@@ -123,10 +123,11 @@ int main() {
 ```bash
 gcc ./main.c -o hello
 ```
-                          
+
 
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
 ```C
 
 #include <stdio.h>

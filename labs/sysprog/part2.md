@@ -1,6 +1,5 @@
 # Partie 2: Compilation, debug et gestionnaire de signaux
 
-
 ## Exercice 1 : GDB et fichier core
 
 Une fois le simulateur GPS compilé, le lancer grâce au script *gps/run.sh* :
@@ -13,8 +12,28 @@ PTTY: /dev/pts/X
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
 
+```bash
+Segmentation fault (core dumped)
+```
+Le programme gps essaie de lire un espace mémoire interdit
+
+
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+
+la commande pour connaître le signal reçu est 
+
+```bash
+echo $?
+```
+Elle retourne le numéro 139, qui correspond au signal 139 - 128 = 11 -> 11) SIGSEGV
+
+cf la commande 
+
+```bash
+kill -l
+```
+
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -43,7 +62,7 @@ nombreuses commandes.
 Pour lancer GDB et analyser un fichier core :
 
 ````
-$ gdb ./bin/gps core
+gdb ./bin/gps core
 ````
 
 Ensuite, dans le prompt GDB, utilisez la commande *bt* (pour *backtrace*) afin
@@ -53,10 +72,37 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+```bash
+#3  0x00007f12b854eef6 in nmea_vtg (vtg=0x7fff84b05910) at nmea.c:178
+```
+
+```C
+int knot_to_kmh_str(float not, size_t size, char * format, char * kmh_str)
+{
+    float kmh = KNOT_TO_KMH * not;
+    snprintf(kmh_str, size, format, kmh);
+
+#ifndef GPS_OK
+    iteration++;
+    if (iteration == 2)
+    {
+        puts("NULL \n");
+    }
+#endif
+
+    return kmh;
+}
+
+```
+
+Le NULL ne correspond à aucun espace mémoire, donc c'est lui qui génère le core dumped. 
+
+
+
 GDB peut être aussi lancé de manière interactive :
 
 ````
-$ gdb ./bin/gps
+gdb ./bin/gps
 ````
 
 Une fois dans le prompt, il faut lancer la commande *r* (comme *run*) et *bt*
@@ -90,8 +136,36 @@ ldd ./gps
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
 
+La commande permet de connaitre les dépendances de l'exécutable. 
+
+```bash
+	linux-vdso.so.1 (0x00007fffa6bf1000)
+	libptmx.so => not found
+	libnmea.so => not found
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ffa05000000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007ffa055f4000)
+```
+
+Cela est cohérent avec le message d'erreur indiqué par GDB intéractif:
+
+```bash
+Starting program: /home/gwen/Documents/ENSTA/EMBARQUE/embsys/labs/sysprog/gps/bin/gps 
+/home/gwen/Documents/ENSTA/EMBARQUE/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+```
+
+
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
+
+Après avoir regarder le fichier run.sh on remarque : qu'il faut linker la librairie à l'exécutable via la variable d'environnement : LD_LIBRARY_PATH . 
+J'ai donc exécuter la commande dans bash :
+
+```bash
+embsys/labs/sysprog/gps$ export LD_LIBRARY_PATH=$(pwd)/lib
+```
+Maintenant on peut executer sans problème directement ./gps
+
+ldd ./gps ne génère plus de bugs
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
@@ -107,10 +181,10 @@ et communique avec le serveur grâce au réseau.
 
 ### À retenir
 
-  * l'utilité de *ulimit* et comment déclencher la génération d'un fichier core
-  * à quoi sert *GDB* et comment l'utiliser
-  * l'utilité de *ldd*
-  * pourquoi, quand et comment utiliser la variable d'environnement
+* l'utilité de *ulimit* et comment déclencher la génération d'un fichier core
+* à quoi sert *GDB* et comment l'utiliser
+* l'utilité de *ldd*
+* pourquoi, quand et comment utiliser la variable d'environnement
     *LD_LIBRARY_PATH*
 
 ## Exercice 2 : LD_PRELOAD et sigaction
@@ -134,9 +208,9 @@ définies dans libhook aient exactement le même prototype.
 Pour les questions suivantes, allez dans le répertoire de travail
 *ld_preload*. Vous devrez travailler sur trois fichiers:
 
-  * hook.c
-  * Makefile
-  * run.sh
+* hook.c
+* Makefile
+* run.sh
 
 **Question 1** : Implémentez dans le fichier hook.c la fonction à l'origine du
                  problème repéré au sein du simulateur GPS mais cette fois-çi
@@ -179,10 +253,9 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
 
 ### À retenir
 
-  * comment utiliser le *man*
-  * la mise en place d'un gestionnaire de signaux grâce à *sigaction*
-  * l'utilité et le fonctionnement de *LD_PRELOAD*
-
+* comment utiliser le *man*
+* la mise en place d'un gestionnaire de signaux grâce à *sigaction*
+* l'utilité et le fonctionnement de *LD_PRELOAD*
 
 ## Exercice 3 : Terminal série (minicom)
 

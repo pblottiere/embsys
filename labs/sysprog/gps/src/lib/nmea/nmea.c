@@ -20,7 +20,7 @@ int knot_to_kmh_str(float not, size_t size, char * format, char * kmh_str)
     iteration++;
     if (iteration == 2)
     {
-        puts(NULL);
+        puts("NULL \n");
     }
 #endif
 
