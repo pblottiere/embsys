@@ -10,11 +10,16 @@ $ sh run.sh
 PTTY: /dev/pts/X
 ````
 
-**Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
-                 déduisez vous?
+**Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en déduisez vous?
 
-**Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
-                vérifiez vous le numéro du signal reçu?
+PTTY: /dev/pts/4
+Segmentation fault (core dumped)
+
+Il y a un problème d'accès mémoire (zone mémoire invalide) .
+
+**Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment vérifiez vous le numéro du signal reçu?
+
+SIGSEGV 
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
