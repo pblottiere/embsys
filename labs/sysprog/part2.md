@@ -1,4 +1,4 @@
-# Partie 2: Compilation, debug et gestionnaire de signaux
+# Partie 2: Compilation, debug et gestionn# Partie 2: Compilation, debug et gestionnaire de signaux
 
 
 ## Exercice 1 : GDB et fichier core
@@ -12,9 +12,13 @@ PTTY: /dev/pts/X
 
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
+Une erreur Segmentation fault interrompt le programme. Un accès mémooire invalide
+à été détecté.
 
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+echo $?
+la réponse est 139 ce qui correspond au signal SIGSEGV. 
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -53,6 +57,10 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+Le code essaie d'accéder à un fichier qui n'existe pas :
+62	../sysdeps/x86_64/multiarch/strlen-avx2.S: Aucun fichier ou dossier de ce type.
+
+
 GDB peut être aussi lancé de manière interactive :
 
 ````
@@ -80,6 +88,10 @@ $ n
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
 
+Starting program: /home/affraike/Documents/Sys_Embarques/embsys/labs/sysprog/gps/bin/gps 
+/home/affraike/Documents/Sys_Embarques/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+
+
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
 
@@ -90,13 +102,21 @@ ldd ./gps
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
 
+Cela permet de visualiser les dépendances du programme avec les librairies partagées.
+
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
+
+LD_LIBRARY_PATH=$(pwd)/lib ./bin/gps
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans
                  le prompt gdb suite à un breakpoint?
+step
+Continue running your program until control reaches a different source line, then stop it and return control to GDB.
+next
+Continue to the next source line in the current (innermost) stack frame. This is similar to step, but function calls that appear within the line of code are executed without stopping. Execution stops when control reaches a different line of code at the original stack level that was executing when you gave the next command.
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
@@ -104,81 +124,7 @@ exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
 et communique avec le serveur grâce au réseau.
 
 **Question 8** : Dans quel contexte ce type d'outils peut être intéressant?
-
-Si on cherche à optimiser les outils installés sur un OS minimaliste,
-gdb est un outils de base qui consommera peu de ressources.
-
-### À retenir
-
-  * l'utilité de *ulimit* et comment déclencher la génération d'un fichier core
-  * à quoi sert *GDB* et comment l'utiliser
-  * l'utilité de *ldd*
-  * pourquoi, quand et comment utiliser la variable d'environnement
-    *LD_LIBRARY_PATH*
-
-## Exercice 2 : LD_PRELOAD et sigaction
-
-Maintenant que le problème est identifié, nous allons le résoudre. Cependant,
-nous partons du principe que le code source du simulateur **NE DOIT PAS ÊTRE
-MODIFIÉ**. Pour corriger le problème, nous allons utiliser la variable
-d'environnement *LD_PRELOAD*. Cette variable permet de *hooker* (comprendre
-*usurper*) certaines fonctions d'une application.
-
-Utilisation :
-
-````
-LD_PRELOAD=libhook.so ./bin/gps
-````
-
-En faisant ainsi, le binaire cherchera en priorité les fonctions dont il
-a besoin dans *libhook.so*! Pour que cela fonctionne, il faut que les fonctions
-définies dans libhook aient exactement le même prototype.
-
-Pour les questions suivantes, allez dans le répertoire de travail
-*ld_preload*. Vous devrez travailler sur trois fichiers:
-
-  * hook.c
-  * Makefile
-  * run.sh
-
-**Question 1** : Implémentez dans le fichier hook.c la fonction à l'origine du
-                 problème repéré au sein du simulateur GPS mais cette fois-çi
-                 sans erreur.
-
-**Question 2** : Éditez le Makefile pour compiler *hook.c* sous la forme d'une
-                 librairie partagée nommée *libhook.so* (s'inspirer de
-                 *gps/src/lib/ptmx/Makefile*). Testez la compilation.
-
-**Question 3** : Éditez le fichier *run.sh* pour utiliser LD_PRELOAD au moment
-                 de lancer le simulateur et ainsi hooker le binaire avec la
-                 librairie libhook.so. Exécutez run.sh : le simulateur ne doit
-                 plus partir en segfault.
-
-Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
-peut réaliser la même opération sur les librairies systèmes. Par exemple, le
-simulateur GPS utilise la fonction *printf* dès son lancement.
-
-**Question 4** : Utilisez le *man* pour déterminer le prototype de la fonction
-                 *printf* (expliquez comment vous utilisez *man* dans ce cas et
-                 pourquoi). Comment est appelé ce type de fonction?
-
-**Question 5** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
-                 gestionnaires de signaux. Décrivez les fonctions utilisez
-                 ainsi que les signaux gérés.
-
-**Question 6** : Hookez le simulateur pour que ce dernier ne puisse plus
-                 être interrompu par le signal SIGINT (Ctrl-C) en
-                 réimplémentant la fonction *printf* dans libhook.so. Pour
-                 cela, utilisez la fonction *sigaction* pour mettre en place
-                 un gestionnaire de signaux au sein même de la fonction
-                 *printf*  réimplémentée.
-
-**Question 7** : Comment faire pour interrompre le processus étant donné
-                 que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
-
-**Question 8** : En regardant le fichier *gps/Makefile*, que pouvez-vous dire
-                 de la règle *ok*? À quoi sert-elle et comment
-                 fonctionne-t-elle?
+Si on cherche a optimiser son OS, il s'agit d'un outils de base utilisant peu de ressources.
 
 ### À retenir
 
