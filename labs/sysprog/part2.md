@@ -17,7 +17,7 @@ PTTY: /dev/pts/4
 Segmentation fault (core dumped)
 ````
 
-Il y a un problème d'accès mémoire (zone mémoire invalide) .
+> Il y a un problème d'accès mémoire (zone mémoire invalide) .
 
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment vérifiez vous le numéro du signal reçu?
 
@@ -28,7 +28,7 @@ $ kill -l
 ... (11) SIGSEGV ...
 ````
 
-Le signal recu est donc SIGSEGV.
+> Le signal recu est donc SIGSEGV.
 
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
@@ -81,9 +81,9 @@ $ (gdb) >bt
 5  0x000055e031bcdee1 in main () at gps.c:109
 
 ````
-Le probleme est localize dans main > write_vtg > nmea_vtg > knot_to_kmh_str > _IO_Puts.  
-A la ligne 178 de nmea.c :  knot_to_kmh_str(vtg->speed_knot, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);  
-Le "_IO_puts" est un string de taille 0 ?  
+> Le probleme est localize dans main > write_vtg > nmea_vtg > knot_to_kmh_str > _IO_Puts.  
+> A la ligne 178 de nmea.c :  knot_to_kmh_str(vtg->speed_knot, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);  
+> Le "_IO_puts" est un string de taille 0 ?  
 
 
 GDB peut être aussi lancé de manière interactive :
@@ -120,6 +120,9 @@ Starting program: /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/
 [Inferior 1 (process 22558) exited with code 0177]
 ````
 
+> Il manque un fichier : les librairies partagees ne sont pas detectees.
+
+
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
 
@@ -127,16 +130,24 @@ commande suivante :
 ldd ./gps
 ````
 
-**Question 5** : À quoi sert la commande *ldd*? Quelle information
-                supplémentaire cela vous apporte-t-il?
+**Question 5** : À quoi sert la commande *ldd*? Quelle information supplémentaire cela vous apporte-t-il?
 
-**Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
-                 pas à regarder le fichier *gps/run.sh*.
+````
+$ ldd ./gps
+	linux-vdso.so.1 (0x00007ffe199ee000)
+	libptmx.so => not found
+	libnmea.so => not found
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd88e4b2000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fd88eaa6000)
+````
+
+> ldd = List Dynamic Dependencies. Les librairies partagees "libptmx.so" et "libnmea.so" ne sont pas detectees.
+
+**Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez pas à regarder le fichier *gps/run.sh*.
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
-**Question 7** : Quelle est la différence entre les commandes *s* et *n* dans
-                 le prompt gdb suite à un breakpoint?
+**Question 7** : Quelle est la différence entre les commandes *s* et *n* dans le prompt gdb suite à un breakpoint?
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
