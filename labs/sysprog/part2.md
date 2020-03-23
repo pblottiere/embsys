@@ -149,7 +149,7 @@ Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
 > Dans le fichier gps/ :
 ````
-$ LD_LIBRARY_PATH=$(pwd)/lib
+$ export LD_LIBRARY_PATH=$(pwd)/lib
 $ ldd ./bin/gps
 	linux-vdso.so.1 (0x00007f799b3e7000)
 	libptmx.so => /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/lib/libptmx.so (0x00007f799adbc000)
@@ -159,11 +159,32 @@ $ ldd ./bin/gps
 	/lib64/ld-linux-x86-64.so.2 (0x00007f799b1c1000)
 ````
 
-> Les librairies sont desormais reconnues.
+> Les librairies sont desormais reconnues. On peut exécuter dynamiquement avec gdb.  
+````
+(gdb) r
+Starting program: /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/bin/gps 
+PTTY: /dev/pts/4
 
+Program received signal SIGSEGV, Segmentation fault.
+````
 
 
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans le prompt gdb suite à un breakpoint?
+
+````
+$ (gdb) break nmea.c:19
+	Breakpoint 1 at 0x7ffff79d0a7e: file nmea.c, line 19.
+$ (gdb) r
+	Starting program: /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/bin/gps 
+	PTTY: /dev/pts/4
+
+	Breakpoint 1, knot_to_kmh_str (not=5.5, size=6, format=0x7ffff79d0f6f "%05.1f", kmh_str=0x7fffffffd7e2 "010.2") at nmea.c:20
+	20	    iteration++;
+$ (gdb) s
+	21	    if (iteration == 2)
+$ (gdb) n
+	27	    return kmh;
+````
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
