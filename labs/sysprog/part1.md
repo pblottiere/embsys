@@ -111,6 +111,21 @@ suivantes:
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
+Le fichier main.c :
+'''c
+#include <stdio.h>
+
+int main(int argc, char const *argv[])
+{
+    printf("hello world\n");
+    return 0;
+}
+'''
+Et pour compiler :
+'''sh
+gcc main.c -o output
+'''
+
 
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
