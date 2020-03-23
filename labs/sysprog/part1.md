@@ -133,10 +133,6 @@ int my_print() {
    printf("Hello, World!");
    return 0;
 }
-
-int main(){
-   return 0;
-}
 ```
 
 ```bash
