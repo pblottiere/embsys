@@ -81,9 +81,9 @@ $ (gdb) >bt
 5  0x000055e031bcdee1 in main () at gps.c:109
 
 ````
-Le probleme est localize dans main > write_vtg > nmea_vtg > knot_to_kmh_str > _IO_Puts.
-A la ligne 178 de nmea.c :  knot_to_kmh_str(vtg->speed_knot, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);
-Le "_IO_puts" est un string de taille 0 ?
+Le probleme est localize dans main > write_vtg > nmea_vtg > knot_to_kmh_str > _IO_Puts.  
+A la ligne 178 de nmea.c :  knot_to_kmh_str(vtg->speed_knot, NMEA_SPEED_SIZE, "%05.1f", speed_kmh_str);  
+Le "_IO_puts" est un string de taille 0 ?  
 
 
 GDB peut être aussi lancé de manière interactive :
