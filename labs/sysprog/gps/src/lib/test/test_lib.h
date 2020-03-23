@@ -1,5 +1,5 @@
-#ifndef PTMX_H
-#define PTMX_H
+#ifndef TEST_LIB_H
+#define TEST_LIB_H
 
 float mul(float a, float b);
 #endif

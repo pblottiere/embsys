@@ -23,7 +23,7 @@ clean:
 	rm -rf lib
 	rm -rf include
 
-ok: init libptmx libnmea_ok gps main
+ok: init libptmx libnmea_ok gps main libtest
 
 libnmea_ok:
 	cd src/lib/nmea && make ok
