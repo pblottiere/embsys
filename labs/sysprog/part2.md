@@ -48,6 +48,8 @@ $ gdb ./bin/gps core
 
 Ensuite, dans le prompt GDB, utilisez la commande *bt* (pour *backtrace*) afin
 de savoir comment votre programme en est arrivé là (image de la pile).
+**Problème : impossible de creer un fichier core**
+
 
 **Question 3** : Grâce à GDB et au fichier *core* généré, analysez la source du
                  problème du binaire *gps*. Quelle partie du code est fausse?
