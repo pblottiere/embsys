@@ -147,6 +147,22 @@ $ ldd ./gps
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
+> Dans le fichier gps/ :
+````
+$ LD_LIBRARY_PATH=$(pwd)/lib
+$ ldd ./bin/gps
+	linux-vdso.so.1 (0x00007f799b3e7000)
+	libptmx.so => /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/lib/libptmx.so (0x00007f799adbc000)
+	libnmea.so => /home/agathe/Documents/Systemes_embarques/embsys/labs/sysprog/gps/lib/libnmea.so (0x00007f799abb9000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f799a7c8000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f799a42a000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f799b1c1000)
+````
+
+> Les librairies sont desormais reconnues.
+
+
+
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans le prompt gdb suite à un breakpoint?
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
