@@ -5,13 +5,26 @@
 #include <fcntl.h>
 #include <string.h>
 #include <termios.h>
+#include <signal.h>
 
 #include <util.h>
+
+int fd, fd2;
+
+void signals_handler()
+{
+    printf("All fd are correctly closed\n");
+    // close serial port
+    close(fd);
+    exit(EXIT_SUCCESS);
+
+}
 
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv [])
 {
     char * port = NULL;
+    char * port2 = NULL;
 
     // parse comand line
     if (argc != 3)
@@ -20,7 +33,7 @@ int main(int argc, char *argv [])
         exit(EXIT_FAILURE);
     }
 
-    char * options = "p:";
+    char * options = "p:o";
     int option;
     while((option = getopt(argc, argv, options)) != -1)
     {
@@ -30,14 +43,18 @@ int main(int argc, char *argv [])
                 port = optarg;
                 break;
 
+            case 'o':
+                port2 = optarg;
+                break;
+
             case '?':
-                fprintf(stderr, "Invalid option %c\n", optopt);
+                fprintf(stderr, "Invalid option %c %c\n", option, optopt);
                 exit(EXIT_FAILURE);
         }
     }
 
     // open serial port
-    int fd = open(port, O_RDWR | O_NOCTTY);
+    fd = open(port, O_RDWR | O_NOCTTY);
     if (fd == -1)
     {
         perror("open");
@@ -48,6 +65,18 @@ int main(int argc, char *argv [])
     // read port
     char buff[50];
     fd_set fdset;
+    fd_set fdset2;
+
+    // for good terminaison
+    struct sigaction action;
+
+    action.sa_handler = signals_handler;
+    sigemptyset(& (action.sa_mask));
+    action.sa_flags = 0;
+    sigaction(SIGQUIT, & action, NULL);
+
+    action.sa_flags = SA_RESETHAND;
+    sigaction(SIGINT, & action, NULL);
 
     while(1)
     {
@@ -70,8 +99,6 @@ int main(int argc, char *argv [])
         }
     }
 
-    // close serial port
-    close(fd);
 
     exit(EXIT_SUCCESS);
 }

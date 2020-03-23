@@ -20,6 +20,12 @@ PTTY: /dev/pts/3
 **Question 1** : Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?
 
+
+> Terminals can be either hardware terminals (“tty”, short for “teletype”) or pseudo-terminals (“pty”).   
+> Hardware terminals are connected over some interface such as a serial port (ttyS0, …) or USB (ttyUSB0, …) or over a PC screen and keyboard (tty1, …).   
+> Pseudo-terminals are provided by a terminal emulator, which is an application.  
+
+
 Pour la suite, placez vous dans le répertoire *gps_reader* contenant :
 
   * reader.c : le code du reader que nous allons modifier
@@ -39,6 +45,9 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
 **Question 2** : En regardant le code de *reader.c*, y a-t-il quelque chose qui
                  vous chagrine?
+
+> Si on fait un Ctrl+C, on ne ferme pas proprement le fd ( close(fd) n'est pas lu). Le port reste donc toujours ouvert en attente.
+> Il faut donc attraper l'exception lancée par le signal généré par le Ctrl-C et y placer le clode(fd).
 
 **Question 3** : Grâce à des recherches Internet (ou en fouinant dans le code
                  du simulateur), déterminez dans quelle trame et dans quel champs
