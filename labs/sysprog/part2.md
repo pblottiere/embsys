@@ -185,6 +185,7 @@ $ (gdb) s
 $ (gdb) n
 	27	    return kmh;
 ````
+> ???
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
