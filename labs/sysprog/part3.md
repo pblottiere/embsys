@@ -18,7 +18,7 @@ PTTY: /dev/pts/3
 ````
 
 **Question 1** : Selon vous, à quoi correspond le champs indiqué par
-                *PTTY*?
+                *PTTY*? **Cela indique que nous avons un terminal virtuel (pseudo-teletype = PTTY)**
 
 Pour la suite, placez vous dans le répertoire *gps_reader* contenant :
 
@@ -38,14 +38,15 @@ Lancez le reader sans paramètre pour avoir l'aide et en déduire son utilisatio
 Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
 **Question 2** : En regardant le code de *reader.c*, y a-t-il quelque chose qui
-                 vous chagrine?
+                 vous chagrine? **si on fait un ctrl-c on ne ferme pas le port donc il reste en attente**
 
 **Question 3** : Grâce à des recherches Internet (ou en fouinant dans le code
                  du simulateur), déterminez dans quelle trame et dans quel champs
-                 l'heure est définie.
+                 l'heure est définie. **trame GPGLL $GPGLL,4850.63,N,00755.04,E,170241,A   17h02min41s**
 
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
+                 **on utilise : open/close/read/FD_ISSET**
                  Comment s'appelle ce type de programmation?
 
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les

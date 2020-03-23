@@ -11,10 +11,10 @@ PTTY: /dev/pts/X
 ````
 
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
-                 déduisez vous?
+                 déduisez vous?  **Au bout de quelques secondes une erreur apparait : Segmentation fault (core dumped)**
 
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
-                vérifiez vous le numéro du signal reçu?
+                vérifiez vous le numéro du signal reçu? **il a reçu 139 ce qui correspond au signal SIGSEGV qui a le code 11 (=139-128)** )**20
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
