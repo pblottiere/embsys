@@ -112,8 +112,29 @@ suivantes:
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
+#include <stdio.h>
+int main() 
+{
+   printf("Hello, World!");
+   return 0;
+}
+
+
+gcc main.c -o output
+
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
+#include <stdio.h>
+ 
+float multiply(float a, float b)
+{
+    return a*b;
+}
+
+
+gcc -c -Wall -Werror -fpic lib_test.c
+gcc -shared -o lib.so lib_test.o
 
 ## À retenir
 
