@@ -20,6 +20,9 @@ PTTY: /dev/pts/3
 **Question 1** : Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?
 
+C'est un canal de données, un peu comme les /dev/ttyUSB0.
+On "émule" un port série.
+
 Pour la suite, placez vous dans le répertoire *gps_reader* contenant :
 
   * reader.c : le code du reader que nous allons modifier
@@ -40,21 +43,32 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 **Question 2** : En regardant le code de *reader.c*, y a-t-il quelque chose qui
                  vous chagrine?
 
+Il n'y a pas de close(fd) si on fait un CTRL+C. Il faudrait un gestionnaire de signaux.
+Fait sur le modèle de celui de gps.c
+
 **Question 3** : Grâce à des recherches Internet (ou en fouinant dans le code
                  du simulateur), déterminez dans quelle trame et dans quel champs
                  l'heure est définie.
 
+C'est dans la trame $GPGLL, l'avant dernier champ, avant la checksum.
+
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                  Comment s'appelle ce type de programmation?
+
+open() pour ouvrir, select() pour ecouter, read pour lire et close pour fermer.
 
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les
                  trames provenant de deux simulateurs GPS différents (ports
                  paramétrables au lancement). Vérifiez le bon fonctionnement en
                  lançant deux instances du simulateur GPS.
 
+Fait.
+
 **Question 6** : Utilisez *syslog* pour afficher l'heure dans la console ainsi
                  que le PID du père.
+
+Ne fonctionne pas encore.
 
 **Question 7** : Modifier la conf du démon syslog pour logger dans un
                  un fichier spécifique.
