@@ -13,8 +13,23 @@ PTTY: /dev/pts/X
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
 
+```bash
+$ sh ./run.sh
+PTTY: /dev/pts/2
+Segmentation fault (core dumped)
+```
+
+Il y a un "Core Dumped". C'est sûrement dû à une fuite memoire.
+
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+
+Avec GDB et la commande *bt* on peut obtenir le signal qui a terminé le programme :
+
+```bash
+Program terminated with signal SIGSEGV, Segmentation fault.
+```
+Le programme s'est donc terminé sur un signal **SIGSEV**.
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -53,6 +68,20 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+```bash
+#0  __strlen_sse2 () at ../sysdeps/x86_64/multiarch/../strlen.S:120
+#1  0x00007f5a1fc129d2 in _IO_puts (str=0x0) at ioputs.c:35
+#2  0x00007f5a1ff83aab in knot_to_kmh_str (not=5.51000023, size=6, 
+    format=0x7f5a1ff83f6f "%05.1f", kmh_str=0x7ffe51e0e7e2 "010.2")
+    at nmea.c:23
+#3  0x00007f5a1ff83ef6 in nmea_vtg (vtg=0x7ffe51e0e820) at nmea.c:178
+#4  0x0000558712cacc5c in write_vtg (fd=3) at gps.c:40
+#5  0x0000558712cacee1 in main () at gps.c:109
+
+```
+
+Dans la fonction *knot_to_kmh_str* qui se trouve dans le fichier nmea.c ligne 23, il y a un *puts(NULL);* qui n'est pas apprécié. 
+
 GDB peut être aussi lancé de manière interactive :
 
 ````
@@ -80,23 +109,51 @@ $ n
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
 
+```bash
+/home/quentin/Code/embsys/labs/sysprog/gps/bin/gps 
+/home/quentin/Code/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+[Inferior 1 (process 8247) exited with code 0177]
+```
+
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
 
-````
-ldd ./gps
-````
+
+```bash
+$ ldd ./gps
+  linux-vdso.so.1 (0x00007ffd156c3000)
+  libptmx.so => not found
+  libnmea.so => not found
+  libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f3cfb8d8000)
+  /lib64/ld-linux-x86-64.so.2 (0x00007f3cfbecc000)
+
+```
 
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
 
+                ldd permet d'afficher les dépendances de librairies partagées.
+                Visiblement il manque les librairies partagées *libptmx.so* et *libnmea.so*
+
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
+
+```bash
+SCRIPT=`readlink -f $0`
+ROOT_DIR=`dirname $SCRIPT`
+
+export LD_LIBRARY_PATH=$ROOT_DIR/lib
+```
+
+Va permettre ici d'ajouter la variable d'environnement des librairies dynamiques, le dossier des libraries manquantes générées par notre projet (ici *libptmx.so* et *libnmea.so*).
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans
                  le prompt gdb suite à un breakpoint?
+
+s : commande step qui permet d'avancer pas à pas dans l'execution
+n : commande next qui permet d'avancer à l'instruction suivante ... utile apparement avec les switch ... case
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
@@ -104,6 +161,8 @@ exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
 et communique avec le serveur grâce au réseau.
 
 **Question 8** : Dans quel contexte ce type d'outils peut être intéressant?
+
+Typiquement dans le domaine du système embarqué, avec un robot en phase de tests. Pour tester des progammes, il nous faut le hardware du robot. Du coup il faut lancer le programme sur le robot et donc le débugger dessus.
 
 ### À retenir
 
@@ -150,6 +209,8 @@ Pour les questions suivantes, allez dans le répertoire de travail
                  de lancer le simulateur et ainsi hooker le binaire avec la
                  librairie libhook.so. Exécutez run.sh : le simulateur ne doit
                  plus partir en segfault.
+
+Ca march :sunglasses:
 
 Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
