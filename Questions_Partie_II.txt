@@ -1,3 +1,45 @@
 Partie II
 
 Question 1)
+
+Au bout de quelques instants: on reçoit le message d'erreur suivant: Segmentation fault (core dumped)
+
+
+Question 2)
+
+Le processus a reçu un signal SIGSEGV (signal de violation de segmentation). Pour avoir le numéro de signal reçu, il faut utiliser la commande "echo $?", et pour identifier le signal avec le numéro il faut se référer au manuel des signaux via la commande "man 7 signal"
+
+
+Question 3)
+
+	0x00007fa0272aaaab in knot_to_kmh_str (not=5.51000023, size=6, 
+    format=0x7fa0272aaf6f "%05.1f", kmh_str=0x7ffcfe872722 "010.2")
+    at nmea.c:23
+Le problème vient de nmea.c
+
+
+Question 4)
+
+	Starting program: /home/alexandre/myproject/embsys/labs/sysprog/gps/bin/gps 
+	/home/alexandre/myproject/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+Le binaire n'arrive pas à trouver le fichier libptmx.so
+
+
+Question 5)
+
+La commande ldd nous permet de voir les librairies utilisées, ici on voit que ni libnmea.so ni libptmx.so ne sont trouvées dans la compilation
+
+
+Question 6)
+
+Il suffit de rajouter "LD_LIBRARY_PATH=$(pwd)/lib" avant la commande
+
+
+Question 7)
+
+s continue jusqu'à la ligne suivante, n continue jusqu'à la prochaine ligne qui est différente
+
+
+Question 8)
+
+gdb et ldd sont tous les deux utiles pour savoir trouver d'où viennent les erreurs dans le code afin de le débugger
