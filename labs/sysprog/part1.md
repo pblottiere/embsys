@@ -103,15 +103,24 @@ En vous inspirant du contenu du répertoire *gps/*, répondre aux questions
 suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
-
+Les Makefiles sont des fichiers utilisés par le programme make pour exécuter un ensemble d'actions, comme la compilation d'un projet, l'archivage de document, la mise à jour de site, etc. Make sert à les executer.
 **Question 2**: Quel compilateur est utilisé ici?
-
+le compilateur est GCC
 **Question 3**: Qu'est ce qu'une librairie partagée?
-
+bibliothèque composé de fonction. deux types dynamique et statique. Permet l'utilisation des fonctions.
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
+#include <stdio.h> 1
+````
+int main() { 2
 
+        printf ("Hello, World!\n"); 
+        return 0; 
+}
+````
+
+ligne de commande : gcc "nom du fichier" -o "nom de l'executable"
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
 
