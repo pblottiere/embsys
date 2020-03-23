@@ -13,8 +13,16 @@ PTTY: /dev/pts/X
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
 
+Segmentation fault (core dumped)
+
+Il y a u accès mémoire non autorisé.
+
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+
+SIGSEGV (Segmentation fault) 
+
+echo $? et soustraire 128 
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -53,6 +61,12 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+Dans le fichier nmea.c : 
+puts(NULL);
+puts ne peut pas prendre un pointeur nul comme argument.
+
+
+
 GDB peut être aussi lancé de manière interactive :
 
 ````
@@ -80,6 +94,8 @@ $ n
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
 
+Il manque une librairie.
+
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
 
@@ -90,13 +106,21 @@ ldd ./gps
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
 
+Elle nous donne la liste des libraires utilisée par le binaire GPS.
+
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
 
+Dans le dossier bin, je tape dans le terminal : export LD_LIBRARY_PATH=../lib
+
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
+
+Ca fonctionne.
 
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans
                  le prompt gdb suite à un breakpoint?
+
+*s* : step s'arrete dans les sous-fonctions appelees alors que *n* (next) continue jusqu'à la ligne suivante de la fonction actuelle.
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
@@ -104,6 +128,8 @@ exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
 et communique avec le serveur grâce au réseau.
 
 **Question 8** : Dans quel contexte ce type d'outils peut être intéressant?
+
+Pour recompiler un OS de millions de lignes, cela permet de trouver plus facilement les bugs.
 
 ### À retenir
 
