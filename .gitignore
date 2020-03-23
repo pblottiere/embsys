@@ -89,3 +89,6 @@ exams
 labs/armadeus/src/autotools/src/client/.dirstamp
 buildroot-precompiled-2017.08.tar.gz
 poky-thud-precompiled.tar.gz
+
+#truc binaire
+labs/sysprog/bin
