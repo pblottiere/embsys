@@ -19,7 +19,7 @@ Ce signal est envoyé lorsque le programme tente d'accéder à une adresse mémo
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
 
-Le signal reçu est ````SIGSEGV````. Avec ````kill -l```` on vérifie que le numéro de ce signal est 11.
+Le signal reçu est ````SIGSEGV````. Avec ```echo $?``` on vérifie que le numéro de ce signal est 128 (process terminated) + 11.
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
