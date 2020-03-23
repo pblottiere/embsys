@@ -185,7 +185,7 @@ $ (gdb) s
 $ (gdb) n
 	27	    return kmh;
 ````
-> ???
+> Avec "step" on rentre dans les sous-fonctions, avec "next" on parcourt l'arbre d'appel sans rentrer en profondeur.
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
