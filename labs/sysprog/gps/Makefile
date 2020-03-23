@@ -22,3 +22,12 @@ ok: init libptmx libnmea_ok gps
 
 libnmea_ok:
 	cd src/lib/nmea && make ok
+
+
+##commamde pour la création du fichier binaire
+
+#gcc -Wall -o hello_world.o -c example.c
+
+## commande pour la creation d'une librairie partagé
+
+#gcc -o hello -lm hello_world.o
