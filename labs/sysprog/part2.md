@@ -12,14 +12,24 @@ PTTY: /dev/pts/X
 
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en déduisez vous?
 
+````
 PTTY: /dev/pts/4
 Segmentation fault (core dumped)
+````
 
 Il y a un problème d'accès mémoire (zone mémoire invalide) .
 
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment vérifiez vous le numéro du signal reçu?
 
-SIGSEGV 
+````
+$ echo $?
+139 ( = 11 car ajout de 128 par la distribution)
+$ kill -l
+... (11) SIGSEGV ...
+````
+
+Le signal recu est donc SIGSEGV.
+
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -57,6 +67,22 @@ de savoir comment votre programme en est arrivé là (image de la pile).
 **Question 3** : Grâce à GDB et au fichier *core* généré, analysez la source du
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
+
+
+````
+$ gdb ./bin/gps core
+$ (gdb) >bt
+
+0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:62
+1  0x00007faa7e1a19d2 in _IO_puts (str=0x0) at ioputs.c:35
+2  0x00007faa7e512aab in knot_to_kmh_str (not=5.51000023, size=6,format=0x7faa7e512f6f "%05.1f", kmh_str=0x7ffc5ab3d992 "010.2") at nmea.c:23
+3  0x00007faa7e512ef6 in nmea_vtg (vtg=0x7ffc5ab3d9d0) at nmea.c:178
+4  0x000055e031bcdc5c in write_vtg (fd=3) at gps.c:40
+5  0x000055e031bcdee1 in main () at gps.c:109
+
+````
+Le probleme est localize dans main > write_vtg > nmea_vtg > knot_to_kmh_str > _IO_Puts.
+Le "_IO_puts" est un string de taille 0. La trame semble vide.
 
 GDB peut être aussi lancé de manière interactive :
 
