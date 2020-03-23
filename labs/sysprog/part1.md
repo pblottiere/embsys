@@ -112,7 +112,7 @@ suivantes:
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 Le fichier main.c :
-'''c
+````c
 #include <stdio.h>
 
 int main(int argc, char const *argv[])
@@ -120,15 +120,43 @@ int main(int argc, char const *argv[])
     printf("hello world\n");
     return 0;
 }
-'''
+````
 Et pour compiler :
-'''sh
-gcc main.c -o output
-'''
+````sh
+gcc -Wall main.c -o output
+````
 
 
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
+Le fichier lib.c :
+````c
+#include <stdio.h>
+
+void hw(void)
+{
+    puts("hello world\n");
+}
+
+````
+
+Le fichier lib.h :
+````c
+#ifndef lib_h__
+#define lib_h__
+ 
+extern void hw(void);
+ 
+#endif  // lib_h__
+
+````
+
+Et pour compiler :
+````sh
+gcc -c -Wall -Werror -fpic lib.c
+gcc -shared -o mylib.so lib.o
+````
 
 ## À retenir
 
