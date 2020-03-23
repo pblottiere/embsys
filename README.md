@@ -22,4 +22,4 @@ Several exercises are available :
   * Embedded system with RPI3
   * Usefool Tools (autotools, docker, git, ...)
 
-Test_git
+
