@@ -1,0 +1,19 @@
+=====================================================
+================Parie1===============================
+=====================================================
+Q4) La ligne de commande pour générer un executable binaire est : 
+	Compilation :		gcc -c hello.c
+	Edition des liens:	gcc -o hello hello.o
+
+Q5)  La ligne de commande pour générer une librairie partagée est :
+	 gcc -c mylib.c
+	 gcc -o mylib.so -shared mylib.o
+
+=====================================================
+================Parie2===============================
+=====================================================
+Q1) PTTY: /dev/pts/1
+-->Segmentation fault (core dumped)
+-->le processus a reçu un signal qui l'a terminé avec une erreur.
+
+Q2)
