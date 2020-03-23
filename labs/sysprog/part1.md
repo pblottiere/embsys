@@ -115,8 +115,11 @@ suivantes:
 #include <stdio.h>
 int main() 
 {
+
    printf("Hello, World!");
+
    return 0;
+
 }
 
 
@@ -129,11 +132,14 @@ gcc main.c -o output
  
 float multiply(float a, float b)
 {
-    return a*b;
+  
+return a*b;
+
 }
 
 
 gcc -c -Wall -Werror -fpic lib_test.c
+
 gcc -shared -o lib.so lib_test.o
 
 ## À retenir
