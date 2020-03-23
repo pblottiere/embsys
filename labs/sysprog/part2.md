@@ -59,6 +59,7 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+````
 #0  __strlen_avx2 () at ../sysdeps/x86_64/multiarch/strlen-avx2.S:62
 #1  0x00007f0e54a349d2 in _IO_puts (str=0x0) at ioputs.c:35
 #2  0x00007f0e54da5aab in knot_to_kmh_str (not=5.51000023, size=6, 
@@ -67,6 +68,7 @@ de savoir comment votre programme en est arrivé là (image de la pile).
 #3  0x00007f0e54da5ef6 in nmea_vtg (vtg=0x7fffe878aff0) at nmea.c:178
 #4  0x000055860b8cdc5c in write_vtg (fd=3) at gps.c:40
 #5  0x000055860b8cdee1 in main () at gps.c:109
+````
 
 Le problème est provoqué par "_IO_puts" qui est un "string" de taille 0. La trame est vide.
 
@@ -101,7 +103,7 @@ Starting program: /home/jules/embsys/labs/sysprog/gps/bin/gps
 /home/jules/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
 [Inferior 1 (process 11227) exited with code 0177]
 
-Leystème ne parvient pas à trouver les librairies partagées.
+Le système ne parvient pas à trouver les librairies partagées.
 
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
@@ -121,16 +123,20 @@ Les deux librairies libnmea.so et libptmx.so n'ont pas de chemin d'accès enregi
 
 Dans gps/ j'ai executé :
 
+````
 $ export LD_LIBRARY_PATH=$(pwd)/lib
 $ ldd ./bin/gps
+````
 
 On obtient donc :
+````
 	linux-vdso.so.1 (0x00007ffc63934000)
 	libptmx.so => /home/jules/embsys/labs/sysprog/gps/lib/libptmx.so (0x00007fb5d2460000)
 	libnmea.so => /home/jules/embsys/labs/sysprog/gps/lib/libnmea.so (0x00007fb5d225d000)
 	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb5d1e6c000)
 	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fb5d1ace000)
 	/lib64/ld-linux-x86-64.so.2 (0x00007fb5d2865000)
+````
 
 Toutes les librairies ont un chemin d'accès et peuvent donc être utilisées.
 
