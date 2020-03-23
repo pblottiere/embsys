@@ -105,6 +105,9 @@ et communique avec le serveur grâce au réseau.
 
 **Question 8** : Dans quel contexte ce type d'outils peut être intéressant?
 
+Si on cherche à optimiser les outils installés sur un OS minimaliste,
+gdb est un outils de base qui consommera peu de ressources.
+
 ### À retenir
 
   * l'utilité de *ulimit* et comment déclencher la génération d'un fichier core
