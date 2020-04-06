@@ -131,6 +131,24 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
 
+> Dans *menuconfig*, apres recherche :  
+````
+  | Symbol: BR2_PACKAGE_OPENSSH [=y]                                                                                                      │  
+  │ Type  : boolean                                                                                                                       │  
+  │ Prompt: openssh                                                                                                                       │  
+  │   Location:                                                                                                                           │  
+  │     -> Target packages                                                                                                                │  
+  │ (1)   -> Networking applications                                                                                                      │  
+  │   Defined at package/openssh/Config.in:1                                                                                              │  
+  │   Depends on: BR2_USE_MMU [=y]                                                                                                        │  
+  │   Selects: BR2_PACKAGE_OPENSSL [=y] && BR2_PACKAGE_ZLIB [=y]                                                                          │  
+  │   Selected by: BR2_PACKAGE_SSHFS [=n] && BR2_USE_WCHAR [=y] && BR2_TOOLCHAIN_HAS_THREADS [=y] && BR2_USE_MMU [=y] && !BR2_STATIC_LIBS |  
+````
+> Dans *embsys_defconfig* :  
+````
+	BR2_PACKAGE_OPENSSH=y
+````
+
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
