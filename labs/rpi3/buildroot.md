@@ -51,6 +51,13 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+configs/embsys_defconfig : contient une configuration de l'image à créer adaptée à l'architecture 
+matérielle de la Raspberry. syntaxe : Kconfig
+busybox.config : contient l'ensemble des outils que l'ont veut ajouter, dans un seul 
+fichier. syntaxe : Kconfig
+users.table : répertorie l'ensemble des utilisateurs créés ainsi que le système de 
+fichier associé.
+
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -58,9 +65,11 @@ cartes dans le répertoire *configs*.
 **Question 2**: En considérant que la cible est une carte RaspberryPi3 avec un
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
+raspberrypi3_defconfig
 
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+Il contient tout les packages installables que l'on pourra activer ou non dans les fichiers de configuration.
 
 Désormais, lancez la commande suivante:
 
@@ -69,6 +78,7 @@ Désormais, lancez la commande suivante:
 ```
 
 **Question 4**: À quoi sert la commande précédente?
+Elle configure les paramètres intervenant dans la compilation du Kernel.
 
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
@@ -77,12 +87,12 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
-- la version du cross-compilateur
-- la version du kernel
+- l'architecture matérielle cible : ARM (little endian)
+- le CPU ciblé : ARM cortex-A53
+- l'ABI (en rappellant la signification de celle choisie) : EABIhf
+- la librairie C utilisée : uClibc
+- la version du cross-compilateur : gcc 6.x
+- la version du kernel : Git repository (https://github.com/raspberrypi/linux.git, version :9126e25b0934bd7bd843763310ea4b34c6e139d0)
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
@@ -91,10 +101,16 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
+Oui
+BR2_PACKAGE_OPENSSH=y
 
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+un outil permettant la gestion de tous les outils à installer sur la machine cible.
+la commande sert à ouvrir une interface Kconfig montrant l'ensemble des réglages 
+actuels de busybox. On peut aussi rajouter / enlever des packages supplémentaires.
+
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -113,6 +129,7 @@ l'image Docker que nous utilisons.
 
 **Question 8**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+Il contient le RFS.
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -135,7 +152,9 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 ````
 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
-                si vous exécutez la commande *./hw*?
+                si vous exécutez la commande *./hw*?*
+la commande file affiche differentes informations, notemment l'architecture matérielle et la distribution pour laquelle la compilation a été effectuée.
+Un (magnifique) "Hello world!" est affiché dans le terminal : cette commande execute le binaire.
 
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
@@ -149,13 +168,23 @@ Buildroot:
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
 
+L'execution du binaire renvoie ici une erreur. La commande file montre pourquoi : le fichier est ici compilé pour l'architecture cible (ARM) et non celle du docker.
+
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
+Il contient l'image finale obtenue à partir des réglages effectués dans les fichiers de conpilation.
+rootfs.tar : RFS
+zImage : Kernel
+sdcard.img : le bootloader et les partitions à créer ?
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+
 
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+zImage: Linux kernel ARM boot executable zImage (little-endian)
 
 Ensuite, lancez les commandes suivantes:
 
@@ -165,6 +194,7 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+Le RFS qui sera présent sur la machine cible
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 
