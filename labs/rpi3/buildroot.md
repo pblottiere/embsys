@@ -51,6 +51,7 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+Ce sont des fichiers permettant de décrire la configuration des outils notamment la configuration de Busybox, la configuration de Buildroot et le fichier décrivant les utilistaeurs cible permet de décrire les utilisateurs du système, par exemple pour le créer un home ou des choses comme cela. Ici le seul utilisateur décrit est *user*
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -58,6 +59,7 @@ cartes dans le répertoire *configs*.
 **Question 2**: En considérant que la cible est une carte RaspberryPi3 avec un
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
+Il semblerait logiqeu d'utiliser ici *raspberrypi3_defconfig* car c'est un fichier de configuration pour raspberry pi 3 en versino 32 bits.
 
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
