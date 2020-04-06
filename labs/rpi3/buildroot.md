@@ -52,6 +52,10 @@ cités précédement:
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
 
+- `configs/embsys_defconfig` : *Kconfig* configuration haut niveau du buildroot.
+- `busybox.config` : *Kconfig* fichier de conf spécifique de busybox, configuration des applications et des outils à installer sur le RFS.
+- `users.table` : 
+
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
 
@@ -59,8 +63,13 @@ cartes dans le répertoire *configs*.
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
 
+Il faut utiliser le fichier `/root/buildroot-precompiled-2017.08/configs/raspberrypi3_defconfig`
+
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+
+le répertoire *package* contient tous les modules utiles pour compiler notre Os. Le sous-répertoire de chaque package contient les fichiers de configrations de chaque module.
+
 
 Désormais, lancez la commande suivante:
 
@@ -70,6 +79,8 @@ Désormais, lancez la commande suivante:
 
 **Question 4**: À quoi sert la commande précédente?
 
+Elle sert à générer automatiquement le fichier config pour Buildroot.
+
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 ````
@@ -77,24 +88,34 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
-- la version du cross-compilateur
-- la version du kernel
+- l'architecture matérielle cible : ARM (little endian), BR2_cortex_a53 --> arch ?
+- le CPU ciblé : ARMV8
+- l'ABI (en rappellant la signification de celle choisie) : EABIhf (floating point model)
+- la librairie C utilisée : glibc 2.22 
+- la version du cross-compilateur : gcc 6.x
+- la version du kernel : https://github.com/raspberrypi/linux.git Linux 3.10.x
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
+
 
 **Question 6**: En recherchant dans l'interface de Buildroot, déterminez si le
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
 
+Le paquet *openssh* sera compilé, et disponible sur l'OS.
+Dans le fichier `configs/embsys_defconfig` on trouve *BR2_PACKAGE_OPENSSH=y*
+
+
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+
+BusyBox est un logiciel qui implémente un grand nombre des commandes standard sous Unix, à l'instar des GNU Core Utilities.
+La commande *make busybox-menuconfig* sert à ouvrir le *Busybox Configuraion Editor*.
+On peut séléctionner toutes les *utilities* dont on a besoin.
+
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -113,6 +134,11 @@ l'image Docker que nous utilisons.
 
 **Question 8**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+````
+# ls /root/buildroot-precompiled-2017.08/output/host
+arm-buildroot-linux-uclibcgnueabihf  bin  doc  etc  include  lib  libexec  man  sbin  share  usr 
+````
+le binaire *output/host/usr/bin/arm-linux-gcc* correspond à : 
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -137,17 +163,26 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
 
+*file* permet de déterminer le type d'un fichier. Quand on exécute la commande *./hw*, on obtient le résultat du print dans le terminal.
+
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
 
 ````
 # ./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw
+hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
 ````
 
 **Question 10**: Utilisez la commande *file* sur le binaire résultant.
                  Quelle différences constatez vous par rapport au cas précédent
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
+````
+# ./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw
+hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
+````
+La différence : le compilateur utilisé, l'architecture matérielle (arm au lieu de x86-64) Comme si cette fois, nous avons compilé sur la Raspb.
+
 
 ### Images
 
