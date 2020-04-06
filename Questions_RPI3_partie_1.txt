@@ -1,0 +1,56 @@
+RPI3 - Partie 1
+
+Question 1)
+Le fichier configs/embsys_defconfig permet de définir quels packages on utilise et on compile dans l'OS de manière globale
+Le fichier de configuration busybox.config permet de définir quels outils et commandes on a dans le terminal de l'OS
+Le fichier users.table permet de définir quels utilisateurs on utilise, et leur privilèges admin ou non
+
+Question 2)
+Il faut utiliser le fichier configs/raspberrypi3_defconfig
+
+Question 3)
+Le répertoir package contient tous les packages installés sur le docker. Avant qu'on ne lance la compilation, il est vide
+
+Question 4)
+La commande # make embsys_defconfig compile et installe tous les packages définis dans le defconfig. Après la commande, le répertoire package est plein
+
+Question 5)
+Architecture: ARM
+CPU: Cortex-A53
+ABI: EABIhf: extension du EABI qui supporte les virgules flottantes
+Librairie C: uClibc-ng
+Cross-Compilateur: gcc 6
+Version du Kernel: version spéciale Raspberry sur Git
+
+Question 6)
+Openssh est validé et sera compilé et disponible dans l'OS cible
+
+Question 7)
+Busybox est un pack d'outils avec un faible volume et une faible consommations. make busybox-menuconfig compile et ouvre le menu de configuration de busybox. Le menu propose de nombreux outils différents
+
+Question 8)
+output/host contient les fichiers compilés de l'OS, et le binaire output/host/usr/bin/arm-linux-gcc est l'OS lui même
+
+Question 9)
+La commande file nous donne des informations sur le binaire et son architecture.
+Ici, elle renvoie hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
+Executer ./hw renvoie Hello World!, 
+
+Question 10)
+bash: ./hw: cannot execute binary file: Exec format error
+La commande file renvoie: hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
+On a des formats différents, et on utilise un interpreteur différent de celui du docker
+
+Question 11)
+Le fichier output images contient les fichiers suivants:
+bcm2710-rpi-3-b.dtb  bcm2710-rpi-cm3.dtb  boot.vfat  rootfs.ext2  rootfs.ext4  rootfs.tar  rpi-firmware  sdcard.img  zImage
+rootfs est le rootfilesystem, zImage est l'image de l'OS et sdcard.img est l'image qu'on va envoyer à la carte SD (qui contient zImage) et contient des informations de partitions
+
+Question 12)
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+zImage est une image d'un OS sur Linux
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+sdcard.img est l'image qu'on va envoyer à la carte SD (qui contient zImage) et contient des informations de partitions
+
+Question 13)
+/tmp/rootfs contient les fichiers systèmes de l'image Linux
