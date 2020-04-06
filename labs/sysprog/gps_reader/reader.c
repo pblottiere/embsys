@@ -108,6 +108,8 @@ int main(int argc, char *argv []){
 
         FD_ZERO(&fdset);
         FD_SET(fd1, &fdset);
+        FD_SET(fd2, &fdset);
+
 
         select(fd1+1, &fdset, NULL, NULL, NULL);
 
@@ -123,7 +125,6 @@ int main(int argc, char *argv []){
         }
 
         bzero(buff, sizeof(buff));
-        FD_SET(fd2, &fdset);
 
         //select(fd2+1, &fdset, NULL, NULL, NULL);
 
