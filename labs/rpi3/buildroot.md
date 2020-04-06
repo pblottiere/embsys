@@ -51,7 +51,7 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
-Ce sont des fichiers permettant de décrire la configuration des outils notamment la configuration de Busybox, la configuration de Buildroot et le fichier décrivant les utilistaeurs cible permet de décrire les utilisateurs du système, par exemple pour le créer un home ou des choses comme cela. Ici le seul utilisateur décrit est *user*
+Ce sont des fichiers permettant de décrire la configuration des outils notamment la configuration de Busybox, la configuration de Buildroot et le fichier décrivant les utilistaeurs cible permet de décrire les utilisateurs du système, par exemple pour le créer un home ou des choses comme cela. Ici le seul utilisateur décrit est *user*. Les deux premiers sont des fichiesrs kconfig et le fichier utilisateurs cible est une base de donnée.
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -59,10 +59,11 @@ cartes dans le répertoire *configs*.
 **Question 2**: En considérant que la cible est une carte RaspberryPi3 avec un
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
-Il semblerait logiqeu d'utiliser ici *raspberrypi3_defconfig* car c'est un fichier de configuration pour raspberry pi 3 en versino 32 bits.
+Il semblerait logiqeu d'utiliser ici *raspberrypi3_defconfig* car c'est un fichier de configuration pour raspberry pi 3 en version 32 bits.
 
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+C'est l'ensemble des packages qui pourront être installés de base sur le système d'exploitation et les dossiers contiennent les fichiers nécessaires à ces packages (configuraiton, ...)
 
 Désormais, lancez la commande suivante:
 
@@ -71,6 +72,7 @@ Désormais, lancez la commande suivante:
 ```
 
 **Question 4**: À quoi sert la commande précédente?
+Cela a crée un fichier de configuration *.config* qui va contenir la configuration par défaut pour l'architecture définie.
 
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
@@ -79,12 +81,12 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
-- la version du cross-compilateur
-- la version du kernel
+- l'architecture matérielle cible : Raspberry Pi 3
+- le CPU ciblé : ARM
+- l'ABI (en rappellant la signification de celle choisie) : EABIhf Floating Point hardware
+- la librairie C utilisée : uClibc-ng
+- la version du cross-compilateur : gcc 6.x
+- la version du kernel : 4.9.x
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
@@ -93,10 +95,12 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
+Oui le packet *openssh* sera compilé et disponible dans l'os.
 
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+Busybox est l'utilitaire nous permettant de compiler le noyau. On peut le configurer par make busybox-menuconfig, les differents packages à inclure dans l'image, ...
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -115,6 +119,7 @@ l'image Docker que nous utilisons.
 
 **Question 8**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+Le repertoire output/host est le dossier dans lequel se trouve la totalité des fichiers binaires disponibles que ce soit pour les utilisateurs ou pour l'OS. Le biniare *output/host/usr/bin/arm-linux-gcc* est le binaire de gcc qui pourra être utilisé pour compiler des programmes pour l'architecture cible.
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -138,6 +143,7 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
+La commande file nous retorune le fait que le fichier *hw* compilé est un binaire crée pour une architecture x86_64 pour GNU/Linux 3.2.0 et executable par interpreteur /lib64/ld-linux-x86-64.so.2. Après execution on a Hello World! qui apparait dans le terminal ... ce qui était attendu !
 
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
@@ -150,14 +156,18 @@ Buildroot:
                  Quelle différences constatez vous par rapport au cas précédent
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
+On a maintenant une image qui est crée pour l'architecture cible qui est de type ARM 32 bit, et qui est un binaire qui ne peut pas être executée sur ma machine actuellement, car ce n'est pas la même architecture de processeur.
 
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
+Le répertoire image contient l'image générée par cette chaine de compilation et qui pourra être décompressée sur une carte sd par la suite pour être installée sur le raspberry pi, c'est *sdcard.img*, mais aussi la description du système de fichier le *rootfs.tar* et *zImage* est le ficher binaire compilé du noyau. C'est ce que le bootloader va chercher à executer lors du lancement de l'os.
 
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+Pour le *zImage* : Linux kernel ARM boot executable zImage (little-endian), qui est un executable pour processeur ARM,
+Pour *sdcard.img* : DOS/MBR boot sector, c'est une image etant executable par un bootloader comme grub par exemple.
 
 Ensuite, lancez les commandes suivantes:
 
@@ -167,6 +177,7 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+Il contient le futur RFS qui sera disponible sur le système d'exploitation compilé.
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 
