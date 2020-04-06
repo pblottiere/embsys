@@ -54,7 +54,7 @@ cités précédement:
 
 - `configs/embsys_defconfig` : *Kconfig* configuration haut niveau du buildroot.
 - `busybox.config` : *Kconfig* fichier de conf spécifique de busybox, configuration des applications et des outils à installer sur le RFS.
-- `users.table` : 
+- `users.table` : liste des utilisateurs à la compilation du noyau.
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -139,7 +139,7 @@ Il contient le RFS
 # ls /root/buildroot-precompiled-2017.08/output/host
 arm-buildroot-linux-uclibcgnueabihf  bin  doc  etc  include  lib  libexec  man  sbin  share  usr 
 ````
-le binaire *output/host/usr/bin/arm-linux-gcc* correspond à : le compilateur C qui sera utiliser.
+le binaire *output/host/usr/bin/arm-linux-gcc* correspond à : le cross-compilateur C qui sera utiliser.
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
