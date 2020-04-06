@@ -52,16 +52,21 @@ cités précédement:
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
 
+embys_defconfig : Kconfig fichier de configuration du buildroot
+busybox.config : Kconfig fichier de configuration propre à busybox, configuration des apps et outils pour installer sur le RFS
+users.table : fichier décrivant les utilisateurs cibles.
+Données sur l'utilisateurs.
+
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
 
 **Question 2**: En considérant que la cible est une carte RaspberryPi3 avec un
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
-
+Il faut utiliser le fichier raspberrypi3_defconfig qui est dans le dossier configs 
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
-
+Il contient tout les packages necessaires à la compilation de l'OS. Les sous répertoires contiennent les fichiers de configurations de chaque modules.
 Désormais, lancez la commande suivante:
 
 ```
@@ -69,7 +74,7 @@ Désormais, lancez la commande suivante:
 ```
 
 **Question 4**: À quoi sert la commande précédente?
-
+à générer le fichier config pour buildroot.
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 ````
@@ -77,12 +82,12 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
+- l'architecture matérielle cible :ARM (little endian)
+- le CPU ciblé: cortex-A53
+- l'ABI (en rappellant la signification de celle choisie): EABIhf
+- la librairie C utilisée:
 - la version du cross-compilateur
-- la version du kernel
+- la version du kernel : linux Kernel
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
@@ -91,10 +96,14 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
+openssh = y 
+Il sera donc compilé et disponible dans l'OS cible
 
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+Bussybox est un fichier executable contenant des commandes pour utiles et
+utilisable sur un système embarqué.
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -136,6 +145,7 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
+Donne l'ensemble des informations relatives à l'execution du programme helloworld.c, l'environement, la version kernel, le CPU ciblé, la version de build, l'interpreteur, la librairie c utilisée, etc.
 
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
