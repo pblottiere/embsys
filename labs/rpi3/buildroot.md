@@ -53,14 +53,14 @@ cités précédement:
                 de chacun des 3 fichiers mentionnés ci-dessus.
 
 > configs/embsys_defconfig : fichier de configuration buildroot pour la compilation,  pour les makefiles automatisant le process de build 
-> d’une distribution Linux embarquée.
-> La syntaxe : BR2_ARCH_HAS_MMU_OPTIONAL=y / # BR2_arcle is not set => kconfig
+> d’une distribution Linux embarquée.  
+> La syntaxe : BR2_ARCH_HAS_MMU_OPTIONAL=y / # BR2_arcle is not set => kconfig  
 > 
-> busybox.config : fichier de configuration du binaire busybox unique fournissant les commandes grâce à un jeu de liens symboliques
-> La syntaxe : CONFIG_LAST_ID=60000 / CONFIG_LOGIN=y / # CONFIG_ADD_SHELL is not set => kconfig
+> busybox.config : fichier de configuration du binaire busybox unique fournissant les commandes grâce à un jeu de liens symboliques  
+> La syntaxe : CONFIG_LAST_ID=60000 / CONFIG_LOGIN=y / # CONFIG_ADD_SHELL is not set => kconfig  
 > 
-> user.table : decrit les differents utilisateurs
-> La syntaxe: user -1 users_group -1 =user1* /home/user /bin/sh - => base de donnees ?
+> user.table : decrit les differents utilisateurs  
+> La syntaxe: user -1 users_group -1 =user1* /home/user /bin/sh - => base de donnees ?  
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -69,17 +69,24 @@ cartes dans le répertoire *configs*.
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
 
+> On utilise le raspberrypi3_defconfig dans /configs/  
+
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+
+> package regroupe les differentes applications fournies par le docker.
 
 Désormais, lancez la commande suivante:
 
 ```
 # make embsys_defconfig
 ```
+> make: Nothing to be done for 'embsys_defconfig'.  
 
 **Question 4**: À quoi sert la commande précédente?
 
+> Configuration du kernel.  
+ 
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 ````
@@ -96,6 +103,28 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
+
+> Le menu :  
+````
+  | |                                  Target options  --->                                                                             │ │  
+  │ │                                  Build options  --->                                                                              │ │  
+  │ │                                  Toolchain  --->                                                                                  │ │  
+  │ │                                  System configuration  --->                                                                       │ │  
+  │ │                                  Kernel  --->                                                                                     │ │  
+  │ │                                  Target packages  --->                                                                            │ │  
+  │ │                                  Filesystem images  --->                                                                          │ │  
+  │ │                                  Bootloaders  --->                                                                                │ │  
+  │ │                                  Host utilities  --->                                                                             │ │  
+  │ │                                  Legacy config options  --->                                                                      | |   
+````
+> Target Architecture (ARM (little endian))  
+> BR2_GCC_TARGET_CPU [=cortex-a53]   
+> Target ABI (EABIhf) = Embedded ABI Hard Floating point  
+> C library (uClibc-ng)   
+> gcc optimization level  
+> Kernel version (Custom Git repository) (https://github.com/raspberrypi/linux.git) URL of custom repository
+> (9126e25b0934bd7bd843763310ea4b34c6e139d0) Custom repository version () Custom kernel patches   
+
 
 **Question 6**: En recherchant dans l'interface de Buildroot, déterminez si le
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
