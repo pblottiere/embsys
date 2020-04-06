@@ -9,7 +9,7 @@ le projet Buildroot.
 Tout d'abord, téléchargez l'image Docker suivante:
 
 ````
-$ docker rmi pblottiere/embsys-rpi3-buildroot
+$ docker rmi pblottiere/embsys-rpi3-buildroot # pour remettre à jour l'image si elle exite déja
 $ docker pull pblottiere/embsys-rpi3-buildroot
 ````
 
@@ -51,6 +51,16 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+
+> configs/embsys_defconfig : fichier de configuration buildroot pour la compilation,  pour les makefiles automatisant le process de build 
+> d’une distribution Linux embarquée.
+> La syntaxe : BR2_ARCH_HAS_MMU_OPTIONAL=y / # BR2_arcle is not set => kconfig
+> 
+> busybox.config : fichier de configuration du binaire busybox unique fournissant les commandes grâce à un jeu de liens symboliques
+> La syntaxe : CONFIG_LAST_ID=60000 / CONFIG_LOGIN=y / # CONFIG_ADD_SHELL is not set => kconfig
+> 
+> user.table : decrit les differents utilisateurs
+> La syntaxe: user -1 users_group -1 =user1* /home/user /bin/sh - => base de donnees ?
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
