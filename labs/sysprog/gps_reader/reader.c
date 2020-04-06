@@ -21,6 +21,13 @@ void signals_handler(int signal_number){
     exit(EXIT_SUCCESS);
 }
 
+int max(int x1, int x2){
+	if(x1 > x2){
+		return x1;
+	}
+	return x2;
+}
+
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv []){
 
@@ -111,7 +118,7 @@ int main(int argc, char *argv []){
         FD_SET(fd2, &fdset);
 
 
-        select(fd1+1, &fdset, NULL, NULL, NULL);
+        select(max(fd1, fd2)+1, &fdset, NULL, NULL, NULL);
 
         if (FD_ISSET(fd1, &fdset))
         {
