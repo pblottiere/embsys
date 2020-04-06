@@ -8,6 +8,8 @@
 
 #include <util.h>
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv [])
 {
@@ -15,13 +17,13 @@ int main(int argc, char *argv [])
     char * port2 = NULL;
 
     // parse comand line
-    if (argc != 3)
+    if (argc != 5)
     {
         fprintf(stderr, "Invalid usage: reader -p port_name\n");
         exit(EXIT_FAILURE);
     }
 
-    char * options = "p:";
+    char * options = "p:d:";
     int option;
     while((option = getopt(argc, argv, options)) != -1)
     {
@@ -42,6 +44,8 @@ int main(int argc, char *argv [])
     }
 
     // open serial port
+    printf("%s\n",port);
+    printf("%s\n",port2);
     int fd = open(port, O_RDWR | O_NOCTTY);
     if (fd == -1)
     {
@@ -61,18 +65,17 @@ int main(int argc, char *argv [])
     // read port
     char buff[50];
     fd_set fdset;
-    fd_set2 fdset2;
+    fd_set fdset2;
 
     while(1)
     {
         bzero(buff, sizeof(buff));
 
         FD_ZERO(&fdset);
-        FD_ZERO(&fdset2);
         FD_SET(fd, &fdset);
-        FD_SET(fd2, &fdset2);
+        FD_SET(fd2, &fdset);
 
-        select(fd+1, &fdset, NULL, NULL, NULL);
+        select(MAX(fd+1,fd2+1), &fdset, NULL, NULL, NULL);
 
         if (FD_ISSET(fd, &fdset))
         {
@@ -83,12 +86,7 @@ int main(int argc, char *argv [])
                 printf("%s\n", buff);
                 fflush(stdout);
             }
-        }
 
-        select(fd2+1, &fdset2, NULL, NULL, NULL);
-
-        if (FD_ISSET(fd2, &fdset2))
-        {
             int bytes2 = read (fd2, buff, sizeof(buff));
 
             if (bytes2 > 0)
