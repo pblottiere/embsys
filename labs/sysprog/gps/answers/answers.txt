@@ -5,7 +5,7 @@ Q4) La ligne de commande pour générer un executable binaire est :
 	Compilation :		gcc -c hello.c
 	Edition des liens:	gcc -o hello hello.o
 
-Q5)  La ligne de commande pour générer une librairie partagée est :
+Q5) La ligne de commande pour générer une librairie partagée est :
 	 gcc -c mylib.c
 	 gcc -o mylib.so -shared mylib.o
 
@@ -16,4 +16,50 @@ Q1) PTTY: /dev/pts/1
 -->Segmentation fault (core dumped)
 -->le processus a reçu un signal qui l'a terminé avec une erreur.
 
-Q2)
+Q2) Le signa reçu est : SIGSEGV --> numéro 11.
+Pour vérifier : $man 7 signal 
+ou : $echo $? (il faut retrancher 128 au numéro)
+
+Q3) Le problème vient de : 
+	main gps.c:109 -> write_vtg (gps.c:40)
+				   -> nmea_vtg (nmea.c:178)
+				   -> knot_to_kmh_str (nmea.c:23)
+				   -> puts(NULL)
+
+Q4) Quand on fait "run", on obtient l'erreur suivante : 
+/home/hamid/Documents/S4/GNU/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+
+Q5) $ldd ./gps
+ldd permet d'afficher les librairies partagées nécessaire pour le programme "gps"
+En l'occurence : 
+	libptmx.so => not found
+	libnmea.so => not found
+
+Q6) $LD_LIBRARY_PATH=$(pwd)/lib gdb bin/gps
+
+Q7) n : rentrer dans les "sous-fonctions" 
+	r : parcourir l'arbre des appels sans rentrer en profondeur
+
+Q8) 
+
+=====================================================
+================Parie3===============================
+=====================================================
+Q1) PTTY : le port "fictif" du gps
+	$./gps_reader -p /dev/pts/3
+
+Q2) On sort sans faire de close(fd)
+--> implémenter un gesitonnaire de signaux (signals handler)
+--> Done
+
+Q3) "$GPGLL,4916.45,N,12311.12,W,225444,A"
+  time : 225444
+
+Q4) select, FD_ZERO, FD_SET, FD_CLR, FD_ISSET
+--> multiplexage
+
+Q5) Done
+
+Q6) Seems to be working !!
+
+Q7) 
