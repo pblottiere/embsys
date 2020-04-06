@@ -51,6 +51,8 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+                **Informations essentielles de l'utilisateur créé**
+                
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -58,9 +60,11 @@ cartes dans le répertoire *configs*.
 **Question 2**: En considérant que la cible est une carte RaspberryPi3 avec un
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
+                **raspberrypi3_defconfig**
 
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+                
 
 Désormais, lancez la commande suivante:
 
@@ -83,7 +87,10 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 - la librairie C utilisée
 - la version du cross-compilateur
 - la version du kernel
-
+**architecture matérielle cible : ARM**
+**CPU ciblé : cortex-A53**
+**ABI : EABIhf**
+**librairie C : uClibc-ng**
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
 
@@ -92,9 +99,16 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
 
+**Le paquet sera compilé et disponible sur l'OS**
+**Dans configs/embsys_defconfig il y a $ BR2_PACKAGE_OPENSSH=y**
+
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+
+**Busybox est un logiciel qui permet d'implementer des commandes sous Unix.**
+***make busybox-menuconfig* cette commande permet d'ouvrir le "Busybox Configuration Editor**
+**Cela permet d'obtenir et de sélectionner toutes les options qu'on veut**
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
