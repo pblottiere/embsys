@@ -138,7 +138,7 @@ l'image Docker que nous utilisons.
 # ls /root/buildroot-precompiled-2017.08/output/host
 arm-buildroot-linux-uclibcgnueabihf  bin  doc  etc  include  lib  libexec  man  sbin  share  usr 
 ````
-le binaire *output/host/usr/bin/arm-linux-gcc* correspond à : 
+le binaire *output/host/usr/bin/arm-linux-gcc* correspond à : le compilateur C qui sera utiliser.
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -181,16 +181,26 @@ hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, 
 # ./output/host/usr/bin/arm-linux-gcc helloworld.c -o hw
 hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
 ````
-La différence : le compilateur utilisé, l'architecture matérielle (arm au lieu de x86-64) Comme si cette fois, nous avons compilé sur la Raspb.
-
+La différence : le compilateur utilisé, l'architecture matérielle (arm au lieu de x86-64). Comme si cette fois, nous avons compilé sur la Raspb.
+Lors de l'exécution de la commande *./hw*, on obtient une erreur. Car le binaire n'est pas fait pour marcher sur une architecture x86 mais sur ARM.
 
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
+Il contient l'image compilée de notre Os qu'on vient dde créer.
 
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+````
+# file zImage 
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+# file sdcard.img 
+sdcard.img: DOS/MBR boot sector; 
+partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; 
+partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+
+````
 
 Ensuite, lancez les commandes suivantes:
 
@@ -200,6 +210,10 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+````
+bin  dev  etc  home  lib  lib32  linuxrc  media  mnt  opt  proc  root  run  sbin  sys  tmp  usr  var
+````
+Il y a toute l'arborescence classique d'une distribution linux. C'esr le répertoire */* (la racine)
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 
