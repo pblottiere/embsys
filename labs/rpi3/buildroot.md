@@ -134,6 +134,7 @@ l'image Docker que nous utilisons.
 
 **Question 8**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+Il contient le RFS
 ````
 # ls /root/buildroot-precompiled-2017.08/output/host
 arm-buildroot-linux-uclibcgnueabihf  bin  doc  etc  include  lib  libexec  man  sbin  share  usr 
