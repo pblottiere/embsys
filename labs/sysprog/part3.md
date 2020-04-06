@@ -46,13 +46,14 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
-                 **on utilise : open/close/read/FD_ISSET**
+                 **on utilise : open/tcflush/read/close**
                  Comment s'appelle ce type de programmation?
 
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les
                  trames provenant de deux simulateurs GPS différents (ports
                  paramétrables au lancement). Vérifiez le bon fonctionnement en
                  lançant deux instances du simulateur GPS.
+                 **fait**
 
 **Question 6** : Utilisez *syslog* pour afficher l'heure dans la console ainsi
                  que le PID du père.

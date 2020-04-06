@@ -8,26 +8,32 @@
 
 #include <util.h>
 
+#define max(a,b) (a>=b?a:b)
+
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv [])
 {
-    char * port = NULL;
-
+    char * port1 = NULL;
+    char * port2 = NULL;
     // parse comand line
-    if (argc != 3)
+    if (argc != 5)
     {
         fprintf(stderr, "Invalid usage: reader -p port_name\n");
         exit(EXIT_FAILURE);
     }
 
-    char * options = "p:";
+    char * options = "p:s:";
     int option;
     while((option = getopt(argc, argv, options)) != -1)
     {
         switch(option)
         {
             case 'p':
-                port = optarg;
+                port1 = optarg;
+                break;
+            
+            case 's':
+                port2 = optarg;
                 break;
 
             case '?':
@@ -37,33 +43,57 @@ int main(int argc, char *argv [])
     }
 
     // open serial port
-    int fd = open(port, O_RDWR | O_NOCTTY);
-    if (fd == -1)
+
+    int fd1 = open(port1, O_RDWR | O_NOCTTY);
+    if (fd1 == -1)
     {
         perror("open");
         exit(EXIT_FAILURE);
     }
-    tcflush(fd, TCIOFLUSH);
+    tcflush(fd1, TCIOFLUSH);
+
+    int fd2 = open(port2, O_RDWR | O_NOCTTY);
+    if (fd2 == -1)
+    {
+        perror("open");
+        exit(EXIT_FAILURE);
+    }
+    tcflush(fd2, TCIOFLUSH);
 
     // read port
     char buff[50];
     fd_set fdset;
+
 
     while(1)
     {
         bzero(buff, sizeof(buff));
 
         FD_ZERO(&fdset);
-        FD_SET(fd, &fdset);
-
-        select(fd+1, &fdset, NULL, NULL, NULL);
-
-        if (FD_ISSET(fd, &fdset))
+        FD_SET(fd1, &fdset);
+        FD_SET(fd2, &fdset);
+        int fd_max = max(fd1,fd2) +1;
+        select(fd_max, &fdset, NULL, NULL, NULL);
+        
+        if (FD_ISSET(fd1, &fdset))
         {
-            int bytes = read (fd, buff, sizeof(buff));
+            int bytes = read (fd1, buff, sizeof(buff));
 
             if (bytes > 0)
             {
+                printf("%s\n",port1);
+                printf("%s\n", buff);
+                fflush(stdout);
+            }
+        }
+
+        if (FD_ISSET(fd2, &fdset))
+        {
+            int bytes = read (fd2, buff, sizeof(buff));
+
+            if (bytes > 0)
+            {
+                printf("%s\n",port2);
                 printf("%s\n", buff);
                 fflush(stdout);
             }
@@ -71,7 +101,8 @@ int main(int argc, char *argv [])
     }
 
     // close serial port
-    close(fd);
+    close(fd1);
+    close(fd2);
 
     exit(EXIT_SUCCESS);
 }
