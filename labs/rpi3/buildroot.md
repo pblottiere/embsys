@@ -49,8 +49,15 @@ cités précédement:
 # cd buildroot-precompiled-2017.08
 ````
 
-**Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
+**Question 1**: Décrivez de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+
+````txt
+Ces fichiers servent à configurer notre compilation
+->embsys_defconfig : options de Buildroots
+-> busybox.config : options de busybox
+-> user.table : liste des utilisateurs à creer
+````
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -59,8 +66,16 @@ cartes dans le répertoire *configs*.
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
 
+````txt
+On utiliserai surement : raspberrypi3_defconfig
+````
+
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+
+````txt
+Ce sont des packages à installer de base sur l'OS
+````
 
 Désormais, lancez la commande suivante:
 
@@ -70,6 +85,10 @@ Désormais, lancez la commande suivante:
 
 **Question 4**: À quoi sert la commande précédente?
 
+````txt
+On compile le menu de configuration
+````
+
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 ````
@@ -77,12 +96,15 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
-- la version du cross-compilateur
-- la version du kernel
+
+```` txt
+- l'architecture matérielle cible : ARM (little debian)
+- le CPU ciblé : CPU ARM V8/ARM/NEON/THUMB2/VFPV2/VFPV3/VFPV4
+- l'ABI : EABIhf
+- la librairie C utilisée : UcLIBC-NG
+- la version du cross-compilateur : GCC 6.X
+- la version du kernel : 4.19
+````
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
@@ -91,10 +113,19 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
+````txt
+on a BR2_PACKAGE_OPENSSH [=y], qui devrait donc être compilé
+même constat sur embsys_defconfig
+````
 
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+
+````txt
+Outil de base, avec les commandes standards
+make busybox-menuconfig -> Compilation, et affichage du menu
+````
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -137,6 +168,12 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
 
+````txt
+Description du binaire
+-> execution : Hello World! comme attendu
+````
+
+
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
 
@@ -149,13 +186,37 @@ Buildroot:
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
 
+````bash
+hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
+````
+
+````txt
+Compilé pour arch arm, non exec sur mon pc évidement
+````
+
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
+````txt
+rootfs est le systeme de fichier compressé
+zImage est le kernel compressé
+sdcard est une image contenant les deux précedent, image prête à être mise sur une sd card et lancé sur une rpi !
+````
 
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+
+````bash
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+````
+````txt
+donc image du kernel et partition 
+````
+
+
 
 Ensuite, lancez les commandes suivantes:
 
@@ -165,6 +226,11 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+
+
+````txt
+le systeme de fichier classique linux
+````
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 

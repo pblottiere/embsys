@@ -103,17 +103,66 @@ En vous inspirant du contenu du répertoire *gps/*, répondre aux questions
 suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
+A faciliter la compilation
 
 **Question 2**: Quel compilateur est utilisé ici?
+gcc
 
 **Question 3**: Qu'est ce qu'une librairie partagée?
+une bibliothèque ou librairie[1] logicielle (ou encore, bibliothèque de programmes) est un ensemble de fonctions utilitaires, regroupées et mises à disposition afin de pouvoir être utilisées sans avoir à les réécrire.
 
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
+Fichier main.c :
+
+````c 
+int main(int argc, char const *argv[])
+{
+  printf("Hello World\n");
+  return O;
+
+}
+````
+
+Compilation :
+
+````sh 
+gcc -Wall main.c -o output
+````
+
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
+Fichier lib.c : 
+````c
+#include <stdio.h>
+
+void fonction(void)
+{
+puts("fonction 1\n");
+}
+````
+
+Fichier lib.h : 
+````c
+#ifndef lib_h__
+#define lib_h__
+
+extern void fonction(void);
+
+#endif
+
+````
+
+Complilation : 
+
+````sh
+gcc -c Wall -fpic lib.c
+gcc -shared -o mylib.so lib.o
+````
+
 
 ## À retenir
 
