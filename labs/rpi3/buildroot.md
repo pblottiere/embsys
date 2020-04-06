@@ -106,23 +106,23 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
 
 > Le menu :  
 ````
-  | |                                  Target options  --->                                                                             │ │  
-  │ │                                  Build options  --->                                                                              │ │  
-  │ │                                  Toolchain  --->                                                                                  │ │  
-  │ │                                  System configuration  --->                                                                       │ │  
-  │ │                                  Kernel  --->                                                                                     │ │  
-  │ │                                  Target packages  --->                                                                            │ │  
-  │ │                                  Filesystem images  --->                                                                          │ │  
-  │ │                                  Bootloaders  --->                                                                                │ │  
-  │ │                                  Host utilities  --->                                                                             │ │  
-  │ │                                  Legacy config options  --->                                                                      | |   
+  | |                                  Target options  --->                                                                         │ │  
+  │ │                                  Build options  --->                                                                          │ │  
+  │ │                                  Toolchain  --->                                                                              │ │  
+  │ │                                  System configuration  --->                                                                   │ │  
+  │ │                                  Kernel  --->                                                                                 │ │  
+  │ │                                  Target packages  --->                                                                        │ │  
+  │ │                                  Filesystem images  --->                                                                      │ │  
+  │ │                                  Bootloaders  --->                                                                            │ │  
+  │ │                                  Host utilities  --->                                                                         │ │  
+  │ │                                  Legacy config options  --->                                                                  | |   
 ````
-> Target Architecture (ARM (little endian))  
-> BR2_GCC_TARGET_CPU [=cortex-a53]   
-> Target ABI (EABIhf) = Embedded ABI Hard Floating point  
-> C library (uClibc-ng)   
-> gcc optimization level  
-> Kernel version (Custom Git repository) (https://github.com/raspberrypi/linux.git) URL of custom repository
+> -Target Architecture (ARM (little endian))  
+>- BR2_GCC_TARGET_CPU [=cortex-a53]   
+> -Target ABI (EABIhf) = Embedded ABI Hard Floating point  
+> -C library (uClibc-ng)   
+> -gcc optimization level  
+> -Kernel version (Custom Git repository) (https://github.com/raspberrypi/linux.git) URL of custom repository
 > (9126e25b0934bd7bd843763310ea4b34c6e139d0) Custom repository version () Custom kernel patches   
 
 
@@ -153,6 +153,33 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
 
+> Busybox est un binaire unique fournissant les commandes grace a un jeu de liens symboliques. On reduit ainsi l'espace utilise.  
+> *make busybox-menuconfig* : configuration interactive du busybox.  
+
+  │ │                                  Busybox Settings  --->                                                                       │ │  
+  │ │                                  Busybox Library Tuning  --->                                                                 │ │  
+  │ │                              --- Applets                                                                                      │ │  
+  │ │                                  Archival Utilities  --->                                                                     │ │  
+  │ │                                  Coreutils  --->                                                                              │ │  
+  │ │                                  Console Utilities  --->                                                                      │ │  
+  │ │                                  Debian Utilities  --->                                                                       │ │  
+  │ │                                  Editors  --->                                                                                │ │  
+  │ │                                  Finding Utilities  --->                                                                      │ │  
+  │ │                                  Init Utilities  --->                                                                         │ │  
+  │ │                                  Login/Password Management Utilities  --->                                                    │ │  
+  │ │                                  Linux Ext2 FS Progs  --->                                                                    │ │  
+  │ │                                  Linux Module Utilities  --->                                                                 │ │  
+  │ │                                  Linux System Utilities  --->                                                                 │ │  
+  │ │                                  Miscellaneous Utilities  --->                                                                │ │  
+  │ │                                  Networking Utilities  --->                                                                   │ │  
+  │ │                                  Print Utilities  --->                                                                        │ │  
+  │ │                                  Mail Utilities  --->                                                                         │ │  
+  │ │                                  Process Utilities  --->                                                                      │ │  
+  │ │                                  Runit Utilities  --->                                                                        │ │  
+  │ │                                  Shells  --->                                                                                 │ │  
+  │ │                                  System Logging Utilities  --->                                                               │ │  
+
+
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
 configuration qu'aucun bootloader n'est actuellement sélectionné. Nous
@@ -170,6 +197,8 @@ l'image Docker que nous utilisons.
 
 **Question 8**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+
+> C'est paquet de dépendance qui fournit le compilateur croisé C par défaut pour l'architecture armel.
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -194,6 +223,11 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
 
+> file : determine le type du fichier, ici ELF (Executable and Linkable Format) un fichier binaire.  
+````
+# ./hw
+  Hello World!
+````
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
 
@@ -206,13 +240,37 @@ Buildroot:
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
 
+````
+# file hw
+   hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
+# ./hw
+   bash: ./hw: cannot execute binary file: Exec format error
+````
+> Le fichier binaire executable est en 32 bits et l'interpreteur n'est pas le meme. Il y a donc une erreur de format.  
+
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
 
+````
+root@5743454a0b51:~/buildroot-precompiled-2017.08/output/images# ls
+	bcm2710-rpi-3-b.dtb  bcm2710-rpi-cm3.dtb  boot.vfat  rootfs.ext2  rootfs.ext4  rootfs.tar  rpi-firmware  sdcard.img  zImage
+````
+> zImage est l'image compressee du kernel compile
+> rootfs.tar est le Root File System 
+> sdcard.img : contenu de la carte sd
+
+
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+
+````
+# file zImage 
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+# file sdcard.img 
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+````
 
 Ensuite, lancez les commandes suivantes:
 
@@ -222,6 +280,8 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+
+> Un Root file system.  
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 
