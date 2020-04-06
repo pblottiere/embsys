@@ -51,6 +51,13 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+                
+                - un fichier de configuration `configs/embsys_defconfig` pour Buildroot
+                kconfig Fichier de compilation de root
+                - un fichier de configuration pour busybox `busybox.config
+                kconfigcd bu   Fichier de préparation à la compilation busybox
+                - un fichier décrivant les utilisateurs cibles `users.table`
+                Il s'agit d'une base de données contenant l'essentiel des informations utilisateur
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -58,9 +65,13 @@ cartes dans le répertoire *configs*.
 **Question 2**: En considérant que la cible est une carte RaspberryPi3 avec un
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
+                
+                32 bits -> raspberrypi3_defconfig
 
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+                
+                Il contient les repertoires de packages des programmes
 
 Désormais, lancez la commande suivante:
 
@@ -70,6 +81,9 @@ Désormais, lancez la commande suivante:
 
 **Question 4**: À quoi sert la commande précédente?
 
+                Préparer la compilation (vérifie que tout est prêt, que tout est okay, anticipe les
+                erreurs à venir)
+
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 ````
@@ -77,12 +91,23 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
-- la version du cross-compilateur
-- la version du kernel
+
+- l'architecture matérielle cible;
+little endian
+
+- le CPU ciblé;
+cortex-A53
+
+- l'ABI (en rappellant la signification de celle choisie);
+EABIhf Arch
+
+- la librairie C utilisée;
+
+- la version du cross-compilateur;
+
+- la version du kernel;
+Linux Kernel
+
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
@@ -91,10 +116,17 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
+                
+                openssh = y donc oui
+                Il sera donc compilé et disponible dans l'OS cible
 
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+                
+                Bussybox est un fichier executable contenant des commandes pour utiles et
+                utilisable sur un système
+                embarqué, une sorte de boite à outils numérique
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -132,10 +164,14 @@ l'architecture cible du binaire généré:
 # gcc helloworld.c -o hw
 # file hw
 hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, not stripped
+# ./hw
+Hello World !
 ````
 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
+                
+                Donne l'ensemble des informations relatives à l'execution du programme helloworld.c, l'environement, la version kernel, le CPU ciblé, la version de build, l'interpreteur, la librairie c utilisée, etc.
 
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
@@ -148,14 +184,34 @@ Buildroot:
                  Quelle différences constatez vous par rapport au cas précédent
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
+                 
+                 Cela ne fonctionne pas.
+                 La commande ontionne avec une architecture binaire par construction mais pas
+                 avec une architecture x86.
 
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
+                 
+                 bcm2710-rpi-3-b.dtb  boot.vfat	  rootfs.ext4  rpi-firmware  zImage
+                 bcm2710-rpi-cm3.dtb  rootfs.ext2  rootfs.tar   sdcard.img
+                 
+                 *rootfs.tar* rootfs is root file system, which contains all applications, libs and in most cases everything, including home folder
+                 
+                 *zImage* zImage is compressed version of the Linux kernel image that is self-extracting
+                 
+                 *sdcard.img* sdcard image is just all stuff mentioned above which can be copied (with dd) to the card, after copy you will see FAT partition with Kernel and device tree and EXT partition with rootfs, u-boot is in unpartitioned area before FAT (in case you use i.MX6 it's 0x80000). It's there just to make your life easier
 
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+                 
+                 #file zImage
+                 zImage: Linux kernel ARM boot executable zImage (little-endian)
+                 
+                 #file sdcard.img
+                 sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+
 
 Ensuite, lancez les commandes suivantes:
 
@@ -165,6 +221,8 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+
+Le contenu du fichier rootfs.tar mais décompressé.
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 
