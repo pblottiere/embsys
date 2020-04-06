@@ -20,6 +20,10 @@ PTTY: /dev/pts/3
 **Question 1** : Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?
 
+Les terminaux peuvent être soit des terminaux matériels ("tty", abréviation de "télétype"), soit des pseudo-terminaux ("pty").   
+Les terminaux matériels sont connectés via une interface telle qu'un port série (ttyS0, ...) ou USB (ttyUSB0, ...) ou via un écran et un clavier de PC (tty1, ...).   
+ Les pseudo-terminaux sont fournis par un émulateur de terminal, qui est une application.
+
 Pour la suite, placez vous dans le répertoire *gps_reader* contenant :
 
   * reader.c : le code du reader que nous allons modifier
@@ -39,14 +43,18 @@ Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
 **Question 2** : En regardant le code de *reader.c*, y a-t-il quelque chose qui
                  vous chagrine?
-
+On ne ferme pas correctement le port qui est lu en faisant ctrl+c.
+Il faut donc attraper l'exception lancée par le signal généré par le Ctrl-C et y placer le clode(fd).
 **Question 3** : Grâce à des recherches Internet (ou en fouinant dans le code
                  du simulateur), déterminez dans quelle trame et dans quel champs
                  l'heure est définie.
+Dans la trame Gll.L'avant-dernière valeur en hh:mm:ss UTC.
 
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                  Comment s'appelle ce type de programmation?
+Les fonctions utilisées dans le fichier reader.c sont open, read, close, exit.
+Ceux sont des fonctions d'appels systeme.
 
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les
                  trames provenant de deux simulateurs GPS différents (ports

@@ -5,22 +5,31 @@
 #include <fcntl.h>
 #include <string.h>
 #include <termios.h>
-
+#include <signal.h>  //for signal handler
+#include <syslog.h>  //for syslog use
 #include <util.h>
-
+int fd = -1, fd2 = -1;
 //-----------------------------------------------------------------------------
+void signals_handler(int signal_number)
+{
+	printf("Signal catched. Fermeture des fd !\n");
+	close(fd);
+	close(fd2);
+	closelog();
+	exit(EXIT_SUCCESS);
+}
 int main(int argc, char *argv [])
 {
     char * port = NULL;
-
+    char * port2 = NULL;
     // parse comand line
-    if (argc != 3)
+    if (argc != 5)
     {
-        fprintf(stderr, "Invalid usage: reader -p port_name\n");
+        fprintf(stderr, "Invalid usage: reader -p  first_port_name -h second_port_name\n");
         exit(EXIT_FAILURE);
     }
 
-    char * options = "p:";
+    char * options = "p:h:";
     int option;
     while((option = getopt(argc, argv, options)) != -1)
     {
@@ -29,33 +38,42 @@ int main(int argc, char *argv [])
             case 'p':
                 port = optarg;
                 break;
-
+            case 'h':
+				port2 = optarg;
+				break;
             case '?':
                 fprintf(stderr, "Invalid option %c\n", optopt);
                 exit(EXIT_FAILURE);
         }
     }
-
+    openlog ("log_gps_reader_tp_embsys", LOG_PID, LOG_USER);
     // open serial port
     int fd = open(port, O_RDWR | O_NOCTTY);
-    if (fd == -1)
+    int fd2 = open(port2, O_RDWR | O_NOCTTY);
+    if (fd == -1|(fd2 == -1))
     {
         perror("open");
         exit(EXIT_FAILURE);
     }
     tcflush(fd, TCIOFLUSH);
-
+    tcflush(fd2, TCIOFLUSH);
     // read port
     char buff[50];
     fd_set fdset;
 
+    // signals handler
+	struct sigaction action;
+	action.sa_handler = signals_handler;
+	sigemptyset(& (action.sa_mask));
+	action.sa_flags = 0;
+	sigaction(SIGINT, & action, NULL);
     while(1)
     {
         bzero(buff, sizeof(buff));
 
         FD_ZERO(&fdset);
         FD_SET(fd, &fdset);
-
+        FD_SET(fd2, &fdset);
         select(fd+1, &fdset, NULL, NULL, NULL);
 
         if (FD_ISSET(fd, &fdset))
@@ -65,13 +83,26 @@ int main(int argc, char *argv [])
             if (bytes > 0)
             {
                 printf("%s\n", buff);
+                syslog(LOG_INFO, "First GPS data");
                 fflush(stdout);
             }
         }
+        if (FD_ISSET(fd2, &fdset))
+		{
+			int bytes = read (fd2, buff, sizeof(buff));
+
+			if (bytes > 0)
+			{
+				printf("Second GPS : %s\n", buff);
+				syslog(LOG_INFO, "Second GPS data");
+				fflush(stdout);
+			}
+		}
     }
 
     // close serial port
     close(fd);
-
+    close(fd2);
+	closelog();
     exit(EXIT_SUCCESS);
 }
