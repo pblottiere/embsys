@@ -150,7 +150,8 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
-
+**le file permet de donner les parametres de compilation**
+**lorsqu'on execute on affiche bien "helloworld !**
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
 
