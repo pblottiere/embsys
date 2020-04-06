@@ -125,7 +125,7 @@ int main(int argc, char *argv []){
         bzero(buff, sizeof(buff));
         FD_SET(fd2, &fdset);
 
-        select(fd2+1, &fdset, NULL, NULL, NULL);
+        //select(fd2+1, &fdset, NULL, NULL, NULL);
 
         if (FD_ISSET(fd2, &fdset))
         {
