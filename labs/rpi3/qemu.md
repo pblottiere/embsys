@@ -23,6 +23,9 @@ $ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 
 **Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
+````
+Permet de donner aux conteneurs toutes les capacités
+````
 
 ### QEMU et chroot
 
@@ -58,11 +61,17 @@ root@hostname:  $
 ````
 
 **Question 2**: À quoi sert la commande *chroot*?
-
+````
+permet de changer le répertoire racine d'un processus de la machine hote
+````
 Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
 
 **Question 3**: Que se passe-t-il? Pourquoi?
+````
+exécute le binaire 'hw' ce qui permet cette fois-ci de renvoyer la sortie du binaire à savoir 'Hello Worlds!'
 
+grace a Chroot : dela permet d'isoler l'exécution d'un programme et donc de pouvoir exécuter le binaire
+````
 Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
 volumes:
 
