@@ -49,10 +49,12 @@ $ sudo dd if=sdcard.img of=/dev/sdX
 
 **Question 1**: Une fois le flashage terminé, combien y-a t-il de partition
                 sur la carte SD? Que contiennent-elles?
+Il y en a 2. L'une contient le RFS et l'autre les fichiers de configuration et le bootloader.
 
 **Question 2**: Lire la
                 [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
                 de la RPI3. Quels sont les ports TX/RX?
+respectivement GPIO14 et GPIO15.
 
 Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
 terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
