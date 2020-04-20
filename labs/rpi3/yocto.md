@@ -38,11 +38,17 @@ Décompresser la tarball:
 **Question 1**: En étudiant le contenu du fichier *build/conf/bblayers.conf*,
                 déterminez quelle layer ajoute le support pour la RasperryPi.
 
+> /home/user/poky-thud-precompiled/meta-raspberrypi  
+
 **Question 2**: Où pouvons-nous retrouver le répertoire associée à cette layer?
+
+> /root/poky-thud-precompiled/meta-raspberrypi  
 
 **Question 3**: En étudiant le contenu du fichier *build/conf/local.conf*,
                 indiquez à travers quelle variable on définit le type de carte
                 pour laquelle la distribution Poky doit être compilée.
+
+> MACHINE = "raspberrypi3"  
 
 Ici, la compilation a déjà été réalisée pour gagner du temps pendant le TP, et
 ce grâce aux commandes suivantes:
@@ -54,6 +60,12 @@ ce grâce aux commandes suivantes:
 
 **Question 4**: En cherchant dans la documentation de Yocto, indiquez à quoi
                 servent ces 2 commandes.
+
+> bitbake core-image-minimal : creates a target image (This is a small image allowing a device to boot, and it
+> is very useful for kernel and boot loader tests and development.)  
+> bitbake meta-toolchain :Build the tool chain image. It generates the toolchain that will be installed on the 
+> host machine and used to build any source code  
+
 
 ### Chaîne de cross-compilation
 
