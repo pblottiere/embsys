@@ -24,6 +24,8 @@ $ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 **Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
 
+--> Par défaut, un container Docker ne peut pas accéder au périphérique du pc. En utilisant *--privileged*, il peut accéder à tous les dispositifs hôtes et utiliser la plupart des fonctions du noyau de l'ordinateur hôte.
+
 ### QEMU et chroot
 
 Tout d'abord, il faut installer les paquets nécessaires pour utiliser QEMU dans
@@ -59,9 +61,13 @@ root@hostname:  $
 
 **Question 2**: À quoi sert la commande *chroot*?
 
+--> La commande chroot permet de changer le répertoire racine vers un nouvel emplacement. Elle permet un changement d'environnement : permet de basculer vers un autre système linux.
+
 Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
 
 **Question 3**: Que se passe-t-il? Pourquoi?
+
+--> Le fichier s'exécute sans soucis. Comme il a été compilé pour s'exécuter sur une architercture amd, et qu'avec le chroot on a simulé le système, cela marche bien.
 
 Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
 volumes:

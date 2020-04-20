@@ -50,13 +50,22 @@ $ sudo dd if=sdcard.img of=/dev/sdX
 **Question 1**: Une fois le flashage terminé, combien y-a t-il de partition
                 sur la carte SD? Que contiennent-elles?
 
+--> Il y a 2 partitions : 
+      * W95 FAT32 (LBA) (Amorçable) : W95 FAT32 (LBA) (Amorçable)
+      * Linux : Ext4 (version 1.0)
+
 **Question 2**: Lire la
                 [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
                 de la RPI3. Quels sont les ports TX/RX?
 
+--> COMMUNICATION INTERFACE : UART Interface(RXD, TXD)  [(GPIO15,GPIO14)]
+UART (Universal Asynchronous Receiver Transmitter) used for interfacing sensors and other devices.
+
 Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
 terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
 avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
+
+**--> Pas de câble USB-TTL 🙁**
 
 **Quesion 3**: Quelle est la configuration du port série permettant une
                communication avec la RPI3 (baud, etc)?
