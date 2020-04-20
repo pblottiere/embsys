@@ -23,6 +23,7 @@ $ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 
 **Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
+Ca doit permettre d'avoir les privilèges root sur le docker courant.
 
 ### QEMU et chroot
 
@@ -58,10 +59,12 @@ root@hostname:  $
 ````
 
 **Question 2**: À quoi sert la commande *chroot*?
+Cette commande va permettre d'isoler l'execution d'un programme dans un environnement isolé dont ici nous aurons choisi l'architecture ARM afin d'executer le binaire cross-compilé.
 
 Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
 
 **Question 3**: Que se passe-t-il? Pourquoi?
+Le binaire s'execute, puisqu'on vient d'émuler le Hardware ARM d'un Raspberry Pi. Ainsi le programme hw cross-compilé pour l'architecture ARM s'execute bien.
 
 Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
 volumes:
