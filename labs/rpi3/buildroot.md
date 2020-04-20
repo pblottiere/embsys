@@ -51,6 +51,9 @@ cités précédement:
 
 **Question 1**: Décriver de manière plus précise l'utilité ainsi que la syntaxe
                 de chacun des 3 fichiers mentionnés ci-dessus.
+`configs/embsys_defconfig` est un fichier de configuration pour la création de l'image pour l'architecture hôte.
+`busybox.config` est le fichier de configuration pour busybox. busybox est un fichier regroupant les principaux programmes linux sans leurs métadonnées pour gagner en espace.
+`users.table` est la liste des utilisateurs linux.
 
 Par défaut, le projet Buildroot fournit des configurations pour certaines
 cartes dans le répertoire *configs*.
@@ -59,8 +62,12 @@ cartes dans le répertoire *configs*.
                 OS 32 bits, quel est le fichier de configuration Buildroot par
                 défaut à utiliser?
 
+`raspberrypi3_defconfig` 
+
 **Question 3**: Que contient le répertoire *package* et à quoi servent les
                 sous-répertoires et fichiers associés?
+
+*package* contient les fichiers nécessaires à l'installation des logiciels sélectionnés dans les fihciers de configuration
 
 Désormais, lancez la commande suivante:
 
@@ -70,6 +77,8 @@ Désormais, lancez la commande suivante:
 
 **Question 4**: À quoi sert la commande précédente?
 
+La commande précédente permet de spécifier la configuration que l'on souhaite utiliser.
+
 Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 
 ````
@@ -77,12 +86,12 @@ Maintenant, lancez la commande suivante pour afficher le menu de configuration:
 ````
 
 **Question 5**: En naviguant dans le menu, repérez:
-- l'architecture matérielle cible
-- le CPU ciblé
-- l'ABI (en rappellant la signification de celle choisie)
-- la librairie C utilisée
-- la version du cross-compilateur
-- la version du kernel
+- l'architecture matérielle cible : ARM (little endian)
+- le CPU ciblé : Cortex A53
+- l'ABI (en rappellant la signification de celle choisie) : EABIhf
+- la librairie C utilisée : uClibc
+- la version du cross-compilateur : gcc 6.x
+- la version du kernel : 4.19
 
 Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
@@ -91,10 +100,15 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
                 paquet *openssh* sera compilé et disponible dans l'OS cible. De
                 même, retrouver cette information en analysant le fichier de
                 configuration *embsys_defconfig*.
+ Dans target packages/networking applications, on trouve que l'installation d'Openssh est activée.
+ Avec une recherche dans *embsys_defconfig*, on retrouve la même information.
 
 **Question 7**: Qu'est ce que busybox? À quoi sert la commande
                 *make busybox-menuconfig*? Qu'obtiens t'on et que pouvons
                 nous faire?
+
+Busybox est un fichier regroupant les principaux programmes linux sans leurs métadonnées pour gagner en espace.
+On peut configurer busybox avec *make busybox-menuconfig*, et notamment activer ou désaactiver certain programmes des *GNU Core Utilities*.
 
 Par défaut, le bootloader de la RPI3 est utilisé. D'ailleurs, vous pouvez
 constater en allant dans le menu *Bootloaders* de l'interface de
@@ -113,6 +127,8 @@ l'image Docker que nous utilisons.
 
 **Question 8**: Que contient le répertoire *output/host*? À quoi correspond
                 le binaire *output/host/usr/bin/arm-linux-gcc*?
+
+Il contient le Root File System du système à déployer. *output/host/usr/bin/arm-linux-gcc* est le cross-compiler.
 
 Sur le conteneur Docker, créez un fichier *helloworld.c*:
 
@@ -137,6 +153,8 @@ hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, 
 **Question 9**: Décrire le résultat de la commande *file*. Que se passe t-il
                 si vous exécutez la commande *./hw*?
 
+Ici on peut voir que l'exécutable a été compilé pour le pc.*./hw* affiche `Hello world !`
+
 Cette fois, lancez la commande suivante à partir du répertoire contenant
 Buildroot:
 
@@ -148,14 +166,31 @@ Buildroot:
                  Quelle différences constatez vous par rapport au cas précédent
                  (binaire généré avec gcc)? Que se passe t-il si vous essayez
                  d'exécuter la commande *./hw*? Expliquez pourquoi.
+````
+root@c0e4433759ef:~# file hw
+hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
+root@c0e4433759ef:~# ./hw
+bash: ./hw: cannot execute binary file: Exec format error
+````
+L'exécution ne fonctionne pas, le fichier exécutable a été compilé pour l'architecture ARM.
 
 ### Images
 
 **Question 11**: Que contient le répertoire *output/images*? Décrivez notamment
                  l'utilité des fichiers *rootfs.tar*, *zImage* et *sdcard.img*.
 
+Le répertoire contient l'ensemble des images prêtes à être déployées.
+*rootfs.tar* est le RFS, *zImage* est le Kernel et *sdcard.img* l'image complète d'un disque que l'on peut extraire sur une carte sd, et qui contient notre système complet.
+
 **Question 12**: Que vous dis les résultats de la commande *file* lorsque vous
                  l'utilisez sur les fichiers *zImage* et *sdcard.img*?
+
+````
+root@c0e4433759ef:~/buildroot-precompiled-2017.08/output/images# file sdcard.img 
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+root@c0e4433759ef:~/buildroot-precompiled-2017.08/output/images# file zImage 
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+````
 
 Ensuite, lancez les commandes suivantes:
 
@@ -165,6 +200,7 @@ Ensuite, lancez les commandes suivantes:
 ````
 
 **Question 13**: Que contient le répertoire */tmp/rootfs*?
+Ce répertoire contient le RFS de notre système compilé.
 
 ### Compilation : À ne pas faire pendant le TP (trop long)
 

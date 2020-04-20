@@ -23,6 +23,8 @@ $ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 
 **Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
+                
+When the operator executes docker run --privileged, Docker will enable access to all devices on the host as well as set some configuration in AppArmor or SELinux to allow the container nearly all the same access to the host as processes running outside containers on the host. 
 
 ### QEMU et chroot
 
@@ -59,9 +61,13 @@ root@hostname:  $
 
 **Question 2**: À quoi sert la commande *chroot*?
 
+*chroot* change le répertoire racine d'un processus de la machine hôte.
+
 Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
 
 **Question 3**: Que se passe-t-il? Pourquoi?
+
+L'exécution affiche "Hello world !" grâce à l'émulation QEMU
 
 Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
 volumes:
