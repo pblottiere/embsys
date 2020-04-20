@@ -50,9 +50,14 @@ $ sudo dd if=sdcard.img of=/dev/sdX
 **Question 1**: Une fois le flashage terminé, combien y-a t-il de partition
                 sur la carte SD? Que contiennent-elles?
 
+Il y a deux paritions : une partition de boot qui contient nottament le kernel et le fichier config.txt
+L'autre contient le RFS.
+
 **Question 2**: Lire la
                 [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
                 de la RPI3. Quels sont les ports TX/RX?
+
+Ils s'agit de port permettant une connexion série.
 
 Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
 terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
@@ -64,8 +69,14 @@ avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
 Puis, connectez vous en tant que *user* sur la RPI3 (lire le fichier
 *users.tables* pour déterminer le mot de passe).
 
+user user1*
+
 **Question 4**: Déterminez l'adresse IP de votre RPI3. Quelle commande
                 avez-vous utilisé?
+
+On utilise ifconfig et on modifie /etc/network/interfaces
+Mais cela ne semble pas fonctionner...
+
 
 **Question 5**: Testez la connection ssh en tant que *user* et *root*. Quelle
                 différence observez-vous? Pourquoi? Où est-ce configuré?
@@ -201,6 +212,10 @@ bootz ${kernel_addr_r} - 0x2000000
 
 **Question 6**: En cherchant sur le net, trouvez l'utilité des commandes U-Boot
                 *fatload*, *setenv* et *bootz*.
+
+fatload : charge un binaire
+setenv : change les variables d'environnement
+bootz : boot une zImage
 
 Puis compiler ce fichier avec *mkimage*:
 

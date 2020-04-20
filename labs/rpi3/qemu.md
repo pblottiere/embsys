@@ -24,6 +24,9 @@ $ docker run -it --privileged pblottiere/embsys-rpi3-buildroot /bin/bash
 **Question 1**: À quoi sert l'option *--priviliged* lors du lancement d'un
                 nouveau coneneur Docker?
 
+Cette option permet de donner au docker des droits qu'il n'aurait pas normalement.
+Par exemple, cela autorise l'usage de la commande mount.
+
 ### QEMU et chroot
 
 Tout d'abord, il faut installer les paquets nécessaires pour utiliser QEMU dans
@@ -59,9 +62,13 @@ root@hostname:  $
 
 **Question 2**: À quoi sert la commande *chroot*?
 
+Cette commande permet de "charger" le RFS, en l'occurence celui de l'image rootfs.tar
+
 Ensuite, exécutez le binaire cross-compilé *hw* dans l'environnement *chroot*.
 
 **Question 3**: Que se passe-t-il? Pourquoi?
+
+L'execution réussit car nous sommes dans un environnement, bien que simulé, adapté à un binaire prévu pour une architecture ARM.
 
 Finalement, sortir de l'environnement du chroot (Ctrl-D) et démonter les
 volumes:
