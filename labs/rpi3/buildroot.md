@@ -105,6 +105,7 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
 (comme dans VIM).
 
 > Le menu :  
+
 ````
   | |                                  Target options  --->                                                                         │ │  
   │ │                                  Build options  --->                                                                          │ │  
@@ -118,7 +119,7 @@ Il est possible de rechercher une chaine de caractère avec la commande */*
   │ │                                  Legacy config options  --->                                                                  | |   
 ````
 > -Target Architecture (ARM (little endian))  
->- BR2_GCC_TARGET_CPU [=cortex-a53]   
+> -BR2_GCC_TARGET_CPU [=cortex-a53]   
 > -Target ABI (EABIhf) = Embedded ABI Hard Floating point  
 > -C library (uClibc-ng)   
 > -gcc optimization level  
