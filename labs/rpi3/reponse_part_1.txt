@@ -1,0 +1,42 @@
+q1)
+configs/embsys_defconfig : fichier de configuration custom qui permet de contients les consignes de génération d'un noyau pour le buildroot
+
+busybox.config : fichier de configuration pour busybox, pour définir quels packets seront installés
+
+users.table : liste des utilisateurs qui seront créés et disponible lors de la création du linux
+
+
+q2)
+raspberrypi3_defconfig
+
+q3)
+
+package contient pleins de bibliothèque qui peuvent servir
+
+q4)
+permet de génerer un fichier de configuration
+
+q5)
+l'architecture matérielle cible : cortex a53
+le CPU ciblé : arm
+l'ABI (en rappellant la signification de celle choisie) : 
+la librairie C utilisée : uclibc-ng
+la version du cross-compilateur : 
+la version du kernel : 9126e25b0934bd7bd843763310ea4b34c6e139d0
+
+q6)
+
+q9)
+tous se passe bien 
+
+q10) tous se passe mal
+on a compilé avec un compilateur pas fait pour notre architecture
+
+rootfs.tar : archive root file system
+sdcard.img : image du system à flasher sur la carte
+
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+rootfs.tar: POSIX tar archive (GNU)
+
+q13)
+il contient ce qu'il y aura sur la carte sd de la rasp

@@ -1,0 +1,8 @@
+q1)
+--privileged pouravoir les privilège, être en mode root
+
+q2)chroot permet d'émuler, de lancer le root file system 
+
+q3)
+Ca marche, oura
+en effet, on a fait en sorte que ça marche en compilant le programme avec un compilateur arm (./output/host/usr/bin/arm-linux-gcc), donc en le lançant avec un processeur ARM émulé ça marche
