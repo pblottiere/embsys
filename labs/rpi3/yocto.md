@@ -37,13 +37,22 @@ Décompresser la tarball:
 
 **Question 1**: En étudiant le contenu du fichier *build/conf/bblayers.conf*,
                 déterminez quelle layer ajoute le support pour la RasperryPi.
-
+````
+/home/user/poky-thud-precompiled/meta-raspberrypi 
+````
 **Question 2**: Où pouvons-nous retrouver le répertoire associée à cette layer?
-
+````
+/root/poky-thud-precompiled/meta-raspberrypi
+````
 **Question 3**: En étudiant le contenu du fichier *build/conf/local.conf*,
                 indiquez à travers quelle variable on définit le type de carte
                 pour laquelle la distribution Poky doit être compilée.
-
+````
+On définit le type de carte à utiliser tout à la fin du fichier local.conf:
+CONF_VERSION = "1"
+MACHINE = "raspberrypi3"
+INHERIT += "rm_work"
+````
 Ici, la compilation a déjà été réalisée pour gagner du temps pendant le TP, et
 ce grâce aux commandes suivantes:
 
@@ -54,7 +63,10 @@ ce grâce aux commandes suivantes:
 
 **Question 4**: En cherchant dans la documentation de Yocto, indiquez à quoi
                 servent ces 2 commandes.
-
+````
+bitbake core-image-minimal sert à construire l'image minimale de l'OS, tandis que bitbake meta-toolchain permet de construire la toolchain.
+Yocto permet de créer une image système, et de créer un rootfs, mais ne peut pas créer de packages. Pour créer des package, il faut donc utiliser une toolchain
+````
 ### Chaîne de cross-compilation
 
 Le résultat de la compilation se trouve dans le répertoire *tmp* (il a été
@@ -125,6 +137,9 @@ de celle qu'utilise *arm-poky-linux-gnueabi-gcc* par défaut.
                 laquelle permet de compiler correctement.
 
 Un bon article: https://embeddedartistry.com/blog/2017/10/9/r1q7pksku2q3gww9rpqef0dnskphtc
+````
+arm-poky-linux-gnueabi-gcc \--sysroot=/opt/poky/2.6/sysroots/cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi/-mfpu=neon \helloworld.c -o helloworld -mfloat-abi='soft'
+````
 
 ### Image
 
