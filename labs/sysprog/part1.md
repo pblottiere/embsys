@@ -104,16 +104,47 @@ suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
 
-**Question 2**: Quel compilateur est utilisé ici?
+Un MakeFile donne les instructions de compilation à suivre. La commande make sert à compiler le projet.
 
-**Question 3**: Qu'est ce qu'une librairie partagée?
+**Question 2**: Quel compilateur est utilisé ici? 
+
+GCC = GNU C Compiler
+
+**Question 3**: Qu'est ce qu'une librairie partagée? 
+
+Les bibliothèques partagées sont du code compilé destiné à être partagé entre plusieurs différents programmes d'un projet. Elles ne sont exécutées que lorsqu'elles sont appelées. 
+
+Extension .so avec le numéro de version de la libraire .so.5.12.2 par exemple. .so.5 et .so.5.12 sont des liens symboliques qui pointent vers la bonne version. La dernière extension .so.5.12.2 est le fichier. Les librairies sont des binaires une fois compilées mais ne sont pas exécutables car elles n'ont pas de thread prinipal. La commande ./library_name.so.5.12.2 génère un core dump. Seule la libc-2.32.so est exécutable et donne des informations sur sa version, sa licence, le compilateur utilisé, etc.
+
+Localisations classiques des librairies partagées :
+* /usr/lib
+* /lib
 
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
+Il suffit d'exécuter la commande ```gcc hello_world.c -o hello``` à la racine du dossier **gps**.
+Puis ```mv hello bin/ ``` pour déplacer le binaire dans le dossier **bin** ignoré par git.
+On exécute le binaire avec la commande ```./bin/hello```.
+
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+                
+À la racine du dossier **gps** :
+1. On compile d'abord le code source de la librairie en PIC : ```gcc -c -Wall -Werror -fpic foo.c``` puis ```mv foo.o src/lib```.
+
+In computing, position-independent code(PIC) is a body of machine code that, being placed somewhere in the primary memory, executes properly regardless of its absolute address. PIC is commonly used for shared libraries, so that the same library code can be loaded in a location in each program address space where it does not overlap with other memory in use (for example, other shared libraries). 
+
+2. On crée une librairie partagée (.so) à partir du fichier objet (.o) : ```gcc -shared -o ./lib/libfoo.so ./src/lib/foo.o```
+
+3. Édition de lien avec la librairie partagée : ```gcc -L ./lib -Wall -o test main.c -lfoo```
+
+4. Chargement et exécution de la librairie : ```export LD_LIBRARY_PATH=$(pwd)/lib``` puis ```mv test bin/``` puis
+```./bin/test```. Dans le terminal, on a alors la sortie suivante : ```This is a shared library test... Hello, I am a shared library```.
+
+https://www.cprogramming.com/tutorial/shared-libraries-linux-gcc.html
+
 
 ## À retenir
 
