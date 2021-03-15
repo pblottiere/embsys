@@ -21,3 +21,4 @@ Several exercises are available :
   * GNU/Linux System Programming
   * Embedded system with RPI3
   * Usefool Tools (autotools, docker, git, ...)
+My new fix
