@@ -1,4 +1,8 @@
 Q1) Après quelques secondes, on a un core dumped, le programme essaye probablement d'utiliser de la mémoire qui ne lui est pas attribuée.
 Q2) avec echo $? nous obtenon le code erreur 127.
 Q3) en utisant bt dans l'interface gdb, nous pouvons  voir que la dernière activité de la pile est l'éxecution de la ligne 109 du fichier gps.c dans la fonction main.
-Cette fonction a utilisée write-wtg et nmea_vtg.
+Cette fonction a utilisée write-wtg et nmea_vtg. La ligne 109 correspond au write_vtg(ptmx.fd) à la ligne 40 de gps.c. Dans cette ligne on a nmea_vtg(&vtg) qui est appelé la route se poursuit dans nmea.c ligne 178
+Qui elle meme fait ré&férence a la fonction knot_to_kmh_str ligne 23 de nmea.c.
+La fonction puts(NULL); la fonction puts de ioputs.c à la ligne 35
+Ce puts est une fonction du system, donc a priori l'argument qu'on lui donne est mauvais. On utilise man puts. Effectivement il attendait un const char *. Ce qui n'est pas le cas de Null
+Q4)
