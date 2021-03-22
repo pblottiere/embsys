@@ -104,16 +104,33 @@ suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
 
-**Question 2**: Quel compilateur est utilisé ici?
+Un MakeFile donne les instructions de compilation à suivre. La commande make sert à compiler le projet.
 
-**Question 3**: Qu'est ce qu'une librairie partagée?
+**Question 2**: Quel compilateur est utilisé ici? 
+
+GCC = GNU C Compiler
+
+**Question 3**: Qu'est ce qu'une librairie partagée? 
+
+Les bibliothèques partagées sont du code compilé destiné à être partagé entre plusieurs différents programmes d'un projet. Elles ne sont exécutées que lorsqu'elles sont appelées. 
+
+Extension .so avec le numéro de version de la libraire .so.5.12.2 par exemple. .so.5 et .so.5.12 sont des liens symboliques qui pointent vers la bonne version. La dernière extension .so.5.12.2 est le fichier. Les librairies sont des binaires une fois compilées mais ne sont pas exécutables car elles n'ont pas de thread prinipal. La commande ./library_name.so.5.12.2 génère un core dump. Seule la libc-2.32.so est exécutable et donne des informations sur sa version, sa licence, le compilateur utilisé, etc.
+
+Localisations classiques des librairies partagées :
+* /usr/lib
+* /lib
 
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
+gcc gps.c -g -o gps -I ../../include -L ../../lib/ -lptmx -lnmea
+
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
+gcc -g -c -fPIC nmea.c -o nmea.o
+gcc -g -shared -Wl,-soname,libnmea.so -o libnmea.so nmea.o -lm
 
 ## À retenir
 
