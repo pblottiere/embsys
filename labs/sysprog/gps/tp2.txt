@@ -1,0 +1,50 @@
+TP2
+
+
+1)
+-Que se passe-t-il au bout de quelques secondes?  
+Au bout de quelques secondes, il y a un message d'erreur: Segmentation fault (core dumped)
+- Qu'en déduisez vous?
+Le programme essaie d'acceder a une memoire qui n'est pas/plus allouée.
+
+2) 
+-Quel signal a reçu le processus pour se terminer ainsi? 
+signal SIGSEGV
+
+-Comment vérifiez vous le numéro du signal reçu?
+Grace a la commande kill -l
+
+3) 
+-Quelle partie du code est fausse?
+C'est la fonction puts() qui cause l'erreur de segmentation.
+
+-Pourquoi ? 
+Parce que elle a un paramettre NULL alors qu'elle s'attend a recevoir une chaine de caractere.
+
+
+4)  Que se passe-t-il quand vous lancez GDB en mode interactif sur le binaire gps?
+
+On obtient un message d'erreur car des librairie partagées n'arrivent pas a être trouvées.
+error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+
+5) À quoi sert la commande ldd? Quelle information supplémentaire cela vous apporte-t-il?
+
+Cette commande nous permet de voir la liste des librairies partagées et le chemin où elles sont chargées.
+
+Dans le tp, elle nous permets de voir quelles sont toutes les librairies qui ne sont pas trouvées
+
+6) Comment résoudre ce problème en tant qu'utilisateur?
+
+Dans le fichier gps/run.sh, on constate que LD_LIBRARY_PATH n'etait positionné dans le bon repertoire.
+en faisantt la commande : export LD_LIBRARY_PATH=$(pwd)/lib dans le terminal, on peut resoudre le probleme.
+
+7) Quelle est la différence entre les commandes s et n dans le prompt gdb suite à un breakpoint?
+
+La différence entre "next" et "step" est que "step" s'arrête à l'intérieur d'une fonction appelée, alors que "next" exécute les fonctions appelées à (presque) pleine vitesse, en s'arrêtant seulement à la ligne suivante dans la fonction courante.
+
+
+8) Dans quel contexte ce type d'outils peut être intéressant?
+
+Dans le cas où il faudra debugger un serveur distant. Par exemple une raspberry où on a juste accès au terminal, on pourra donc ce connecter via ssh et utiliser cette methode. 
+
+
