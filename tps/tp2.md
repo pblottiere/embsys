@@ -19,6 +19,6 @@
 * Qustion 8: Remote tools like that are useful when the code is being run a computer different from the one being used, such as in servers and robots, where there are multiple pieces of hardware to be managed.
 
 
-## Exercise 2: LD_PRELOAD et sigaction
+
 
 
