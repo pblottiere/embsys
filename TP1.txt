@@ -1,0 +1,14 @@
+Question 1: Make est un logiciel qui construit des fichiers exécutables ou des bibliothèques. Il utilise les fichiers Makefile pour obtenir les instructions pour contruire ces fichiers.
+
+Question 2: Le compilateur utilisé est gcc (on peut le voir par exemple dans le Makefile de ptmx)
+
+Question 3: Une librairie partagée peut être appelée par différents exécutables. Elles sont par défault présentes dans usr/lib.
+
+Question 4: Exemple de fichier c: gps.c
+On peut par exemple taper "gcc gps.c -o output"
+
+Question 5: Un exemple: ptmx.c
+Il faut taper: gcc -c -fpic ptmx.c -o ptmx.o
+pic: position independant code
+Puis: gcc -shared libptmx.so ptmx.so
+

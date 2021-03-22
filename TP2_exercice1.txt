@@ -1,0 +1,18 @@
+Question 1: Une erreur de segmentation apparait (core dumped). Cela est dû à une utilisation de la mémoire qui n'était pas autorisée. Le processus s'est donc arrêté involontairement.
+
+Question 2: Avec gdb, on obtient: signal SIGSEGV, Segmentation fault
+Avec echo $? on obtient le numéro du signal 139
+
+Question 3: Avec le backtrace de gdb, on peut trouver que l'erreur intervient dans le main: "in main () at gps.c:109" et aussi dans la librairie nmea. L'erreur vient de la ligne 23 de nmea.c "puts(null)". En utilisant la commande "man puts", on s'aperçoit que Puts attend une variable de type const char * str, pas NULL.
+
+Question 4: On obtient une erreur: la librairie partagée libptmx.so ne peut pas être ouverte. En effet, run.sh trouve la librairie partagée grâce à la ligne export LD_LIBRARY_PATH=$ROOT_DIR/lib qui indique qu'il faut chercher dans le dossier lib. Cependant gps n'a pas de moyen de trouver cette librairie.
+
+Question 5: ldd est ne commande qui permet d'afficher les librairies partagées d'un programme. Dans notre cas, on voit que les librairies libptmx.so et libnmea.so ne sont pas trouvées par gps. Cela est normal car gps ne sait pas comment y accéder.
+
+Question 6: Pour résoudre le problème, il suffit de se mettre dans le répertoire /gps et de taper dans le terminal: export LD_LIBRARY_PATH = $(pwd)/lib qui ajoute le chemin vers les librairies partagées. En relançant ldd on peut voir que cela a bien marché.
+
+Question 7: C'est le pas qui change (ligne par ligne de code ou de manière plus globale)
+n : next exécute uniquement l'instruction suivante du programme
+s: step même action que next mais rentre dans les fonctions. Si une instruction contient un appel de fonction, la commande step va effectuer les instructions de cette fonction.
+
+Question 8: L'intérêt est lorsque le programme se trouve sur un autre ordinateur. On peut alors le déboguer à distance.
