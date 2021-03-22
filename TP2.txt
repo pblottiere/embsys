@@ -5,4 +5,8 @@ Cette fonction a utilisée write-wtg et nmea_vtg. La ligne 109 correspond au wri
 Qui elle meme fait ré&férence a la fonction knot_to_kmh_str ligne 23 de nmea.c.
 La fonction puts(NULL); la fonction puts de ioputs.c à la ligne 35
 Ce puts est une fonction du system, donc a priori l'argument qu'on lui donne est mauvais. On utilise man puts. Effectivement il attendait un const char *. Ce qui n'est pas le cas de Null
-Q4)
+Q4) Des bibliothèques ne sont pas importés correctements ! 
+Q5) On connait le nom des bibliothèques qui ne sont pas trouvées (et celles qui le sont)
+Q6) Le repértoire indiqué dans la variable LD_LIBRARY_PATH n'étais pas le chemin absolu vers lib, il ne trouvait donc pas les bibliothèques.
+Q7) le n execute la ligne suiviante, le s l'execute et rentre dans les fonctions, on pourra donc itérer les lignes des fonctions ensuite.
+Q8)Losque l'on a fourni un soft à un client, l'outil GDBserver doit pouvoir servir pour effectuer de la maintenance, en tout cas se rendre compte des problèmes dans le programme. Sinon eventuelement pour du télétravail. 
