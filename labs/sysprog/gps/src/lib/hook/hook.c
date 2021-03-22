@@ -13,7 +13,7 @@ int iteration = 0;
 
 void signals_handler(int signal_number)
 {
-    printf("Signal catched and being ignored.\n");
+    printf("Signal caught and being ignored.\n");
 }
 
 int knot_to_kmh_str(float not, size_t size, char * format, char * kmh_str)
