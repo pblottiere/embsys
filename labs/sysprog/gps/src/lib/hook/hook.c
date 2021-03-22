@@ -7,8 +7,6 @@
 
 #include <stdarg.h>
 
-#include "hook.h"
-
 #define KNOT_TO_KMH 1.852
 
 int iteration = 0;

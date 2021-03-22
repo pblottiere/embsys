@@ -29,7 +29,7 @@
 
 * Question 6: In code.
 
-* Question 7
+* Question 7: One way is to just kill the process, by finding its PID and using the kill tool, such as in *kill 88783*
 
 
 
