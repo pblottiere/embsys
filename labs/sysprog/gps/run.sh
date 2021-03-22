@@ -1,6 +1,7 @@
 #! /bin/sh
 
 SCRIPT=`readlink -f $0`
+echo $SCRIPT
 ROOT_DIR=`dirname $SCRIPT`
 
 export LD_LIBRARY_PATH=$ROOT_DIR/lib
