@@ -1,0 +1,36 @@
+GNU/Linux
+
+TP1
+
+1) Qu'est ce qu'un Makefile? À quoi sert make?
+
+Un makefile est un fichier nommé makefile utilisé par le programme make pour exécuter un ensemble d'actions, comme la compilation d'un projet, l'archivage de document, la mise à jour de site, etc.
+
+Make est un logiciel qui construit automatiquement des fichiers, souvent exécutables, ou des bibliothèques à partir d'éléments de base tels que du code source.
+la commande make en c/c++ sert a compilé.
+
+2) Quel compilateur est utilisé ici?
+
+le compliateur utilisé ici est GCC.
+
+3) Qu'est ce qu'une librairie partagée?
+
+les bibliothèques partagées ne sont pas des archives (librairie statique) mais des objets relogeables, identifiés en tant que bibliothèques partagées par un code special. 
+
+4) voir code: main.c
+
+ lien de commande pour obtenir un binaire executable:
+ gcc main.c -o executable 
+ 
+ pour executer : ./executable
+
+5) voir le zip.
+
+apres avoir créer les dossier factorielle, factorielle/src, factorielle/include, factorielle/lib, 
+
+j'ai tapé:
+
+gcc -c -I include/ -fPIC -Wall -o src/fact.o src/fact.c
+gcc -fPIC -shared -Wl,-soname,libfact.so.1 -o lib/libfact.so.1.0 src/fact.o
+
+
