@@ -25,9 +25,11 @@
 
 * Question 4: It is an user command.
 
-* Question 5: The only signal sent from gps.c is located in the main, being the SIGINT launched with sigaction.
+* Question 5: The signal handler is located from the line 93 to 97 in the gps.c file. The handler is first initialized as a function that processes the signals being caught, first by displaying it, then closing the connection to the ptmx and finally exiting the process correctly. Afterwards, the set of signals is initialized with nothing (empty set), and the modifiers to the signals is also set to none (0 as the flag represents no modifiers). In the end, the sigaction function is called, changing the process to behave when receiving SIGINT signal as previously specified by the action (and the handler inside).
 
-* Question 6: 
+* Question 6: In code.
+
+* Question 7
 
 
 
