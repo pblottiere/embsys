@@ -1,0 +1,22 @@
+TP2
+
+Exercice 1
+Q1:
+On obtient une erreur de segmentation (core dumped) On a dépassé les limite du core dump.
+
+Q2:
+Il s'agit du signal n°11, segmentation fault.
+
+Q3:
+Le GDB affiche des erreurs d'execution dans les codes ioputs.c (l.
+35), dans nmea.c (l.23 et l.178) et dan gps.c (l.40 et l.109)
+
+Q4:
+Run affiche un problème avec la librairie partagée, et bt affiche "no stack". Il semblerait que comparer à la manip precédente ici le code ne s'execute pas.
+
+Q5:
+Cette commande affiche les librairies partagées utilisées par gps, on remarque que nos deux librairies ptmx.
+
+Q6:
+Il faudrait indiqué le chemin des librairies que l'on veut exporter
+

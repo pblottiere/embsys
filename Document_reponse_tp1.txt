@@ -1,0 +1,3 @@
+TP1
+Question 1
+Un Makefile est un fichier qui spécifie comment construire les fichiers cibles. make va lire les commandes de création du  Makefile.  
