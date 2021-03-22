@@ -1,0 +1,15 @@
+Question1: Lorsque nous exécutons la commande make, elle recherche le makefile et l'analyse pour trouver la cible et accéder à ses dépendance et ainsi lancer le compilateur et les bibliothèques associés.
+Question2:Le compilateur est GCC
+Question3:Les bibliothèques partagées ne sont chargées que lorsqu'un programme les appellent. Extension.so, numéro de version à la fin.
+Question4:
+exemple code c:
+int main()
+{
+	printf("hello world \n");
+	return EXIT_SUCCESS;
+}
+Question5: 
+lptmx et lnmea.
+commandes:
+$ gcc -c librairy.c
+gcc -shared -o liblibrairy.so librairy.o
