@@ -16,7 +16,7 @@
 
 * Question 7: The command n, short for next, executes until the next line of code in the source, as long as there are debugging annotations allowing that. The command s, short for step, does the same thing, but doesn't enter functions as they appear in the code, skipping their execution.
 
-* Qustion 8: Remote tools like that are useful when the code is being run a computer different from the one being used, such as in servers and robots, where there are multiple pieces of hardware to be managed.
+* Question 8: Remote tools like that are useful when the code is being run a computer different from the one being used, such as in servers and robots, where there are multiple pieces of hardware to be managed.
 
 
 ## Exercise 2: LD_PRELOAD et sigaction
@@ -29,7 +29,16 @@
 
 * Question 6: In code.
 
-* Question 7: One way is to just kill the process, by finding its PID and using the kill tool, such as in *kill 88783*
+* Question 7: One way is to just kill the process, by finding its PID and using the kill tool, such as in *kill 88783*, or with *pkill gps*, being gps the name of the executable running. Another alternative is to suspend it with ctrl-z.
+
+* Question 8: It compiles the libnmea with GPS_OK=1, making it not execute the code in lines 20-24 in nmea.c. It works by changing a flag used inside the code during compilation.
 
 
+## Exercise 3: Terminal série (minicom) 
+
+* Question 1: Used the command *minicom -p /dev/pts/X*, being X informed when executing gps.
+
+* Question 2: The speed is how many bits per second are transmitted, the parity is used in case any is expected so to have some fault tolerance (it's set to none) and data is the number of bits of each message.
+
+* Question 3: It was used the function "Capture on/off" inside minicom.
 
