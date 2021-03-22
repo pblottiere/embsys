@@ -104,13 +104,25 @@ suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
 
+- Les fichiers makefile permettent au programme make d'executer un ensemble d'actions, comme la compilation d'un projet.
+
 **Question 2**: Quel compilateur est utilisé ici?
 
+- Make
+
 **Question 3**: Qu'est ce qu'une librairie partagée?
+
+- extension : *.so = shared object
+- après extension : version de la libraire.
+- ce sont des binaires.
+- n'est pas executable sauf la lib système.  
+- 
 
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
+
+
 
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.

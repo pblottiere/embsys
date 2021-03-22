@@ -13,6 +13,8 @@ PTTY: /dev/pts/X
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
 
+- On obitent une erreur : Segmentation fault (core dumped)
+
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
 
@@ -89,6 +91,9 @@ ldd ./gps
 
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
+
+- retourne les librairies partagées requises par chaque programme ou objets partagés dans la ligne de commande.
+- on trouve les librairies non trouvées !
 
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
