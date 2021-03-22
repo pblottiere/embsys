@@ -3,6 +3,6 @@ Question2:Core dumped ->SIGSEGV avec kill-l numéro 12
 Question3:Erreur à la ligne 40 dans l'exécution de write_vgt. Vace la fonction man on remarque que cette fonction ne prend pas de Null en argument.
 Question4 :En mode iteratif, il manque un fichier dans la bibliothèque partagée.
 Question5: ldd affiche les bibliothèques utilisées. Il semble manquer deux fichier: libptmx.so et libnmea.so
-Question6:export LD_LIBRARY_PATH=$ROOT_DIR/lib permet de linker les librairies
+Question6:export LD_LIBRARY_PATH=$(pwm)/lib permet de linker les librairies
 Question7:s ->ligne par ligne /n -> comme s mais sans pause entre chaque fonction.
 Question8: dans le cas d'un serveur réseaux.
