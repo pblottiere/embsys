@@ -124,13 +124,27 @@ Localisations classiques des librairies partagées :
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
-gcc gps.c -g -o gps -I ../../include -L ../../lib/ -lptmx -lnmea
+Il suffit d'exécuter la commande ```gcc hello_world.c -o hello``` à la racine du dossier **gps**.
+Puis ```mv hello bin/ ``` pour déplacer le binaire dans le dossier **bin** ignoré par git.
+On exécute le binaire avec la commande ```./bin/hello```.
 
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+                
+À la racine du dossier **gps** :
+1. On compile d'abord le code source de la librairie en PIC : ```gcc -c -Wall -Werror -fpic foo.c``` puis ```mv foo.o src/lib```.
 
-gcc -g -c -fPIC nmea.c -o nmea.o
-gcc -g -shared -Wl,-soname,libnmea.so -o libnmea.so nmea.o -lm
+In computing, position-independent code(PIC) is a body of machine code that, being placed somewhere in the primary memory, executes properly regardless of its absolute address. PIC is commonly used for shared libraries, so that the same library code can be loaded in a location in each program address space where it does not overlap with other memory in use (for example, other shared libraries). 
+
+2. On crée une librairie partagée (.so) à partir du fichier objet (.o) : ```gcc -shared -o ./lib/libfoo.so ./src/lib/foo.o```
+
+3. Édition de lien avec la librairie partagée : ```gcc -L ./lib -Wall -o test main.c -lfoo```
+
+4. Chargement et exécution de la librairie : ```export LD_LIBRARY_PATH=$(pwd)/lib``` puis ```mv test bin/``` puis
+```./bin/test```. Dans le terminal, on a alors la sortie suivante : ```This is a shared library test... Hello, I am a shared library```.
+
+https://www.cprogramming.com/tutorial/shared-libraries-linux-gcc.html
+
 
 ## À retenir
 
