@@ -1,0 +1,38 @@
+---TD1---
+
+Q1) Le makefile est un fichier ultilisé pour executer un ensemble d'action. Ici, il permet de gerer la compilation du repertoire /gps
+Et la commande "make" permet d'executer un makefile.
+
+Q2) Le compilateur utilisé est celui du langage C "gcc".
+
+Q3) C'est une librairie qui est compilée une seule fois et qui peut etre utilisé par tous les autres programmes(liées au moment de l'execution de ce dernier). 
+
+Q4) 
+fichier c : hello.c
+----------------------
+#include <stdio.h>
+int main()
+{
+	printf("Hello world");
+	return 0;
+}
+----------------------
+
+Commande pour compiler : gcc -o hello.c hello_exe 
+hello_exe est l'executable obtenu.
+
+
+Q5) 
+fichier c : salut.c
+#include <stdio.h>
+---------------------
+void bonjour()
+{
+	printf("Bonjour !");
+}
+---------------------
+Si on prend l'exemple du fichier salut.c précedent peut faire : 
+gcc -c salut.c
+gcc -o libsalut.so -shared salut.o
+
+libsalut.so est notre librairie.
