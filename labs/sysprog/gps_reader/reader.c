@@ -9,69 +9,89 @@
 #include <util.h>
 
 //-----------------------------------------------------------------------------
-int main(int argc, char *argv [])
+int main(int argc, char *argv[])
 {
-    char * port = NULL;
+    int n = 2;
+    char *ports[2];
+    char *port = NULL;
 
     // parse comand line
-    if (argc != 3)
+    if (argc != 3 + n)
     {
-        fprintf(stderr, "Invalid usage: reader -p port_name\n");
+        fprintf(stderr, "Invalid usage: reader -p port_name1 -q port_name2\n");
         exit(EXIT_FAILURE);
     }
 
-    char * options = "p:";
+    char *options = "p:q:";
     int option;
-    while((option = getopt(argc, argv, options)) != -1)
+    while ((option = getopt(argc, argv, options)) != -1)
     {
-        switch(option)
+        switch (option)
         {
-            case 'p':
-                port = optarg;
-                break;
+        case 'p':
+            port = optarg;
+            ports[0] = optarg;
+            break;
+        case 'q':
+            port = optarg;
+            ports[1] = optarg;
+            break;
 
-            case '?':
-                fprintf(stderr, "Invalid option %c\n", optopt);
-                exit(EXIT_FAILURE);
+        case '?':
+            fprintf(stderr, "Invalid option %c\n", optopt);
+            exit(EXIT_FAILURE);
         }
     }
 
     // open serial port
-    int fd = open(port, O_RDWR | O_NOCTTY);
-    if (fd == -1)
+    int fds[2];
+    for (int i = 0; i < n; i++)
     {
-        perror("open");
-        exit(EXIT_FAILURE);
+        printf("%s\n", ports[i]);
+        int fd = open(ports[i], O_RDWR | O_NOCTTY);
+        if (fd == -1)
+        {
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
+        tcflush(fd, TCIOFLUSH);
+        fds[i] = fd;
+        printf("fd = %i \n", fd);
     }
-    tcflush(fd, TCIOFLUSH);
 
     // read port
     char buff[50];
     fd_set fdset;
 
-    while(1)
+    while (1)
     {
         bzero(buff, sizeof(buff));
 
         FD_ZERO(&fdset);
-        FD_SET(fd, &fdset);
-
-        select(fd+1, &fdset, NULL, NULL, NULL);
-
-        if (FD_ISSET(fd, &fdset))
+        int fd;
+        for (int i = 0; i < n; i++)
         {
-            int bytes = read (fd, buff, sizeof(buff));
+            fd = fds[i];
+            FD_SET(fd, &fdset);
 
-            if (bytes > 0)
+            select(fd + 1, &fdset, NULL, NULL, NULL);
+
+            if (FD_ISSET(fd, &fdset))
             {
-                printf("%s\n", buff);
-                fflush(stdout);
+                int bytes = read(fd, buff, sizeof(buff));
+
+                if (bytes > 0)
+                {
+                    printf("GPS fd = %i ------- %s\n", fd, buff);
+                    fflush(stdout);
+                }
             }
         }
     }
 
     // close serial port
-    close(fd);
+    for (int i = 0; i < n; i++)
+        close(fds[i]);
 
     exit(EXIT_SUCCESS);
 }

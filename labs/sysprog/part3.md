@@ -20,6 +20,8 @@ PTTY: /dev/pts/3
 **Question 1** : Selon vous, à quoi correspond le champs indiqué par
                 *PTTY*?
 
+Ce champ correspond à l'adresse du port virtuel par le processus du simulateur GPS. Il s'agit d'un pseudo-terminal (émulé) qui possède comme un vrai terminal un processus associé.
+
 Pour la suite, placez vous dans le répertoire *gps_reader* contenant :
 
   * reader.c : le code du reader que nous allons modifier
@@ -37,21 +39,53 @@ Un binaire *gps_reader* est alors généré.
 Lancez le reader sans paramètre pour avoir l'aide et en déduire son utilisation.
 Puis exécutez le avec les paramètres nécessaires et observez les trames NMEA.
 
+````
+./gps_reader -p /dev/pts/3
+$GPVTG,054.7,T,034.4,M,005.6,010.3,K
+$GPGLL,4836.90,N,00741.30,E,140613,A
+$GPVTG,054.8,T,034.5,M,005.6,010.3,K
+$GPGLL,4836.96,N,00741.36,E,140617,A
+$GPVTG,054.8,T,034.5,M,005.6,010.3,K
+````
+
 **Question 2** : En regardant le code de *reader.c*, y a-t-il quelque chose qui
                  vous chagrine?
+
+Pourquoi on vérifie la lecture de données GPS sur plusieurs *file descriptors* (**fd**) sachant que les données GLL et VTG sont envoyées sur un unique **fd** qui correspond à celui du port virtuel **ptmx** ? Pourquoi utiliser un multiplexage d'entrées sachant qu'on écoute qu'un port ici ?
 
 **Question 3** : Grâce à des recherches Internet (ou en fouinant dans le code
                  du simulateur), déterminez dans quelle trame et dans quel champs
                  l'heure est définie.
 
+L'heure est dans la tram GLL en avant-dernière position (6ème position) : $GPGLL,4836.90,N,00741.30,E,**140613**,A. Ici, l'heure est 14:06:13 UTC.
+
 **Question 4** : Quelles fonctions sont utilisées dans *reader.c* pour
                  ouvrir/écouter/lire/fermer le port virtuel du simulateur?
                  Comment s'appelle ce type de programmation?
+
+Les fonctions utilisées dans *reader.c* sont :
+* **open** pour ouvrir le port virtuel du simulateur et récupérer le descripteur de fichier associé.
+* **select** pour écouter les ```fd + 1``` descripteurs de fichier de lecture de données dans l'ensemble *fdset*.
+* **read** pour lire les données du descripteur de fichier **fd** et les mettre dans le *buffer* **buff**.
+* **close** pour fermer le port virtuel associé au descripteur de fichier **fd**.
+Il s'agit d'un multiplexage d'entrées : le processus **gps_reader** peut donc gérer l'arrivée d'informations à travers plusieurs canaux de type différents.
 
 **Question 5** : Modifiez le code de *reader.c* afin qu'il puisse écouter les
                  trames provenant de deux simulateurs GPS différents (ports
                  paramétrables au lancement). Vérifiez le bon fonctionnement en
                  lançant deux instances du simulateur GPS.
+
+````
+./gps_reader -p /dev/pts/3 -q /dev/pts/6
+/dev/pts/3
+fd = 3 
+/dev/pts/6
+fd = 4 
+GPS fd = 3 ------- $GPVTG,059.5,T,039.2,M,010.3,019.1,K
+GPS fd = 4 ------- $GPVTG,058.8,T,038.5,M,009.6,017.7,K
+GPS fd = 3 ------- $GPGLL,4905.62,N,00810.04,E,171422,A
+GPS fd = 4 ------- $GPGLL,4900.94,N,00805.36,E,171422,A
+````
 
 **Question 6** : Utilisez *syslog* pour afficher l'heure dans la console ainsi
                  que le PID du père.
