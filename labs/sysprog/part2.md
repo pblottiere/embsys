@@ -13,8 +13,13 @@ PTTY: /dev/pts/X
 **Question 1** : Que se passe-t-il au bout de quelques secondes? Qu'en
                  déduisez vous?
 
+Une segmentation fault se produit, l'édition de liens pour les librairies partagées à utiliser ne semble pas fonctionner.
+En allant directement dans /bin pour exécuter le binaire ```./gps```, on obtient l'erreur suivante : "./gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory".
+
 **Question 2** : Quel signal a reçu le processus pour se terminer ainsi? Comment
                 vérifiez vous le numéro du signal reçu?
+
+Le processus a reçu le signal 11) SIGSEGV associé à une segmentation fault pour se termoner ainsi. On peut le vérifier dans un fichier core généré et être rejoué par le débugger GDB pour comprendre l'erreur.
 
 Lors d'une terminaison anormale, un fichier *core* peut être généré. Par défaut,
 la génération d'un fichier core est généralement désactivée :
@@ -53,6 +58,8 @@ de savoir comment votre programme en est arrivé là (image de la pile).
                  problème du binaire *gps*. Quelle partie du code est fausse?
                  Pourquoi?
 
+Le problème vient du fichier source nmea.c ligne 23 avec l'appel de la fonction *puts* ``` puts(NULL);```. En exécutant ```man 3 puts``` on comprend que la fonction attend une chaîne de caractères et non un pointeur *NULL*.
+
 GDB peut être aussi lancé de manière interactive :
 
 ````
@@ -80,6 +87,9 @@ $ n
 **Question 4** : Que se passe-t-il quand vous lancez GDB en mode interactif sur
                  le binaire *gps*?
 
+Une erreur survient en lançant la commande *r* pour rejouer le processus. On a l'erreur suivante : /bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory.
+
+
 Suite au problème repéré, allez dans le répertoire *gps/bin* et lancez la
 commande suivante :
 
@@ -90,13 +100,46 @@ ldd ./gps
 **Question 5** : À quoi sert la commande *ldd*? Quelle information
                 supplémentaire cela vous apporte-t-il?
 
+La commande ldd donne l'ensemble des librairies partagées nécessaires pour exécuter le programme *gps*. Pour chaque dépendance, ldd affiche le chemin de la librairie partagée et l'adresse hexadécimale à laquelle l'objet est chargé..
+```
+  linux-vdso.so.1 (0x00007ffc0f15e000)
+	libptmx.so => not found
+	libnmea.so => not found
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fa7030fc000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fa7036f0000)
+```
+
+
 **Question 6** : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez
                  pas à regarder le fichier *gps/run.sh*.
+
+On exécute la commande suivante dans le terminal :
+```export LD_LIBRARY_PATH=$(pwd)/lib```
+
+Puis on relance la commande ``` ldd .bin/gps``` et on obtient :
+```
+ldd: ./home/estellearrc/Documents/Cours/ENSTA_Bretagne_2020_2022/S4/GNU_Linux_embarque/myproject/embsys/labs/sysprog/gps/bin/gps: No such file or directory
+        linux-vdso.so.1 (0x00007ffd36df6000)
+        libptmx.so => /home/estellearrc/Documents/Cours/ENSTA_Bretagne_2020_2022/S4/GNU_Linux_embarque/myproject/embsys/labs/sysprog/gps/lib/libptmx.so (0x00007f89755fa000)
+        libnmea.so => /home/estellearrc/Documents/Cours/ENSTA_Bretagne_2020_2022/S4/GNU_Linux_embarque/myproject/embsys/labs/sysprog/gps/lib/libnmea.so (0x00007f89753f7000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f8975006000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f8974c68000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f89759ff000)
+```
+L'édition de liens pour les librairies partagées est valide.
 
 Relancez *ldd* puis GDB pour vérifier que votre solution a porté ses fruits.
 
 **Question 7** : Quelle est la différence entre les commandes *s* et *n* dans
                  le prompt gdb suite à un breakpoint?
+
+*s* exécute chaque ligne du code source, y compris celles des sous-fonctions qu'il appelle. On saute donc de fonction en fonction, de fichier en fichier.
+"Step program until it reaches a different source line."
+
+*r* exécute chaque ligne du code source, sans entrer dans les sous-fonctions appelées.
+"Unlike "step", if the current source line calls a subroutine,
+this command does not enter the subroutine, but instead steps over
+the call, in effect treating it as a single source line."
 
 Il existe aussi une version de GDB pour déboguer à distance. Il y
 a alors un GDBServer tournant sur la cible où le programme à déboguer est
@@ -104,6 +147,8 @@ exécuté. Ensuite, un client GDB tourne sur la machine servant à déboguer
 et communique avec le serveur grâce au réseau.
 
 **Question 8** : Dans quel contexte ce type d'outils peut être intéressant?
+
+Ce type d'outils est très intéressant lors d'une erreur de type *segmentation fault* puisqu'aucune information sur la provenance de l'erreur n'est donnée. GDB nous permet de remonter jusqu'à la source de l'erreur sans perdre trop de temps.
 
 ### À retenir
 
@@ -159,9 +204,22 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
                  *printf* (expliquez comment vous utilisez *man* dans ce cas et
                  pourquoi). Comment est appelé ce type de fonction?
 
+On utilise la commande ```man 3 printf``` pour avoir la documentation C de la foonction **printf** et non celle du bash. Cette fonction fait partie des converteurs de sortie formattée, c'est-à-dire qu'elle écrit une sortie selon un format dans un flux de données.
+
 **Question 5** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
                  gestionnaires de signaux. Décrivez les fonctions utilisez
                  ainsi que les signaux gérés.
+
+Le gestionnaire de signaux est la fonction **signals_handler** qui prend en argument le numéro du signal attrapé. La fonction **sigaction** change l'action à réaliser par un processus à la réception d'un signal spécifique. Elle associe donc à un signal donné (ici SIGINT soit le numéro 2) l'action à réaliser à la place de celle qui était réalisée par défaut par le processus.
+
+L'argument **signum** spécifie le signal concerné (tous sont valides à l'exception de *SIGKILL* et *SIGSTOP*).
+
+L'argument **act** renseigne la nouvelle action à mettre en place pour le signal **signum** s'il est non NULL. Si l'argument **oldact** est non NULL, l'action précédemment réalisée est enregistrée dans cette variable.
+
+Pour créer une action, il faut renseigner au moins 3 attributs :
+* **sa_handler** l'action à associer au signal **signum** attrapé par le processus. Elle peut être *SIG_DFL* pour l'action par défaut, *SIG_IGN* pour ignorer le signal, ou un pointeur vers la fonction custom gérant le signal (comme c'est le cas ici).
+* **sa_mask** précise le masque de signaux qui doivent être bloqués lors de l'exécution du gestionnaire du signal attrapé **signum**.
+* **sa_flags** précise l'ensemble des variables drapeaux qui modifient le comportement du signal.
 
 **Question 6** : Hookez le simulateur pour que ce dernier ne puisse plus
                  être interrompu par le signal SIGINT (Ctrl-C) en
@@ -173,9 +231,38 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
 **Question 7** : Comment faire pour interrompre le processus étant donné
                  que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
 
+On peut utiliser le signal *SIGQUIT* avec ```Ctrl + Alt Gr + \```. On peut aussi utiliser le signal *SIGSTP* avec ```Ctrl+Z``` qui va mettre en pause le processus en premier plan.
+
+````
+GPS OK
+^Z   
+[1]+  Stopped                 ./run.sh
+````
+
+On tape la commande ```ps``` dans un terminal pour avoir la liste des processus en cours d'exécution et donc récupérer le PID du script bash "run.sh".
+
+````
+PID TTY          TIME CMD
+ 9487 pts/1    00:00:00 bash
+ 9651 pts/1    00:00:00 run.sh
+ 9657 pts/1    00:00:00 gps
+ 9718 pts/1    00:00:00 ps
+````
+
+ Puis on tue le processus avec la commande ```kill -9 PID``` où PID = 9651 ici. On vérifie que le processus est bien terminé avec ```ps```:
+
+````
+ PID TTY          TIME CMD
+ 9487 pts/1    00:00:00 bash
+ 9724 pts/1    00:00:00 ps
+[1]+  Killed                  ./run.sh
+````
+
 **Question 8** : En regardant le fichier *gps/Makefile*, que pouvez-vous dire
                  de la règle *ok*? À quoi sert-elle et comment
                  fonctionne-t-elle?
+
+La règle **ok** sert à compiler le simulateur avec la variable **GPS_OK = 1** donc à *false*. Le simulateur n'exécutera donc jamais à l'instruction ```puts(NULL);``` et il n'y aura jamais de *core dumped*. Pour cela, on se place dans le dossier */gps* et on exécute ```make ok``` puis ```./run.sh```. Dans le cas où on exécute ```make```, la règle appelée par défaut est **all** et **GPS_OK = 0** donc on obtient un core dumped à l'exécution ```./run.sh```.
 
 ### À retenir
 
