@@ -5,8 +5,21 @@
 #include <fcntl.h>
 #include <string.h>
 #include <termios.h>
+#include <syslog.h>
 
 #include <util.h>
+
+void log()
+{
+    setlogmask(LOG_UPTO(LOG_NOTICE));
+
+    openlog("exampleprog", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1);
+
+    syslog(LOG_NOTICE, "Program started by User %d", getpid());
+    syslog(LOG_INFO, "A tree falls in a forest");
+
+    closelog();
+}
 
 //-----------------------------------------------------------------------------
 int main(int argc, char *argv[])
@@ -92,6 +105,8 @@ int main(int argc, char *argv[])
     // close serial port
     for (int i = 0; i < n; i++)
         close(fds[i]);
+
+    log();
 
     exit(EXIT_SUCCESS);
 }
