@@ -11,7 +11,6 @@
 
 void logger()
 {
-    syslog(LOG_CONS, "hello");
     // open log file with name, header options for each message written, and facility
     openlog("test", LOG_PID | LOG_NDELAY, LOG_LOCAL0);
 

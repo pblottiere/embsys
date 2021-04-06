@@ -104,6 +104,8 @@ local0.=debug /dev/console #/dev/pts/3 /proc/5362/fd/1
 ````
 Par défaut, *rsyslog* utilise la facilité **LOG_USER**, mais pour un usage local, on peut aussi utiliser **LOG_LOCAL0** à **LOG_LOCAL7**. Ici, si la facilité utilisée lors de l'appel à *syslog* est **LOG_LOCAL0** et la priorité est **LOG_INFO** alors le message sera écrit dans le log personnalisé *test.log*. Si la priorité est **LOG_DEBUG**, le message sera écrit dans la console.
 
+Par défaut, *rsyslog* écrit ses messages dans */var/log/syslog*. Ici, ils sont écrits dans */var/log/test.log*.
+
 On exécute ensuite ```sudo service rsyslog restart``` pour prendre en compte les changements de configuration.
 
 Dans le fichier *reader.c*, la fonction **logger** permet décrire des messages de priorité *info* contenant le PID du père dans le *test.log*, et des messages *debug* pour la console.
@@ -112,15 +114,18 @@ Puis, on lance 2 instances du simlateur et le *gps_reader*. On obtient alors dan
 ````
 Apr  5 18:00:18 aspire-a515-54g test[19016]: PPID 9331
 ````
-
+On a donc les informations suivantes :
+* la date et l'heure
+* le nom de la machine utilisée
+* le nom du log
+* [le PID du processus de log]
+* le message du log : le PID du père (ici la console) du processus de log 
 
 Liste des références :
 * ```man 3 syslog``` -> priority = facility | level
 * https://unix.stackexchange.com/questions/11953/make-a-log-file
 * https://unix.stackexchange.com/questions/40533/lubuntu-12-04-syslog-to-custom-file-not-var-log-syslog-but-var-log-mylog
 * https://www.thegeekdiary.com/understanding-rsyslog-filter-options/
-
-
 
 
 ### À retenir
@@ -183,8 +188,30 @@ $ ./shm_writer -p /dev/pts/X -s myshm -l lock
 **Question 1** : Selon vous, à quoi correspond le paramètre *myshm* indiquée via
                  l'option *-s* de *shm_writer*? Et *lock*?
 
+Le paramètre *myshm* indiqué via l'option *-s* de *shm_writer* correspond au nom du segments de mémoire partagée à ouvrir, et *lock* au nom du sémaphore qui contrôlera les accès en lecture/écriture à cette mémoire partagée.
+
 **Question 2** : Où peut-on trouver la représentation du segment de mémoire
                  partagée sur le système de fichiers?
+
+On trouves les PID des 2 processus *gps* et *shm_writer* via :
+````
+$ ps -a
+  PID TTY          TIME CMD
+10535 pts/1    00:00:00 sh
+10538 pts/1    00:00:00 gps
+10539 pts/0    00:00:00 shm_writer
+10622 pts/3    00:00:00 ps
+````
+Le segment de mémoire partagée possède un descripteur de fichier qui sera alors commun à ces 2 processus.
+````
+estellearrc@aspire-a515-54g:/proc/10538/fd$ ls
+0  1  2  3
+estellearrc@aspire-a515-54g:/proc/10539/fd$ ls
+0  1  2  3  4
+````
+Sachant que 0 (stdin), 1 (stdout) et 2 (stderr) sont réservés, le seul descripteur commun est 3. Il s'agit donc du descripteur de fichier de la mémoire partagée entre les 2 processus.
+
+https://opensource.com/article/19/4/interprocess-communication-linux-storage
 
 **Question 3** : Faites un schéma bloc des différents éléments mis en jeu.
 
