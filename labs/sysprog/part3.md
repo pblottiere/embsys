@@ -90,8 +90,37 @@ GPS fd = 4 ------- $GPGLL,4900.94,N,00805.36,E,171422,A
 **Question 6** : Utilisez *syslog* pour afficher l'heure dans la console ainsi
                  que le PID du père.
 
+
 **Question 7** : Modifier la conf du démon syslog pour logger dans un
                  un fichier spécifique.
+
+Pour configurer *rsyslog* comme on souhaite, ```cd /etc/```. On vérifie lle fichier de configuration global *rsyslog.conf* et notamment la présence de cette ligne : ```$IncludeConfig /etc/rsyslog.d/*.conf```.
+
+Puis ```cd /etc/rsyslog.d/``` pour créer une configuration personnalisée *30-test.conf* contenant par exemple les lignes suivantes :
+````
+#if $programname == 'test' then /var/log/test.log
+local0.=info /var/log/test.log
+local0.=debug /dev/console #/dev/pts/3 /proc/5362/fd/1
+````
+Par défaut, *rsyslog* utilise la facilité **LOG_USER**, mais pour un usage local, on peut aussi utiliser **LOG_LOCAL0** à **LOG_LOCAL7**. Ici, si la facilité utilisée lors de l'appel à *syslog* est **LOG_LOCAL0** et la priorité est **LOG_INFO** alors le message sera écrit dans le log personnalisé *test.log*. Si la priorité est **LOG_DEBUG**, le message sera écrit dans la console.
+
+On exécute ensuite ```sudo service rsyslog restart``` pour prendre en compte les changements de configuration.
+
+Dans le fichier *reader.c*, la fonction **logger** permet décrire des messages de priorité *info* contenant le PID du père dans le *test.log*, et des messages *debug* pour la console.
+
+Puis, on lance 2 instances du simlateur et le *gps_reader*. On obtient alors dans le *test.log*:
+````
+Apr  5 18:00:18 aspire-a515-54g test[19016]: PPID 9331
+````
+
+
+Liste des références :
+* ```man 3 syslog``` -> priority = facility | level
+* https://unix.stackexchange.com/questions/11953/make-a-log-file
+* https://unix.stackexchange.com/questions/40533/lubuntu-12-04-syslog-to-custom-file-not-var-log-syslog-but-var-log-mylog
+* https://www.thegeekdiary.com/understanding-rsyslog-filter-options/
+
+
 
 
 ### À retenir
