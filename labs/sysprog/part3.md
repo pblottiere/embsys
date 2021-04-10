@@ -202,18 +202,20 @@ $ ps -a
 10539 pts/0    00:00:00 shm_writer
 10622 pts/3    00:00:00 ps
 ````
-Le segment de mémoire partagée possède un descripteur de fichier qui sera alors commun à ces 2 processus.
+Le segment de mémoire partagée est rattaché à un descripteur de fichier qui sera alors commun à ces 2 processus.
 ````
 estellearrc@aspire-a515-54g:/proc/10538/fd$ ls
 0  1  2  3
 estellearrc@aspire-a515-54g:/proc/10539/fd$ ls
 0  1  2  3  4
 ````
-Sachant que 0 (stdin), 1 (stdout) et 2 (stderr) sont réservés, le seul descripteur commun est 3. Il s'agit donc du descripteur de fichier de la mémoire partagée entre les 2 processus.
+Sachant que 0 (stdin), 1 (stdout) et 2 (stderr) sont réservés, le seul descripteur commun est 3. Il s'agit donc du descripteur de fichier de la mémoire partagée entre les 2 processus. Le descripteur de fichier 4 correspond au fichier de sauvegarde (*backing file*) qui est synchronisé avec la mémoire partagée par le système.
 
 https://opensource.com/article/19/4/interprocess-communication-linux-storage
 
 **Question 3** : Faites un schéma bloc des différents éléments mis en jeu.
+
+Voir *img/shared-memory.png*.
 
 Placez vous dans le répertoire *shm_writer*.
 
@@ -221,11 +223,85 @@ Placez vous dans le répertoire *shm_writer*.
                  *handler.c*, décrivez les fonctions utilisées pour gérer le
                  segment de mémoire partagée.
 
+### Initialisation
+
+````
+// init handlers
+    hndinit(handlers);
+
+void hndinit(struct HANDLERS *handlers)
+{
+    handlers->gpsfd = -1;
+    handlers->sem = NULL;
+    handlers->semname = NULL; 
+    handlers->shmfd = -1;
+    handlers->shm = NULL; 
+    handlers->shdata = NULL; 
+}
+````
+
+On a :
+* **handlers->gpsfd** : descripteur de fichier dans lequel le processus *gps* écrit ses données
+* **handlers->sem** : pointeur sur le sémaphore qui contrôle les accès en lecture/écriture du segment de mémoire partagée
+* **handlers->semname** : nom du sémaphore
+* **handlers->shmfd** : descripteur de fichier du fichier de sauvegarde pour le processus d'écriture dans la mémoire partagée *shm_writer*
+* **handlers->shm** : nom du segment de mémoire partagée entre le processus *gps* et *shm_writer*
+* **handlers->shdata** : pointeur sur les données gps dans le segment de mémoire partagée
+
+### Ouverture du sémaphore
+````
+handlers->sem = sem_open(opts.sem, O_RDWR | O_CREAT,
+                             S_IRUSR | S_IWUSR, 1);
+````
+On a :
+* **opts.sem** : nom du sémaphore
+* **O_RDWR | O_CREAT** : variables drapeaux qui contrôlent l'opération d'appel à la fonction *sem_open*. **O_CREAT** indique que le sémaphore est créé s'il n'existe pas, et **O_RDWR** indique que les opérations de lecture et d'écriture sont possibles à l'ouverture du sémaphore.
+* **S_IRUSR | S_IWUSR** : permissions d'accès au sémaphore. Les opérations d'écriture et de lecture sont autorisées pour le créateur du sémaphore, ici le processus *shm_writer*.
+* La valeur **1** donne le droit au créateur du sémpahore de réaliser une opération de lecture (ou d'écriture si la valeur est **0**).
+
+### Ouverture du port GPS
+````
+handlers->gpsfd = open(opts.port, O_RDWR | O_NOCTTY);
+````
+
+On a :
+* **opts.port** : adresse (dans le système de fichiers) du port à ouvrir
+*  **O_RDWR | O_NOCTTY** : **O_RDWR** autorise les opérations d'écriture et de lecture sur ce port, **O_NOCTTY** indique que le fichier ouvert n'est pas le terminal de contrôle du processus *gps* à l'ouverture du port.
+
+### Ouverture de la mémoire partagée et projection
+
+````
+handlers->shmfd = shm_open(opts.shm, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+````
+La fonction *shm_open* retourne un descripteur de fichier pour le fichier de sauvegarde que le système synchronise avec la mémoire partagée.
+
+````
+ftruncate(handlers->shmfd, sizeof(handlers->shdata));
+````
+La fonction *ftruncate* alloue un certain nombre de bits (ici la taille de la structure de données *SHDATA*) au fichier de sauvegarde. Les processus *shm_writer* et *shm_reader* accèdent uniquement à la mémoire partagée et non pas au fichier de sauvegarde créé.
+
+````
+handlers->shdata = mmap(NULL, sizeof(handlers->shdata), PROT_READ | PROT_WRITE, MAP_SHARED, handlers->shmfd, 0);
+
+````
+La fonction *mmap* crée un nouveau *mapping* dans l'espace d'adresses virtuelles du processus appelant, et renvoie un pointeur vers la mémoire partagée.
+On a :
+* **NULL** : l'adresse de début du segment de mémoire partagée. Si elle est **NULL**, le système choisit l'adresse à laquelle créerle segment de mémoire partagée.
+* **sizeof(handlers->shdata)** donne la longueur (en bits) du segment de mémoire partagée à mapper/synchroniser avec le fichier de sauvegarde.
+*  **PROT_READ | PROT_WRITE** : drapeaux indiquant que le segment de mémoire partafée est protégé en lecture et en écriture (en accord avec le mode d'ouverture du fichier de sauvegarde).
+* **MAP_SHARED** indique que les mises à jour du segment de mémoire partagée sont visibles par les autres processus ayant accès au segment, et que ces mises à jour sont reportées dans le fichier de sauvegarde.
+* **handlers->shmfd** : descripteur de fichier du fichier de sauvegarde (*backing file* ou *underlying file*).
+* **0** : la correspondance ou *mapping* entre le segment de mémoire partagée et le fichier de sauvegarde commence au premier bit du fichier de sauvegarde.
+
 **Question 5** : Quelle fonction utilise le paramètre *myshm* passé en ligne de
                  commande?
 
+La fonction *parse_args* du fichier *util.c* utilise le paramètre *myshm*.
+
 **Question 6** : Quel flag en particulier indique une *création* de segment
                  et pas seulement une ouveture en lecture/écriture?
+
+Il s'agit du flag **O_CREAT**.
 
 Placez vous maintenant dans le répertoire 2_sysprog_part2/src/shm_reader.
 
