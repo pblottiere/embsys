@@ -257,7 +257,7 @@ On a :
 * **opts.sem** : nom du sémaphore
 * **O_RDWR | O_CREAT** : variables drapeaux qui contrôlent l'opération d'appel à la fonction *sem_open*. **O_CREAT** indique que le sémaphore est créé s'il n'existe pas, et **O_RDWR** indique que les opérations de lecture et d'écriture sont possibles à l'ouverture du sémaphore.
 * **S_IRUSR | S_IWUSR** : permissions d'accès au sémaphore. Les opérations d'écriture et de lecture sont autorisées pour le créateur du sémaphore, ici le processus *shm_writer*.
-* La valeur **1** donne le droit au créateur du sémpahore de réaliser une opération de lecture (ou d'écriture si la valeur est **0**).
+* La valeur **1** indique que le sémaphore est déverrouillé. Le processus *shm_writer* a le droit de réaliser une opération de lecture (ou d'écriture)dans le segment de mémoire partagée. La valeur **0** indique bien sûr que le sémaphore est verouillé et que donc aucune opération ne peut être réalisée sur le segmet de mémoire partagée.
 
 ### Ouverture du port GPS
 ````
@@ -325,6 +325,8 @@ est nécessaire.
 **Question 8** : En s'inspirant de *shm_writer/Makefile*, modifiez le fichier
                  *shm_reader/Makefile* pour que la compilation passe.
 
+On ajoute la librairie *realtime* en ajoutant l'option de compilation ```-lrt``` dans le *shm_reader/Makefile*.
+
 Une fois la compilation réalisée avec succès, exécutez *shm_reader*. Vous devez
 obtenir :
 
@@ -340,11 +342,67 @@ time : XXXXXX
 
 **Question 9** : Expliquez l'évolution de la valeur *time* affichée à l'écran.
 
+````
+time: 134709
+
+time: 134709
+
+time: 134709
+
+time: 134709
+
+time: 134709
+
+time: 134709
+
+time: 134709
+
+time: 134709
+
+time: 134713
+
+time: 134713
+
+time: 134713
+````
+
+La valeur de *time* affichée à l'écran est l'heure système à laquelle le gps a acquis sa donnée gps GLL et VTG, ici 13:47:09 pour la première donnée GPS.
+
+### Code GPS 
+````
+ while(1)
+    {
+        sleep(2);
+        write_gll(ptmx.fd);
+
+        sleep(2);
+        write_vtg(ptmx.fd);
+    }
+````
+
+### Code lecteur de la mémoire partagée
+````
+ while(1)
+    {
+        if(handlers.shdata != NULL)
+        {
+            printf("\n");
+            printf("time: %d\n", handlers.shdata->time);
+            fflush(stdout);
+        }
+        usleep(500000);
+    }
+````
+
+Une nouvelle donnée GPS (GLL et VTG) est publiée toutes les 4 secondes, et le lecteur de la mémoire partagée affiche les données toutes les 0.5 secondes. C'est pourquoi on a 8 fois l'affichage de la même heure (13:47:09 ici).
+
 Dans le main de *shm_reader*, le paramètre *handlers* est défini en tant que
 variable globale.
 
 **Question 10** : Quelle est la particularité d'une variable globale? Comment
                   fait-on pour définir une telle variable?
+
+Une variable globale est accessible et modifiable par l'ensemble des fichiers d'un même processus auxquels elle est incluse. Une variable globale est déclarée dans un *header* (fichier .h) pour qu'elle soit connue de tous lors de la compilation. 
 
 **Question 11** : Dans le *main* de shm_reader.c, complétez la boucle *while* de
                   la fonction shmreader afin que les champs *latitude* et
@@ -371,6 +429,26 @@ longitude : XXXX
 
 ...
 ````
+On obtient :
+````
+time: 143345
+latitude: 4918.629883
+longitude: 823.070007
+
+time: 143345
+latitude: 4918.629883
+longitude: 823.070007
+
+time: 143349
+latitude: 4918.689941
+longitude: 823.130005
+
+time: 143349
+latitude: 4918.689941
+longitude: 823.130005
+
+...
+````
 
 Modifiez la fonction *sem_open* utilisée dans la fonction *hndopen* et définie
 dans *shm_writer/handler.c* de cette manière :
@@ -384,6 +462,12 @@ Recompilez *shm_writer*. Relancez *shm_writer* puis *shm_reader*.
 
 **Question 13** : Que se passe t-il côté *shm_reader*? Pourquoi? Quel effet a eu
                   la modification précédente?
+
+Plus aucune donnée GPS n'est affichée dans le terminal. En effet, le dernier argument de la fonction *sem_open* définit la valeur initiale pour le nouveau sémaphore créé. La valeur **1** indique que le sémaphore est déverrouillé. Le processus *shm_writer* a le droit de réaliser une opération de lecture (ou d'écriture) dans le segment de mémoire partagée. 
+
+Du côté du *shm_reader*, le sémaphore est ouvert avec la valeur **0** par défaut. La valeur **0** indique bien sûr que le sémaphore est verouillé et que donc aucune opération ne peut être réalisée sur le segment de mémoire partagée par le processus *shm_reader*.
+
+Ainsi, si l'ouverture du sémaphore est initialisée à **0** par les 2 processus *shm_writer* et *shm_reader*, le sémaphore est verrouillé, personne ne peut accéder à la mémoire partagée et rien ne se passe.
 
 Rétablissez l'appel à *sem_open* du fichier *shm_writer/handler.c* ainsi :
 
@@ -403,6 +487,24 @@ correctement.
                   *shm_writer/handler.c* avec celle définie dans
                   *shm_reader/handler.c*. Quelle différence voyez vous?
                   Expliquez.
+Côté *shm_writer*, la fonction *hndclose* possède les lignes supplémentaires suivantes :
+````
+    // close gps port
+    if (handlers->gpsfd != -1)
+        close(handlers->gpsfd);
+
+    // unlink semaphore
+    if (handlers->semname != NULL)
+        sem_unlink(handlers->semname);
+
+    // unlink shm
+    if (handlers->shm != NULL)
+        shm_unlink(handlers->shm);
+````
+En effet, le processus *shm_writer* :
+* lit les données sur le port virtuel du GPS, il faut donc fermer le fichier correspondant via la fonction *close*.
+* a créé le sémaphore pour le segment de mémoire partagée avec le processus *shm_reader*. Il détruit donc le sémaphore via la fonction *sem_unlink* une fois que tous les processus, qui avaient le sémaphore ouvert, l'ont fermé.
+* a crée le segment de mémoire partagée avec le processus *shm_reader*. Il détruit donc le segment via la fonction *shm_unlink* une fois que tous les processus, qui avaient le segment ouvert, l'ont fermé.
 
 ### À retenir
 

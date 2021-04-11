@@ -26,16 +26,16 @@ int hndopen(struct OPTS opts, struct HANDLERS *handlers)
 
     // open semaphore
     handlers->semname = opts.sem;
-    handlers->sem = sem_open(opts.sem, O_RDWR|O_CREAT,
-                             S_IRUSR|S_IWUSR, 1);
+    handlers->sem = sem_open(opts.sem, O_RDWR | O_CREAT,
+                             S_IRUSR | S_IWUSR, 1);
     if (handlers->sem == SEM_FAILED)
     {
-        perror ("sem_open");
+        perror("sem_open");
         goto err;
     }
 
     // open gps port
-    handlers->gpsfd = open(opts.port, O_RDWR|O_NOCTTY);
+    handlers->gpsfd = open(opts.port, O_RDWR | O_NOCTTY);
     if (handlers->gpsfd == -1)
     {
         perror("open");
@@ -45,7 +45,7 @@ int hndopen(struct OPTS opts, struct HANDLERS *handlers)
 
     // open shared memory and projection
     handlers->shm = opts.shm;
-    handlers->shmfd = shm_open(opts.shm, O_RDWR|O_CREAT, S_IRUSR|S_IWUSR);
+    handlers->shmfd = shm_open(opts.shm, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
     if (handlers->shmfd == -1)
     {
         perror("shm_open");
@@ -59,7 +59,7 @@ int hndopen(struct OPTS opts, struct HANDLERS *handlers)
     }
 
     handlers->shdata = mmap(NULL, sizeof(handlers->shdata),
-                            PROT_READ|PROT_WRITE, MAP_SHARED, handlers->shmfd, 0);
+                            PROT_READ | PROT_WRITE, MAP_SHARED, handlers->shmfd, 0);
     if (handlers->shdata == MAP_FAILED)
     {
         perror("mmap");
