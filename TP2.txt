@@ -1,0 +1,19 @@
+---TD2---
+
+Exercice 1
+
+Q1) Au bout de quelques secondes on a une erreur de segmentation.
+Q2) Il a reçu le signal SIGSEGV.
+...
+Q3) Le problème vient de la ligne 23 du fichier nmea.c " puts(NULL); "
+...
+Q4) Lorsqu'on lance la commande GDB en mode interactif sur le binaire *gps* on a un message d'erreur : "libptmx.so: cannot open shared object file: No such file or directory "
+
+Q5)  La commande "ldd" permet de retrouver les librairies partagées dans un repertoire.
+Elle nous dit que les librairie libptmx.so et libnmea.so ne sont pas trouvées.
+
+Q6) Pour résoudre ce problème il faudrait renseigner le chemin d'acces, afin que les librairies puissent être trouver. Commande : "export LD_LIBRARY_PATH=$(pwd)/lib"
+
+Q7) La commande "s" permet d'exécute une instruction (rentre potentiellement dans les fonctions) et la commande "n" permet d'exécute une instruction (ne rentre pas dans les fonctions) peut-être suivi du nombre de ligne à exécuter.
+
+Q8)
