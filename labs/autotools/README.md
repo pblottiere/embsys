@@ -52,17 +52,33 @@ de compilation se passe bien.
 
 **Question 1** : En analysant le contenu du fichier *configure.ac*, déterminez
                  quel header est vérifié pendant la phase de configuration.
+                 
+sys/socket.h
+
 
 **Question 2** : Modifiez le fichier *configure.ac* pour forcer l'étape de
                  configuration à vérifier la présence d'un header inexistant
                  sur le système. Relancez la phase de configuration et observez
                  les plaintes! Remettez les choses dans l'ordre lorsque vous
                  avez terminé.
+                 
+checking sys/socket_not_found.h usability... no
+checking sys/socket_not_found.h presence... no
+checking for sys/socket_not_found.h... no
+configure: error: "Couldn't find sys/socket.h"
+
 
 **Question 3** : En cherchant sur le net, déterminez à quoi sert la macro
                  *AC_ENABLE_SHARED* utilisée dans le fichier *configure.ac*.
 
+
+Change the default behaviour for LT_INIT to enable shared libraries. This is the default on all systems where Libtool knows how to create shared libraries. The user may still override this default by specifying ‘--disable-shared’. The option ‘shared’ to LT_INIT is a shorthand for this. AM_ENABLE_SHARED is a deprecated alias for AC_ENABLE_SHARED. 
+
 **Question 4** : À quoi sert le fichier *Makefile.am*?
+
+Makefile.am is a programmer-defined file and is used by automake to generate the Makefile.in file (the .am stands for automake). The configure script typically seen in source tarballs will use the Makefile.in to generate a Makefile.
+The configure script itself is generated from a programmer-defined file named either configure.ac or configure.in (deprecated). 
+.ac (for autoconf) can be preferable since it differentiates it from the generated Makefile.in files and that way there can be rules such as make dist-clean which runs rm -f *.in. Since it is a generated file, it is not typically stored in a revision system such as Git, SVN, Mercurial or CVS, rather the .ac file would be.
 
 Lorsque la phase de configuration se passe bien, on peut lancer la phase de
 compilation :
