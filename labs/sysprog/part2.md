@@ -142,14 +142,22 @@ Pour les questions suivantes, allez dans le répertoire de travail
                  problème repéré au sein du simulateur GPS mais cette fois-çi
                  sans erreur.
 
+Segmentation fault (core dumped)
+
+le fichier run.sh a tenté d'accéder à un emplacement mémoire qui ne lui était pas alloué
+
 **Question 2** : Éditez le Makefile pour compiler *hook.c* sous la forme d'une
                  librairie partagée nommée *libhook.so* (s'inspirer de
                  *gps/src/lib/ptmx/Makefile*). Testez la compilation.
+
+Le processus a reçu le signal SIGSEGV. Nous vérifions le numéro du signal avec echo $? et nous obtenons le numéro 139
 
 **Question 3** : Éditez le fichier *run.sh* pour utiliser LD_PRELOAD au moment
                  de lancer le simulateur et ainsi hooker le binaire avec la
                  librairie libhook.so. Exécutez run.sh : le simulateur ne doit
                  plus partir en segfault.
+
+Le problème vient du fait que nous essayons d’accéder à des fichiers dont le chemin est inacessible
 
 Nous avons ici hooké une fonction définie dans une librairie "utilisateur". On
 peut réaliser la même opération sur les librairies systèmes. Par exemple, le
@@ -159,9 +167,24 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
                  *printf* (expliquez comment vous utilisez *man* dans ce cas et
                  pourquoi). Comment est appelé ce type de fonction?
 
+Starting program: /home/anton1/Documents/GNU_LINUX/TPs/myproject/embsys/labs/sysprog/gps/bin/gps 
+/home/anton1/Documents/GNU_LINUX/TPs/myproject/embsys/labs/sysprog/gps/bin/gps: error while loading shared libraries: libptmx.so: cannot open shared object file: No such file or directory
+[Inferior 1 (process 19501) exited with code 0177]
+
 **Question 5** : Analysez *gps/src/bin/gps/gps.c* er repérez où se trouve le
                  gestionnaires de signaux. Décrivez les fonctions utilisez
                  ainsi que les signaux gérés.
+
+Cette commande nous permet d’afficher les bibliothèques logicielles partagées du programmes
+
+Nous avons ceci qui s’affiche :
+linux-vdso.so.1 (0x00007fff16bd2000)
+libptmx.so => not found
+libnmea.so => not found
+libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ff4eb66b000)
+/lib64/ld-linux-x86-64.so.2 (0x00007ff4eb8a4000)
+
+Nous savons maintenant que nous n’arrivons pas à accéder aux bibliothèques libptmx.so et libnmea.so
 
 **Question 6** : Hookez le simulateur pour que ce dernier ne puisse plus
                  être interrompu par le signal SIGINT (Ctrl-C) en
@@ -170,8 +193,12 @@ simulateur GPS utilise la fonction *printf* dès son lancement.
                  un gestionnaire de signaux au sein même de la fonction
                  *printf*  réimplémentée.
 
+export LD_LIBRARY_PATH=$(pwd)/lib
+
 **Question 7** : Comment faire pour interrompre le processus étant donné
                  que ce dernier ne répond plus au Ctrl-C? Citez deux méthodes.
+
+Je n'ai pas encore fini
 
 **Question 8** : En regardant le fichier *gps/Makefile*, que pouvez-vous dire
                  de la règle *ok*? À quoi sert-elle et comment

@@ -104,16 +104,36 @@ suivantes:
 
 **Question 1**: Qu'est ce qu'un Makefile? À quoi sert make?
 
+Le logiciel Make :
+–construit automatiquementdes fichiers exécutables ou desbibliothèques ;
+– permet de gérer des dépendances lors de la compilation par ladéfinition de règles.
+
+Il se base sur un fichier Makefile:
+– qui détermine les opérations nécessaires pour compiler unprogramme ;
+– les exécute si nécessaire(ex : recompilation si modification des sources).
+
 **Question 2**: Quel compilateur est utilisé ici?
 
+Le compilateur utilisé est gcc
+
 **Question 3**: Qu'est ce qu'une librairie partagée?
+
+Les bibliothèques partagées sont du code compilé destiné à être partagé entre plusieurs différents programmes. Ils sont distribués en tant que fichiers .so dans /usr/lib/.
 
 **Question 4**: Donnez un exemple de fichier C et la ligne de commande
                 correspondante pour obtenir un binaire exécutable (un hello
                 world par exemple).
 
+embsys/labs/sysprog/gps/src/lib/nmea est le chemin permettant d’acccéder au fichier nmea.c 
+exemple de ligne de commande dans ce fichier :
+sprintf(str, "%02d%02d%02d", timeinfo->tm_hour, timeinfo->tm_min,timeinfo->tm_sec);
+
 **Question 5**: Donnez un exemple de fichier C et les lignes de commandes
                 correspondantes pour obtenir une librairie partagée.
+
+Dans le Makefile associé au fichier nmea.c nous retrouvons la commande permettant d’obtenir la librairie nmea.o :
+
+mv $(SONAME) ../../../lib
 
 ## À retenir
 
