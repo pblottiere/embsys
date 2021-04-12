@@ -1,0 +1,5 @@
+Question1: Le header vérifier est sys/socket.h
+Question2: On obtient "Cound't not find socket.
+Question3 :Change the default behaviour for LT_INIT to enable shared libraries. This is the default on all systems where Libtool knows how to create shared libraries.
+Question4: MakeFile.am donne les règles de compilation, les noms des binaires a exécuter et les librairies et les nom des executables.
+Question8: Delete almost everything that can be reconstructed with this Makefile.

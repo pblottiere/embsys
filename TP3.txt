@@ -1,0 +1,25 @@
+Question1:
+Pour configs/embsys_deconfig -> fichier de configmenu (kconfig) pour BUildroot, permet activer des fonctionalités.
+Pour busybox.config -> fichier kconfig pour la busyBox
+Pour users.tables -> gérer les droits de l'utilisateur, syntaxe: makeuser
+Question2: raspberrypi3_defconfig est le fichier de configuration pour une Rasberry pi3
+Question3:Contient tous les packages associés avec les fichiers de configuration, de mise a jour (patch)
+Question4: Permet de compiler les options de buildRoot.
+Question5: Librairie C: uClibc-ng /Version Kernel: custom version git 4.9.x/Architecture cible:processus/ABI: EABIhf (gestion des nombre flottants)/Cross compiler buildroot-precompiled-2017.08/ CPU ARM (little endian)
+Question6: oui il sera disponible(=y)
+Question7: Busybox est environnement d'outil et applications. Ca ouvre le menu congifue de BusyBox. On peut ainsi changer les paramètres de busybox, activer des options.
+Question8: Il y a les fichiers de la chaine de cross compilation.Arm-linux-gcc est le binaire nécessaire pour cross compiler.
+Question9: On obtient: 
+hw: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=1c21b02bb918a65e6de1e00bbf7c82efab564d9a, not stripped
+File determine le type de fichier, la version, la distribution associée.
+Avec ./hw: on obtient "Hello World"
+Question 10:On obtient
+hw: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-uClibc.so.0, not stripped
+On obtient une distribution différente, celle désirée par la chaine de cross compilation.
+J'obtient cette erreur:  cannot execute binary file: Exec format error. Cela semble logique car notre distribution ne correspond pas à celle source du compilateur.
+Question 11: Le résultat de la compilation est alors une image iso du kernel ainsi que le bootloader et un RFS (notamment) dans le dossier output/image.
+Question12: zImage: Linux kernel ARM boot executable zImage (little-endian)
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+Question13: Il contient tout les fichiers du Root File System.
+
+
