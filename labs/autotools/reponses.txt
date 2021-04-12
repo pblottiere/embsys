@@ -1,0 +1,2 @@
+1) le header socket.h
+3) autorise les librairies partagées

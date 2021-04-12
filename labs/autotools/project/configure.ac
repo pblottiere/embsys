@@ -16,6 +16,8 @@ AC_ENABLE_SHARED
 # check headers
 AC_CHECK_HEADER(sys/socket.h, [],
                 [AC_MSG_ERROR(["Couldn't find sys/socket.h"])])
+#AC_CHECK_HEADER(sys/socket3.h, [],
+                #[AC_MSG_ERROR(["Couldn't find sys/socke3t.h"])])
 
 
 # output files
