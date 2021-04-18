@@ -50,6 +50,8 @@ $ sudo dd if=sdcard.img of=/dev/sdX
 **Question 1**: Une fois le flashage terminé, combien y-a t-il de partition
                 sur la carte SD? Que contiennent-elles?
 
+Après flashage du port ```/dev/sda```, il y a deux partitions ```/dev/sda1``` et ```/dev/sda2```. La première partition contient le bootloader et la seconde partition le RFS (*Root File System*).
+
 **Question 2**: Lire la
                 [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
                 de la RPI3. Quels sont les ports TX/RX?
@@ -63,6 +65,9 @@ avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
 
 Puis, connectez vous en tant que *user* sur la RPI3 (lire le fichier
 *users.tables* pour déterminer le mot de passe).
+
+username = user
+password = user1*
 
 **Question 4**: Déterminez l'adresse IP de votre RPI3. Quelle commande
                 avez-vous utilisé?
