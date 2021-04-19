@@ -70,6 +70,7 @@ Question 10: Utilisez la commande file sur le binaire résultant. Quelle différ
 ous avons un exécutable de type "executable", la différence est que un executable compilé peut être lié à un "object share" mais pas un "executable".
 ce fichier est compilé avec le compilateur compilé
 il y a une erreur de format.
+avant de pour executer le fichier .hw il faudrait ajouter les varibales d'environnements avec une comande export ...
 
 Question 11: Que contient le répertoire output/images? Décrivez notamment l'utilité des fichiers rootfs.tar, zImage et sdcard.img.
 
