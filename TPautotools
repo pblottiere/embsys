@@ -1,0 +1,9 @@
+Q1) on remarque que le config header est config.h 
+Q2) On tombe sur une erreur : required file not found !
+Q3) AC_ENABLE_SHARED permet d'autoriser l'utilisation des librairies partagée
+Q4) Le Makefile.am est un Makefile de plus haut niveau permettant d'avoir un seul point de référence pour les chemins relatifs.
+Q5)Il fallait changer le nom de la variable bin_programs qui correspond à l'executable binaire
+Q6) j'ai tenté la commande ./client 192.168.0.15 coucou mais l'erreur buffer overflow detected apparait :(
+Q7) 
+
+Q9) Après la commande maintenair-clean, le projet semble nettoyé, il n'y a aucune trace de compialtion et des commandes de configuration que nous avons lancé précédement dans le TP
