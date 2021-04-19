@@ -53,16 +53,29 @@ de compilation se passe bien.
 **Question 1** : En analysant le contenu du fichier *configure.ac*, déterminez
                  quel header est vérifié pendant la phase de configuration.
 
+### check headers
+AC_CHECK_HEADER(sys/socket.h, [],
+                [AC_MSG_ERROR(["Couldn't find sys/socket.h"])])
+
 **Question 2** : Modifiez le fichier *configure.ac* pour forcer l'étape de
                  configuration à vérifier la présence d'un header inexistant
                  sur le système. Relancez la phase de configuration et observez
                  les plaintes! Remettez les choses dans l'ordre lorsque vous
                  avez terminé.
 
+checking usr/bjr.h usability... no
+checking usr/bjr.h presence... no
+checking for usr/bjr.h... no
+configure: error: "Couldn't find usr/bjr.h"
+
 **Question 3** : En cherchant sur le net, déterminez à quoi sert la macro
                  *AC_ENABLE_SHARED* utilisée dans le fichier *configure.ac*.
 
+La macro *AC_ENABLE_SHARED* permet d'utiliser les librairies partagées pour le projet.
+
 **Question 4** : À quoi sert le fichier *Makefile.am*?
+
+Il permet de configurer les options de compilation du projet (gestion des dépendances, répertoires, variables d'environnement, enchaînement de sinstructions de compliation, etc.).
 
 Lorsque la phase de configuration se passe bien, on peut lancer la phase de
 compilation :
@@ -85,6 +98,15 @@ dur).
 **Question 6** : Grâce à l'aide des binaires *client* et *miniserver* (lancez
                  les binaires sans options), testez leur bon fonctionnement en
                  local.
+
+Opened issue :
+````
+./src/miniserver/miniserver 
+Server is listening...
+*** buffer overflow detected ***: ./src/miniserver/miniserver terminated
+Aborted (core dumped)
+ ./client 192.168.43.250:5000 "hello"
+````
 
 Lors de la phase de compilation, le compilateur natif est utilisé. Dans le cadre
 d'une cross-compilation, on peut utiliser l'option *--host* lors de la

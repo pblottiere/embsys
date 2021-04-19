@@ -16,6 +16,8 @@ AC_ENABLE_SHARED
 # check headers
 AC_CHECK_HEADER(sys/socket.h, [],
                 [AC_MSG_ERROR(["Couldn't find sys/socket.h"])])
+# AC_CHECK_HEADER(usr/bjr.h, [],
+              #  [AC_MSG_ERROR(["Couldn't find usr/bjr.h"])])
 
 
 # output files

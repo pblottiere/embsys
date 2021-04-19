@@ -50,9 +50,13 @@ $ sudo dd if=sdcard.img of=/dev/sdX
 **Question 1**: Une fois le flashage terminé, combien y-a t-il de partition
                 sur la carte SD? Que contiennent-elles?
 
+Après flashage du port ```/dev/sda```, il y a deux partitions ```/dev/sda1``` et ```/dev/sda2```. La première partition contient le bootloader et la seconde partition le RFS (*Root File System*).
+
 **Question 2**: Lire la
                 [datasheet](https://components101.com/microcontrollers/raspberry-pi-3-pinout-features-datasheet)
                 de la RPI3. Quels sont les ports TX/RX?
+
+Le port TX correspond au pin GPIO14, et RX correspond au pin GPIO15.
 
 Ensuite, branchez l'adaptateur USB-TTL sur les ports TX/RX et ouvrez un
 terminal série (gtkterm, minicom, ...). Finalement, connectez vous au réseau
@@ -61,14 +65,39 @@ avec un cable Ethernet, insérez la carte SD et démarrez la RPI3.
 **Quesion 3**: Quelle est la configuration du port série permettant une
                communication avec la RPI3 (baud, etc)?
 
+Port sur la machine hôte du câble USB TTL = /dev/ttyUSB0
+Configuration du port série sur la Raspberry Pi dans la partition ```/dev/sda1/cmdline.txt``` :
+````
+root=/dev/mmcblk0p2 rootwait console=tty1 console=ttyAMA0,115200
+````
+console=ttyAMA0
+baud = 115200
+
 Puis, connectez vous en tant que *user* sur la RPI3 (lire le fichier
 *users.tables* pour déterminer le mot de passe).
+
+username = user
+password = user1*
 
 **Question 4**: Déterminez l'adresse IP de votre RPI3. Quelle commande
                 avez-vous utilisé?
 
+IP addr : 172.20.11.251 obtenue avec ```ifconfig```.
+
 **Question 5**: Testez la connection ssh en tant que *user* et *root*. Quelle
                 différence observez-vous? Pourquoi? Où est-ce configuré?
+
+En tant que *user*, on tape ```ssh user@172.20.11.251``` dans le terminal de la machine hôte, puis le mot de passe ```user1*```. En tapant la commande ```ls```, rien ne s'affiche. En effet, *user* a uniquement accès au ```/home/user/```.
+
+En tant que *root*, donc en tapant la commande ```su``` puis le mot de pass ```root1*```, la commande ```ls``` affiche tout le RFS car il se trouve à la racine du RFS. Ce comportement est configuré dans la partition 1 de boot ```/dev/mmcblk0p1``` dans le fichier *cmdline.txt* : ```root=/dev/mmcblk0p2``` (le root a accès a la partition 2 qui correspond au RFS).
+
+````
+$ cd ..
+$ ls -a
+.           dev         lib         lost+found  opt         run         tmp
+..          etc         lib32       media       proc        sbin        usr
+bin         home        linuxrc     mnt         root        sys         var
+````
 
 #### Manuel (juste pour information, à ne pas faire)
 
@@ -88,7 +117,10 @@ carte SD:
 
 ```` shell
 $ dd if=/dev/zero of=/dev/mmcblkX
-````
+```
+dd = copie binaire donc pas de sécurité, on peut écraser son disque
+if = input file
+of = output file, disque sur lequel on veut écrire
 
 Ensuite, informez vous sur l'utilisation de la commande *fdisk* afin de
 partitionner la carte SD tel que:
@@ -201,6 +233,8 @@ bootz ${kernel_addr_r} - 0x2000000
 
 **Question 6**: En cherchant sur le net, trouvez l'utilité des commandes U-Boot
                 *fatload*, *setenv* et *bootz*.
+
+
 
 Puis compiler ce fichier avec *mkimage*:
 
