@@ -1,0 +1,90 @@
+Question 1: Décriver de manière plus précise l'utilité ainsi que la syntaxe de chacun des 3 fichiers mentionnés ci-dessus
+
+
+- configs/embsys_defconfig : c'est le fichier de configuration de buildroot, ce fichier contient les intructions permettant de spécifier les éléments que nous voulons dans le système qui sera construit, la configurations se fait en choisissant des booléens ou des strings.
+	syntaxe:
+BR2_PACKAGE_MODULE_INIT_TOOLS is not set
+BR2_TARGET_UBOOT_CUSTOM_GIT_REPO_URL=""
+
+- busybox.config : C'est le fichier de configuration de busybox, qui permet plus ou moins de faciliter la création du lien symbolique. Les champs peuvent être activés ou désactivés en utilisant ( is not pu = y )
+	syntaxe 
+CONFIG_FEATURE_SYSLOGD_DUP is not set
+CONFIG_FEATURE_SYSLOGD_CFG=y
+
+- users.table : C'est un fichier utilisé par buildroot pour sauvegarder les informations relatives aux utilisateurs comme leurs shell par defaut. Chaque ligne correspond à un utilisateur.
+	syntaxe 
+user -1 users_group -1 =user1* /home/user /bin/sh -
+
+
+Question 2: En considérant que la cible est une carte RaspberryPi3 avec un OS 32 bits, quel est le fichier de configuration Buildroot par défaut à utiliser?
+
+raspberrypi3_defconfig dans le dossier configs
+
+
+Question 3: Que contient le répertoire package et à quoi servent les sous-répertoires et fichiers associés?
+
+Le dossier package contient tous les packages qui pourront être utilisés ou disponible à l'OS cible.
+Les sous repertoires contiennent les fichiers HASHS qui sont couramment utilisés comme une méthode de vérification de la taille du fichier.
+il y a aussi les fichiers configure.in qui contient les configurations du package
+
+Question 4: À quoi sert la commande précédente?
+
+cette commande permet le lancement d’une IHM de configuration utilisant Kconfig se fait, elle permet aussi de configuré le busybox, on obtient un fichier de configuration à la sortie.
+
+Question 5: En naviguant dans le menu, repérez:
+
+- Architecture : ARM little endian
+- CPU : ARMV8
+- ABI : EABIhf
+- Bibliothèque C : uClibc-ng
+- Compilateur croisé : GCC 6.x
+- version du noyau : depend du depot git
+(https://github.com/raspberrypi/linux.git) URL of custom reposito│ │  
+  │ │    (9126e25b0934bd7bd843763310ea4b34c6e139d0) Custom repository vers│ 
+
+
+Question 6: En recherchant dans l'interface de Buildroot, déterminez si le paquet openssh sera compilé et disponible dans l'OS cible. De même, retrouver cette information en analysant le fichier de configuration embsys_defconfig.
+
+Dans le fichier embsts.config on a la ligne suivante BR2_PACKAGE_OPENSSH=y qui prouve que le package sera compilé et utilisable.
+De même en faisant une recherche dans l'IHM ( /openshh ) on a BR2_PACKAGE_OPENSSH [=y] qui prouve que le package sera compilé et utilisable.
+
+Question 7: Qu'est ce que busybox? À quoi sert la commande make busybox-menuconfig? Qu'obtiens t'on et que pouvons nous faire? 
+
+busybox est un binaire unique fournissant les commandes grâce à un jeu de liens symboliques, la commande busybox-menuconfig permet de spécifier les configurations du busybox, après on obtiens un fichier de configuration qui sera utilisé par le buildroot pour compiler l'OS cible.
+
+Question 8: Que contient le répertoire output/host? À quoi correspond le binaire output/host/usr/bin/arm-linux-gcc?
+
+le répertoire output/host contient la chaine de  cross-compilation
+
+le binaire output/host/usr/bin/arm-linux-gcc est la chaine d'outils de cross-compilation
+
+Question 9: Décrire le résultat de la commande file. Que se passe t-il si vous exécutez la commande ./hw?
+
+nous avons un exécutable de type "object share" avec des liens dynamiques ce i signifie que es bibliothèques externes incluses dans le code source sont compilées mais un lien vers la bibliothèque compilée (ou un objet dans la perspective de l'éditeur de liens) est ajouté à l'exécutable (et les bibliothèques / objets compilés sont chargés par l'éditeur de liens au moment de l'exécution si nécessaire.
+Le compilateur utilisé est le gcc de notre ordinateur.
+Le fchier hw s'exécute parfaitement 
+
+
+Question 10: Utilisez la commande file sur le binaire résultant. Quelle différences constatez vous par rapport au cas précédent (binaire généré avec gcc)? Que se passe t-il si vous essayez d'exécuter la commande ./hw? Expliquez pourquoi.
+
+ous avons un exécutable de type "executable", la différence est que un executable compilé peut être lié à un "object share" mais pas un "executable".
+ce fichier est compilé avec le compilateur compilé
+il y a une erreur de format.
+
+Question 11: Que contient le répertoire output/images? Décrivez notamment l'utilité des fichiers rootfs.tar, zImage et sdcard.img.
+
+le repertoire output/images contient les images compilées.
+
+
+Question 12: Que vous dis les résultats de la commande file lorsque vous l'utilisez sur les fichiers zImage et sdcard.img?
+
+
+le fichier zimage est lié au kernel tandis que sdcar.img enumère les partitions de  cartes SD ainsi que leurs tailles ( en gros des informations sur la carte SD du système compilé)
+
+
+Question 13: Que contient le répertoire /tmp/rootfs?
+
+
+le repertoire /tmp/roootfs contient plusieurs sous-repertoires (etc   lib	  linuxrc  mnt	proc  run   sys  usr ,dev  home  lib32  media    opt	root  sbin  tmp  var )
+
+
