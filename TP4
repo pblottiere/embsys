@@ -1,0 +1,14 @@
+Q1)embsys_defconfig et busybox.config sont des fichiers avec la définition de beaucoup de variable (le fichier semble contenir beaucoup de chose)
+le users.table ne contient qu'une ligne défissant l'utilisateur.
+Q2)
+Q3) Le répertoire package semble contenir beaucoup de librairies pour différents languages
+Q4) La commande make demande d'effectuer la compilation associé au embsys_defconfig, visiblement nothing to be done for 'embsys_defconfig'
+Q5) Version du Kernel : 4.12.10
+  l'architecture matérielle cible : ARM (little endian)
+  l'ABI : EABIhf le hf permet d'utiler les floating points unit, cela peut mettre de faire tourner un programm plus vite si le cpu le supporte
+Q6)
+Q7)BusyBox est un logiciel qui implémente un grand nombre des commandes standard sous Unix. lancer la commande nous emmene dans le menu de la busybox, 
+il nous est donc possible de se promener dans les configuration de cete dernière
+Q8) Le répertoire output/host semble contenir un utilitaire pour compiler du c. Le fichier binaire serait un kernel arm linux ?
+Q9)  La commande file nous donne des informations sur le binaire. La commande est executé par le ./hw
+Q10 ) mon vi crash en boucle je n'arrive pas à refaire mon fichier .c 
