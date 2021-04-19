@@ -1,0 +1,26 @@
+
+**Reponses aux questions** 
+
+Question 1: Qu'est ce qu'un Makefile? À quoi sert make?
+
+le Makefile est un fichier qui contient des paramètres pour une compilation avec gcc
+
+En revanche make est l'outil qui appelle le makefile pour  exécuter un ensemble d'actions, comme la compilation d'un projet, l'archivage de document, la mise à jour de site, etc...
+
+
+Quel compilateur est utilisé ici? 
+
+Le compilateur utilisé est le compilateur gcc
+
+Qu'est ce qu'une librairie partagée?
+
+les librairies partagées sont du code compilé destiné à être partagé entre plusieurs différents programmes. Ils sont distribués en tant que fichiers .so
+
+
+Question 4: Donnez un exemple de fichier C et la ligne de commande correspondante pour obtenir un binaire exécutable (un hello world par exemple).
+
+Fichier question4.c, le code a exécuter est gcc question4.c -o question4
+
+Question 5: Donnez un exemple de fichier C et les lignes de commandes correspondantes pour obtenir une librairie partagée.
+
+fichier question5.c
