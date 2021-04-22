@@ -1,0 +1,34 @@
+1. Le fichier configs/embsys_defconfig permet de configurer Buildroot, qui décrit alors quelles fonctionnalités vont être utilisées. Il est au format KConfig. Meme chose pour le fichier busybox.config.
+Le fichier users.tables permet de définir les utilisateurs et leurs droits d'accès par Buildroot. D'après la doc Buildroot, la syntaxe utilisée est "Makeusers syntax".
+
+2. Le fichier a utiliser est le configs/raspberrypi3_defconfig
+
+3. Il contient la liste des packages intallés. La plupart des packages contiennent un fichier Config.in propre à chaque package, un fichier .hash avec le package compressé, et un fichier .mk en Shell.
+
+4. Cette commande compile toutes les options utilisées par Buildroot.
+
+5. 
+Architecture matérielle cible : CPU
+CPU ciblé : ARM (little endian)
+ABI : EABIhf -> gestion des flottant, le "hf" précise que le modèle support le "Hard floating point model"
+Librairie C : uClibc-ng
+Version du cross-compilateur : Buildroot 2017.08 toolchain
+Version du kernel : 4.9.x
+
+6. Oui il sera compilé puisque le BR2_PACKAGE_OPENSSH est défini sur y
+
+7. C'est un environnement d'outils. La commande compile et ouvre le menu configuration de busybox. On peut changer les paramètres de busybox et choisir ou non d'activer les outils disponibles.
+
+8. Il contient les fichiers relatifs à la chaine de cross compilation. Il correspond au binaire du compilateur qu'on utilise.
+
+9. Elle donne les informations sur la distribution, etc
+
+10. La distribution a changé. On ne peut pas executer ce binaire, puisque la distribution utilisée pour compiler n'est pas compatible avec la notre.
+
+11. Il contient les images iso du Kernel. rootfs.tar est une archive contenant les fichiers RFS, et sdcard.img une image de la carte SD.
+
+12. 
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+
+13. Le répertoire /tmp/rootfs contient l'architecture qu'on retrouvera telle quelle sur la RPi.
