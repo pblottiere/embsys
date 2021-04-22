@@ -1,0 +1,17 @@
+1. Un makefile est un fichier avec des paramètres qui permettent de compiler un code. Make va lire les makefiles et compiler le code source pour construire un code binaire exécutable.
+
+2. On utilise gcc ici. 
+
+3. Une librairie partagée est un code source disponible à tout le monde, standardisé, associée aux programmes lorsqu'ils sont exécutes. Elle est chargée une fois et peut être utilisée par plusieurs programmes.
+
+4. Exemple de commandes qu'on peut utiliser :
+
+$ touch mycode.c
+$ echo "#include <stdio.h>" >> mycode.c
+$ echo 'int main () {printf("Hello World !"); return 0;}' >> mycode.c
+$ gcc mycode.c
+
+5. Le programme créé par les commandes précédentes utilise déjà des librairies partagées. On peut les repérer avec la commande 
+$ ldd "nom du binaire"
+
+

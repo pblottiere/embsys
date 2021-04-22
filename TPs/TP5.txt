@@ -1,0 +1,15 @@
+1. Il y a 2 partitions sur la carte SD
+
+2. Ce sont les GPIO15 et 14
+
+3. Baudrate : 115200
+On peut trouver les infos dans la partition de 34MB, en ouvrant le fichier cmdline.txt.
+
+On a pu se connecter avec le login user et le mot de passe user1*
+
+4. On a du reboot la carte pour avoir une IP
+Après avoir utilisé ifconfig on trouve l'IP : 192.168.1.74
+
+5. On peut se connecter en user mais on ne peut pas effectuer toutes les commandes. Par exemple, la commande 'ls' ne renvoit rien. En revanche, la commande 'ping Google.fr' renvoie des informations.
+On ne peut pas se connecter en ssh avec root.
+

@@ -1,0 +1,20 @@
+Exercice 1
+
+1. On a un message d'erreur : Segmentation fault (core dumped). Le code demande surement trop d'espace memoire et un signal d'arret a ete envoye
+
+2. Certainement le message RLIMIT_CORE
+
+3. L'erreur semble venir de la fonction __GI__IO_puts du fichier ioputs.c puisque c'est la derniere instruction qui a ete effectuee
+
+4. Une bibliotheque partagee est manquante 
+
+5. Elle essaie de trouver les dépendances aux librairies et de les localiser
+
+6. On peut simplement modifier la variable LD_LIBRARY_PATH pour qu'elle donne le bon chemin vers les librairies 
+
+7. La différence semble etre est la taille du pas pour passer les lignes de code (s fait des increments plus petits que n)
+
+8. Dans le cas d'un systeme embarque ne disposant pas d'un ecran pour pouvoir lire les messages, par exemple
+
+
+
