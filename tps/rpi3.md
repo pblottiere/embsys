@@ -21,3 +21,8 @@
   - U-Boot fatload loads a binary file from a dos filesystem.
   - setenv sets the environment variables.
   - boot boots Linux zImage image from memory.
+
+
+## Partie 5:: Flashage et UBoot 
+
+* Question
