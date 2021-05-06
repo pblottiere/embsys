@@ -23,6 +23,44 @@
   - boot boots Linux zImage image from memory.
 
 
-## Partie 5:: Flashage et UBoot 
+# Partie 5: Flashage et UBoot 
 
 * Question
+
+
+## Partie 6: I2C et BME280
+
+* Question 1:
+
+* Question 2:
+  - VCC: input
+  - GND: ground
+  for the bus:
+    - SCL: SCK (serial clock)
+    - SDA: SDI (serial data)
+
+* Question 3: We see the following now:
+  *0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+  00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+  70: -- -- -- -- -- -- -- 77*
+
+* Question 4: Page 32, we see that the slave address is 0x77.
+
+* Question 5: 
+  - For the compilation of bme280.c and linux_userspace.c we used docker.
+    In order to launch it: 
+    `sudo docker start "id of the docker"`
+    `sudo docker exec -it "id of the docker" /bin/bash`
+  
+  - For the cross compilation:
+    `./../buildroot-precompiled-2017.08/output/host/usr/bin/arm-linux-gcc bme 280.c linux_userspace.c -o bme`
+    The output is called bme.
+  
+  - In order to call the sensors on the raspberry it was done `./bme dev/ipc-1`
+    The values appear, but they seem frozen.
