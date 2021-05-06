@@ -34,6 +34,7 @@ After that we did not manage to launch the system, as it never booted.
 ## Partie 6: I2C et BME280
 
 * Question 1:
+![Pins connection](pins.jpg)
 
 * Question 2:
   - VCC: input
