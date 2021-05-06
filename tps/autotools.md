@@ -9,6 +9,6 @@
 
 * Question 4: Makefile.am is a configuration file used by the automake to generate the Makefile.in
 
-* Question 5: One just has to change the a.out values to miniserver inside src/miniserver/Makefile.am
+* Question 5: One just has to change the a.out values to miniserver inside *src/miniserver/Makefile.am*
 
 * Question 6: 
