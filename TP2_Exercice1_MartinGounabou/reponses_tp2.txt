@@ -1,0 +1,39 @@
+Question 1 : Que se passe-t-il au bout de quelques secondes? Qu'en déduisez vous?
+
+Apres quelques secondes, le processus s'arrete et affiche une erreur de segmentation, j'en deduis qu'il y a une violation de memoire
+
+Question 2 : Quel signal a reçu le processus pour se terminer ainsi? Comment vérifiez vous le numéro du signal reçu?
+
+Après avoir l'aide en ligne, la violation de la protection memoire correspond au signal SIGSEGV, qui a pour numero 12, on peut juste executer la commande kill -l , on a la liste des signaux precedes de leurs numeros.
+
+Question 3 : Grâce à GDB et au fichier core généré, analysez la source du problème du binaire gps. Quelle partie du code est fausse? Pourquoi?
+
+Le problème se produit au niveau du code gps, avec l'utilisation de * nmea_vtg (& vtg) * à la ligne 40 de la source, ce qui déclenche une erreur au niveau de la bibliothèque nmea à la ligne 23 avec la commande * met (NULL) *, étant NULL un paramètre défectueux pour les put.
+
+Question 4 : Que se passe-t-il quand vous lancez GDB en mode interactif sur le binaire gps?
+
+lorsque on lance le GDB en mode interactif sur le binaire gps, le programme plante comme precedemment
+
+Question 5 : À quoi sert la commande ldd? Quelle information supplémentaire cela vous apporte-t-il?
+
+La commande ldd permet de lister l'ensemble des bibliothèques partagées requises par un exécutable.
+
+l'information supplementaire est la liste des bibliothèques partagées manquantes, ce qui permet de resoudre les problèmes de bibliothèques partagées manquantes.
+
+
+Question 6 : Comment résoudre ce problème en tant qu'utilisateur? N'hésitez pas à regarder le fichier gps/run.sh.
+
+pour resoudre le probleme il suffit d executer les commandes suivantes 
+	- LD_LIBRARY_PATH="$(pwd)/lib"
+	- export LD_LIBRARY_PATH
+
+Question 7 : Quelle est la différence entre les commandes s et n dans le prompt gdb suite à un breakpoint?
+
+La commande n, s'exécute jusqu'à la prochaine ligne de code dans le code source, tandis que La commande s, fait la même chose, mais n'entre pas dans les fonctions telles qu'elles apparaissent dans le code, sautant leur exécution.
+
+Question 8 : Dans quel contexte ce type d'outils peut être intéressant?
+
+ce type d'outils peut etre interresant lorsque on travaille sur un meme projet a plusieurs. un autre pourra debugger votre code de son ordinateur.
+
+
+

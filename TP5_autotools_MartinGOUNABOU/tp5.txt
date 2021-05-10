@@ -1,0 +1,28 @@
+Question 1 : En analysant le contenu du fichier configure.ac, déterminez quel header est vérifié pendant la phase de configuration.
+
+sys/socket.h
+
+Question 2 : Modifiez le fichier configure.ac pour forcer l'étape de configuration à vérifier la présence d'un header inexistant sur le système. Relancez la phase de configuration et observez les plaintes! Remettez les choses dans l'ordre lorsque vous avez terminé.
+
+
+en ajoutant la ligne suivante dans le fichier configure.ac AC_CHECK_HEADER(sys/inexistant.h, [], [AC_MSG_ERROR(["Couldn't find sys/socket.h"])]) on obtient les erreurs suivantes : 
+checking sys/inexistant.h usability... no
+checking sys/inexistant.h presence... no
+checking for sys/inexistant.h... no
+
+
+Question 3 : En cherchant sur le net, déterminez à quoi sert la macro AC_ENABLE_SHARED utilisée dans le fichier configure.ac.
+
+Modifiez le comportement par défaut pour LT_INITactiver les bibliothèques partagées. 
+
+Question 4 : À quoi sert le fichier Makefile.am?
+
+Makefile.amest un fichier défini par le programmeur et est utilisé par automakepour générer le fichier Makefile.in
+
+
+Question 5 : Modifiez le fichier Makefile.am pour qu'il compile le fichier src/miniserver/miniserver.c en un binaire nommé miniserver.
+
+fait 
+
+Question6 : test de fonctionnement 
+erreur lors de l execussion
