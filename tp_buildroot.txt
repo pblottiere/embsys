@@ -1,0 +1,73 @@
+Question 1:Décriver de manière plus précise l'utilité ainsi que la syntaxe de chacun des 3 fichiers mentionnés ci-dessus.
+
+Le fichier configs/embsys_defconfig permet de configurer Buildroot, qui décrit alors quelles fonctionnalités vont être utilisées. Il est au format KConfig. Meme chose pour le fichier busybox.config.
+Le fichier users.tables permet de définir les utilisateurs et leurs droits d'accès par Buildroot. D'après la doc Buildroot, la syntaxe utilisée est "Makeusers syntax".
+
+QUestion 2: En considérant que la cible est une carte RaspberryPi3 avec un OS 32 bits, quel est le fichier de configuration Buildroot par défaut à utiliser?
+
+Le fichier a utiliser est le configs/raspberrypi3_defconfig
+
+Question 3:Que contient le répertoire package et à quoi servent les sous-répertoires et fichiers associés?
+
+
+ Il contient la liste des packages intallés. 
+ Config.in propre à chaque package, 
+ un fichier .hash avec le package compressé, 
+ Un fichier .mk en Shell.
+
+QUestion 4: À quoi sert la commande précédente?
+
+Cette commande compile ce dont  a besoin le buildroot(ces divers options).
+
+
+Question 5: 
+
+Architecture matérielle cible : CPU
+CPU ciblé : ARM (little endian)
+ABI : EABIhf -> gestion des flottant, le "hf" , le "Hard floating point model"
+Librairie C : uClibc-ng
+Version du cross-compilateur : Buildroot 2017.08 toolchain
+Version du kernel : 4.9.x
+
+
+Question 6: En recherchant dans l'interface de Buildroot, déterminez si le paquet openssh sera compilé et disponible dans l'OS cible. De même, retrouver cette information en analysant le fichier de configuration embsys_defconfig.
+
+Oui il sera compilé et est disponible dans l'OS cible.
+
+
+Question 7: Qu'est ce que busybox? À quoi sert la commande make busybox-menuconfig? Qu'obtiens t'on et que pouvons nous faire?
+
+C'est un environnement d'outils. 
+La commande compile busybox et l'ouvre. 
+On peut changer les paramètres de busybox.
+
+Question 8: Que contient le répertoire output/host? À quoi correspond le binaire output/host/usr/bin/arm-linux-gcc?
+
+Il contient les fichier necessaire a la cross-compilation.
+Il correspond au binaire du compilateur qu'on utilise.
+
+Question 9: Décrire le résultat de la commande file. Que se passe t-il si vous exécutez la commande ./hw?
+
+Elle donne les informations sur la distribution.
+
+Question 10: Utilisez la commande file sur le binaire résultant. Quelle différences constatez vous par rapport au cas précédent (binaire généré avec gcc)? Que se passe t-il si vous essayez d'exécuter la commande ./hw? Expliquez pourquoi.
+
+On ne peut pas executer ce binaire. La distribution utilisée n'est compatible avec celle de nos ordianteur.
+
+Question 11: Que contient le répertoire output/images? Décrivez notamment l'utilité des fichiers rootfs.tar, zImage et sdcard.img.
+
+Il contient les images iso du Kernel. 
+rootfs.tar est une archive contenant les fichiers RFS.
+zimage c'est ...
+sdcard.img une image de la carte SD.
+
+Question 12: Que vous dis les résultats de la commande file lorsque vous l'utilisez sur les fichiers zImage et sdcard.img?
+
+zImage: Linux kernel ARM boot executable zImage (little-endian)
+sdcard.img: DOS/MBR boot sector; partition 1 : ID=0xc, active, start-CHS (0x0,0,2), end-CHS (0x4,20,17), startsector 1, 65536 sectors; partition 2 : ID=0x83, start-CHS (0x4,20,18), end-CHS (0x1d,146,54), startsector 65537, 409600 sectors
+
+
+Question 13: Que contient le répertoire /tmp/rootfs?
+
+bin  dev  etc  home  lib  lib32  linuxrc  media  mnt  opt  proc  root  run  sbin  sys  tmp  usr  var
+
