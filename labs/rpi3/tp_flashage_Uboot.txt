@@ -1,0 +1,41 @@
+Question 1: Une fois le flashage terminé, combien y-a t-il de partition sur la carte SD? 
+Il y a 2 partitions sur la carte SD
+
+Que contiennent-elles?
+Je ne me souviens plus execatement de leur contenu mais il y a des fichiers systeme dans la partion 1 dont un config.txt (Utilisé dans le BE) et cmdline.txt pour des infos sur la partition.
+
+et la partion 2 l'image du systeme.
+
+
+Question 2: Lire la datasheet de la RPI3. Quels sont les ports TX/RX?
+
+Ce sont les GPIO 15 et 14.
+
+Question 3: Quelle est la configuration du port série permettant une communication avec la RPI3 (baud, etc)?
+
+Serial line to connect to: /dev/ttyUSB0
+Baudrate : 115200
+Data bits: 8
+Stop bits: 1
+Parity: NONE
+Flow control: NONE
+
+
+On peut trouver les infos dans la partition de 34MB, en ouvrant le fichier cmdline.txt.
+
+On a pu se connecter avec le login user et le mot de passe user1*
+
+Question 4:Déterminez l'adresse IP de votre RPI3. Quelle commande avez-vous utilisé? 
+
+ifconfig
+l'IP : 172.20.11.254
+
+Question 5: Testez la connection ssh en tant que user et root. Quelle différence observez-vous? Pourquoi? Où est-ce configuré?
+
+On peut se connecter en user mais pas root directement comme par la connexion filaire. 
+Mais il est possible de se mettre en root apres s'etre connecter en user avec la commande :
+su (puis mdp du root).
+Je ne me souviens plus exactement de l'explication mais cela est dû a des raisons de securité des distributions afin d'eviter un acces de super administrateur a distance.
+
+
+## UBOOT
