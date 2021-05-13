@@ -18,6 +18,9 @@ AC_CHECK_HEADER(sys/socket.h, [],
                 [AC_MSG_ERROR(["Couldn't find sys/socket.h"])])
 
 
+# AC_CHECK_HEADER(sys/verycool.h, [],
+#                 [AC_MSG_ERROR(["Couldn't find the cool header"])])
+
 # output files
 AC_CONFIG_FILES([Makefile
                  src/Makefile
