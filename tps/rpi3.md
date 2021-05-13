@@ -80,3 +80,5 @@ After that we did not manage to launch the system, as it never booted.
   For the creation of a prototype of a weather monitoring station, the file [linux_userspace.c](linux_userspace.c) mentioned before was modified in order to change the files in */sys/class/gpio/*, alternating between green and red LEDs on when the temperature passed the mark of 25 degrees Celsius. 
 
   No other features were added as there were only 2 LEDs to be used.
+  
+  An explanation can be found in a video [here](https://youtu.be/NE0iBmBDXm4).
