@@ -62,10 +62,21 @@ After that we did not manage to launch the system, as it never booted.
     In order to launch it: 
     `sudo docker start "id of the docker"`
     `sudo docker exec -it "id of the docker" /bin/bash`
+    
+    We used the pins as shown [here](https://www.velleman.eu/downloads/29/infosheets/vma335_scheme.pdf).
+
+    It was necessary to clone the repository informed in the exercise at */root/*, from the state proposed in [this](https://github.com/BoschSensortec/BME280_driver/pull/80) pull request. Then, the source file linux_userspace.c was moved from the examples folder into the root of the project for it compiled.
   
   - For the cross compilation:
-    `./../buildroot-precompiled-2017.08/output/host/usr/bin/arm-linux-gcc bme 280.c linux_userspace.c -o bme`
+    `./../buildroot-precompiled-2017.08/output/host/usr/bin/arm-linux-gcc bme280.c linux_userspace.c -o bme`
+
     The output is called bme.
-  
-  - In order to call the sensors on the raspberry it was done `./bme dev/ipc-1`
+    
+  - In order to display the sensors on the raspberry it, the file was copied from the docker and the following line was executed:`./bme /dev/i2c-1`
+
     The values appear, but they seem frozen.
+
+* Extra:
+  For the creation of a prototype of a weather monitoring station, the file [linux_userspace.c](linux_userspace.c) mentioned before was modified in order to change the files in */sys/class/gpio/*, alternating between green and red LEDs on when the temperature passed the mark of 25 degrees Celsius. 
+
+  No other features were added as there were only 2 LEDs to be used.
