@@ -74,8 +74,6 @@ After that we did not manage to launch the system, as it never booted.
     
   - In order to display the sensors on the raspberry it, the file was copied from the docker and the following line was executed:`./bme /dev/i2c-1`
 
-    The values appear, but they seem frozen.
-
 * Extra:
   For the creation of a prototype of a weather monitoring station, the file [linux_userspace.c](linux_userspace.c) mentioned before was modified in order to change the files in */sys/class/gpio/*, alternating between green and red LEDs on when the temperature passed the mark of 25 degrees Celsius. 
 
